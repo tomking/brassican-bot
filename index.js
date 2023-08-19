@@ -1,15 +1,12 @@
 DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
-CYCLIC_DB_ID = process.env.CYCLIC_DB;
 
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const CyclicDB = require('@cyclic.sh/dynamodb');
 
 // Inits
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-const db = CyclicDB(CYCLIC_DB_ID);
 
 // Load all commands from dir/subdirs
 client.commands = new Collection();
