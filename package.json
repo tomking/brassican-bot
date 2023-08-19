@@ -19,7 +19,6 @@
     },
     "homepage": "https://github.com/tomking/brassican-bot#readme",
     "dependencies": {
-        "@cyclic.sh/dynamodb": "^0.0.35",
         "discord.js": "^14.13.0"
     }
 }
