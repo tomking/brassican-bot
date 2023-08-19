@@ -1,23 +1,24 @@
 {
-  "name": "brassican-bot",
-  "version": "1.0.0",
-  "description": "A discord bot that manages things for the Bekt clan.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tomking/brassican-bot.git"
-  },
-  "author": "Thomas King",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/tomking/brassican-bot/issues"
-  },
-  "homepage": "https://github.com/tomking/brassican-bot#readme",
-  "dependencies": {
-    "@cyclic.sh/dynamodb": "^0.0.35",
-    "discord.js": "^14.13.0"
-  }
+    "name": "brassican-bot",
+    "version": "1.0.0",
+    "description": "A discord bot that manages things for the Bekt clan.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tomking/brassican-bot.git"
+    },
+    "author": "Thomas King",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/tomking/brassican-bot/issues"
+    },
+    "homepage": "https://github.com/tomking/brassican-bot#readme",
+    "dependencies": {
+        "@cyclic.sh/dynamodb": "^0.0.35",
+        "discord.js": "^14.13.0"
+    }
 }
