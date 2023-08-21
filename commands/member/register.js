@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
-const models = require('./models');
-const womClient = require('./config/wom.js');
+const models = require('../../models');
+const womClient = require('../../config/wom.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -41,13 +41,13 @@ module.exports = {
         }
 
         // Get user info from WOM
+        let womResult;
         try {
-            const womResult = await womClient.players.getPlayerDetails(rsn);
+            womResult = await womClient.players.getPlayerDetails(rsn);
             if (!womResult) {
                 await interaction.editReply('The given RSN is invalid!');
                 return;
             }
-            const womID = womResult.id;
         } catch (error) {
             console.error('Error getting user WOM entry: ', error);
             await interaction.editReply(
@@ -59,7 +59,7 @@ module.exports = {
         // Check if user is already registered with this WOM ID
         try {
             const memberFromWOMID = await models.Member.findOne({
-                womID: womID,
+                womID: womResult.id,
             });
 
             if (memberFromWOMID) {
@@ -81,11 +81,14 @@ module.exports = {
 
         const newMember = new models.Member({
             discordID: discordID,
-            womID: womID,
+            womID: womResult.id,
             currentCabbages: womResult.ehp + womResult.ehb,
             currentRank: null,
             miscCabbages: 0,
         });
         await newMember.save();
+        await interaction.editReply(
+            "You're all set! Keep an eye out for you new rank to be applied soon!"
+        );
     },
 };

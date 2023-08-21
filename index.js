@@ -25,15 +25,11 @@ for (const folder of commandFolders) {
             client.commands.set(command.data.name, command);
         } else {
             console.log(
-                `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
+                `[WARNING] (RUN) The command at ${filePath} is missing a required "data" or "execute" property.`
             );
         }
     }
 }
-
-client.once(Events.ClientReady, (c) => {
-    console.log(`Ready! Logged in as ${c.user.tag}`);
-});
 
 // Listen for commands
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -59,6 +55,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
             });
         }
     }
+});
+
+client.once(Events.ClientReady, (c) => {
+    console.log(`Brassican Bot Booted! Logged in as ${c.user.tag}`);
 });
 
 client.login(DISCORD_BOT_TOKEN);

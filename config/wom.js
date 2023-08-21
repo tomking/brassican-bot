@@ -8,4 +8,4 @@ const womClient = new WOMClient({
     userAgent: DEVELOPER_DISCORD_CONTACT,
 });
 
-module.exports = { womClient };
+module.exports = womClient;

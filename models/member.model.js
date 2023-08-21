@@ -1,4 +1,4 @@
-const mongoose = require('./config/database.js');
+const mongoose = require('../config/database.js');
 
 const Member = mongoose.model(
     'Member',

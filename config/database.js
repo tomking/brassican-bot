@@ -6,4 +6,4 @@ mongoose
     .connect(MONGO_URL)
     .catch((error) => console.error('Database connection failed: ', error));
 
-module.exports = { mongoose };
+module.exports = mongoose;
