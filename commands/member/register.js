@@ -88,7 +88,7 @@ module.exports = {
         });
         await newMember.save();
         await interaction.editReply(
-            "You're all set! Keep an eye out for you new rank to be applied soon!"
+            "You're all set! Keep an eye out for your new rank to be applied soon!"
         );
     },
 };
