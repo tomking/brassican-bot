@@ -8,6 +8,9 @@
         "start": "node index.js",
         "deploy-commands": "node deploy-commands.js"
     },
+    "engines": {
+        "node": ">=18"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/tomking/brassican-bot.git"
