@@ -1,5 +1,4 @@
 DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
-LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
 
 const fs = require('node:fs');
 const path = require('node:path');
