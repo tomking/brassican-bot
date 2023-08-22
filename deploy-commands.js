@@ -50,3 +50,5 @@ const rest = new REST().setToken(DISCORD_BOT_TOKEN);
         console.error(error);
     }
 })();
+
+process.exit(0);
