@@ -1,4 +1,4 @@
-const mapPointsToRank = require('../../helpers/mapPointsToRank.js');
+const mapPointsToRank = require('./helpers/mapPointsToRank.js');
 
 function updateMemberRank(memberDiscordId) {
     // get user data from db
