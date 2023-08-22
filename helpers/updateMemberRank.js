@@ -89,6 +89,8 @@ async function updateMemberRank(memberDiscordId, discordClient) {
                 .toString()} needs their rank in game updated to: ${newRank}`,
             components: [row],
         });
+
+        await memberData.save();
     }
 
     return;
