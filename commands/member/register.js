@@ -1,5 +1,4 @@
 LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
-RANK_UPDATES_CHANNEL = process.env.RANK_UPDATES_CHANNEL;
 
 const { SlashCommandBuilder } = require('discord.js');
 const models = require('../../models');
@@ -86,22 +85,32 @@ module.exports = {
         const newMember = new models.Member({
             discordID: discordID,
             womID: womResult.id,
-            currentCabbages: womResult.ehp + womResult.ehb,
+            currentCabbages: 0,
             currentRank: null,
             miscCabbages: 0,
             registeredDate: new Date(),
+            itemizedCabbages: {
+                extra: 0,
+                clog: 0,
+                ca: 0,
+                ad: 0,
+                max: 0,
+                inferno: 0,
+            },
         });
+
         await newMember.save();
         await interaction.editReply(
             "You're all set! Keep an eye out for your new rank to be applied soon!"
         );
 
-        updateMemberRank(discordID);
+        updateMemberRank(discordID, interaction.client);
 
         // Send log message that user was registered
-        const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
+        const logChannel =
+            interaction.client.channels.cache.get(LOG_CHANNEL_ID);
         logChannel.send(
-            `@${interaction.user.id} has registered for the rank system using the RSN: ${rsn}`
+            `${interaction.member.toString()} has registered for the rank system using the RSN: ${rsn}`
         );
 
         return;

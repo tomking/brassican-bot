@@ -1,25 +1,97 @@
+LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
+RANK_UPDATES_CHANNEL = process.env.RANK_UPDATES_CHANNEL;
+GUILD_ID = process.env.GUILD_ID;
+// TODO: Pull these out to another location
+const roleMap = {
+    Jade: process.env.JADE_RANK_ID,
+    'Red Topaz': process.env.RED_TOPAZ_RANK_ID,
+    Sapphire: process.env.SAPPHIRE_RANK_ID,
+    Emerald: process.env.EMERALD_RANK_ID,
+    Ruby: process.env.RUBY_RANK_ID,
+    Diamond: process.env.DIAMOND_RANK_ID,
+    'Dragon Stone': process.env.DRAGON_STONE_RANK_ID,
+    Onyx: process.env.ONYX_RANK_ID,
+    Zenyte: process.env.ZENYTE_RANK_ID,
+};
+
 const mapPointsToRank = require('./mapPointsToRank.js');
+const models = require('../models');
+const womClient = require('../config/wom.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
-function updateMemberRank(memberDiscordId) {
-    // get user data from db
-    // update on WOM
+async function updateMemberRank(memberDiscordId, discordClient) {
+    let memberData;
+    let playerDetails;
+    try {
+        memberData = await models.Member.findOne({
+            discordID: memberDiscordId,
+        });
 
-    // update their corecabbages
+        if (!memberData) {
+            await interaction.editReply(
+                "You aren't registered yet. Use `/register` to get signed up!"
+            );
+            return;
+        }
 
-    // check if user has been signed up > 1 month
+        playerDetails = await womClient.players.getPlayerDetailsById(
+            memberData.womID
+        );
+    } catch (error) {
+        console.error('Error getting user data for update: ', error);
+        await interaction.editReply('Something went wrong. Please try again.');
+        return;
+    }
 
-    // call mapPointsToRank
+    memberData.currentCabbages = Object.values(
+        memberData.itemizedCabbages
+    ).reduce((acc, val) => acc + val, playerDetails.ehp + playerDetails.ehb);
 
-    // is rank diff from rank in db?
-    // yes?
-    // remove other ranks on disc
-    // add new rank on disc
+    let newRank = null;
+    if (new Date() - memberData.registeredDate < 30 * 24 * 60 * 60 * 1000) {
+        newRank = mapPointsToRank(0);
+    }
 
-    // send message in channel that they are ready for rank change in game
+    newRank = mapPointsToRank(memberData.currentCabbages);
 
-    // log that user's discord rank was changed
+    if (newRank != memberData.currentRank) {
+        memberData.currentRank = newRank;
+
+        try {
+            discordGuild = await discordClient.guilds.fetch(GUILD_ID);
+            discordMember = await discordGuild.members.fetch(memberDiscordId);
+            discordMember.roles.remove(Object.values(roleMap));
+            discordMember.roles.add(roleMap[newRank]);
+
+            // Log that user's discord rank was changed
+            const logChannel = discordClient.channels.cache.get(LOG_CHANNEL_ID);
+            logChannel.send(
+                `${discordClient.users.cache
+                    .get(memberData.discordID)
+                    .toString()}'s rank was updated on Discord to: ${newRank}`
+            );
+        } catch (error) {
+            console.error("Error updating user's roles: ", error);
+        }
+
+        const complete = new ButtonBuilder()
+            .setCustomId('completeRankUpdate')
+            .setLabel('Complete')
+            .setStyle(ButtonStyle.Success);
+
+        const row = new ActionRowBuilder().addComponents(complete);
+
+        const rankUpdatesChannel =
+            discordClient.channels.cache.get(RANK_UPDATES_CHANNEL);
+        rankUpdatesChannel.send({
+            content: `${discordClient.users.cache
+                .get(memberData.discordID)
+                .toString()} needs their rank in game updated to: ${newRank}`,
+            components: [row],
+        });
+    }
 
     return;
 }
 
-module.exports = { updateMemberRank };
+module.exports = updateMemberRank;

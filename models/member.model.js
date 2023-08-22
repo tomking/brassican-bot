@@ -12,6 +12,8 @@ const Member = mongoose.model(
             clog: Number,
             ca: Number,
             ad: Number,
+            max: Number,
+            inferno: Number,
         },
         registeredDate: Date,
     })
