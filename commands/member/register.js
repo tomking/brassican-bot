@@ -4,7 +4,7 @@ RANK_UPDATES_CHANNEL = process.env.RANK_UPDATES_CHANNEL;
 const { SlashCommandBuilder } = require('discord.js');
 const models = require('../../models');
 const womClient = require('../../config/wom.js');
-const updateMemberRank = require('../../helpers/updateMemberRanks.js');
+const updateMemberRank = require('../../helpers/updateMemberRank.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
