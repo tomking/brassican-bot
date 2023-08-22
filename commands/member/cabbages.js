@@ -16,7 +16,7 @@ module.exports = {
                 discordID: discordID,
             });
 
-            if (!memberFromDiscordID) {
+            if (!memberData) {
                 await interaction.editReply(
                     "You aren't registered yet. Use `/register` to get signed up!"
                 );
