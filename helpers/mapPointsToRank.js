@@ -1,4 +1,4 @@
-function getRank(points) {
+function mapPointsToRank(points) {
     const rankCutoffs = [0, 50, 100, 250, 500, 1000, 1500, 2500, 5000, 6500];
     const rankNames = [
         'Jade',
@@ -19,4 +19,4 @@ function getRank(points) {
     }
 }
 
-module.exports = getRank;
+module.exports = mapPointsToRank;

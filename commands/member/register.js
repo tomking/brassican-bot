@@ -1,6 +1,10 @@
+LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
+RANK_UPDATES_CHANNEL = process.env.RANK_UPDATES_CHANNEL;
+
 const { SlashCommandBuilder } = require('discord.js');
 const models = require('../../models');
 const womClient = require('../../config/wom.js');
+const updateMemberRank = require('../../helpers/updateMemberRanks.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -85,11 +89,21 @@ module.exports = {
             currentCabbages: womResult.ehp + womResult.ehb,
             currentRank: null,
             miscCabbages: 0,
+            registeredDate: new Date(),
         });
         await newMember.save();
         await interaction.editReply(
             "You're all set! Keep an eye out for your new rank to be applied soon!"
         );
+
+        updateMemberRank(discordID);
+
+        // Send log message that user was registered
+        const logChannel = client.channels.cache.get(LOG_CHANNEL_ID);
+        logChannel.send(
+            `@${interaction.user.id} has registered for the rank system using the RSN: ${rsn}`
+        );
+
         return;
     },
 };

@@ -7,7 +7,13 @@ const Member = mongoose.model(
         discordID: String,
         currentCabbages: Number,
         currentRank: String,
-        miscCabbages: Number,
+        itemizedCabbages: {
+            extra: Number,
+            clog: Number,
+            ca: Number,
+            ad: Number,
+        },
+        registeredDate: Date,
     })
 );
 

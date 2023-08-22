@@ -1,0 +1,5 @@
+function updateAllMemberRanks() {
+    // TODO
+
+    return;
+}

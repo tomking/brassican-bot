@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
 const models = require('../../models');
-const getRank = require('../../helpers/rankMap.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -37,10 +36,9 @@ module.exports = {
         await interaction.editReply(
             `You currently have: ${Math.floor(
                 memberData.currentCabbages
-            )} cabbages! This makes you ${getRank(
-                Math.floor(memberData.currentCabbages)
-            )} rank!`
+            )} cabbages! Your current rank is: ${memberData.currentRank}!`
         );
+
         return;
     },
 };
