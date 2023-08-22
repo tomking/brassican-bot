@@ -21,3 +21,5 @@ function updateMemberRank(memberDiscordId) {
 
     return;
 }
+
+module.exports = { updateMemberRank };
