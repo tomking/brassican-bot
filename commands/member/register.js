@@ -90,5 +90,6 @@ module.exports = {
         await interaction.editReply(
             "You're all set! Keep an eye out for your new rank to be applied soon!"
         );
+        return;
     },
 };
