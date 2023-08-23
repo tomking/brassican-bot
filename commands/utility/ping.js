@@ -5,8 +5,9 @@ module.exports = {
         .setName('ping')
         .setDescription('Wondering if the servers are on fire?'),
     async execute(interaction) {
-        await interaction.reply(
-            `Pong! (Websocket heartbeat: ${interaction.client.ws.ping}ms.)`
-        );
+        await interaction.reply({
+            content: `Pong! (Websocket heartbeat: ${interaction.client.ws.ping}ms.)`,
+            ephemeral: true,
+        });
     },
 };
