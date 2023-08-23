@@ -32,7 +32,8 @@ module.exports = {
                 const logChannel =
                     interaction.client.channels.cache.get(LOG_CHANNEL_ID);
                 logChannel.send(
-                    `${interaction.member.toString()} marked the following complete: > "${interaction.message.toString()}"`
+                    `${interaction.member.toString()} marked the following complete: 
+                    > "${interaction.message.toString()}"`
                 );
             }
         } else if (interaction.isStringSelectMenu()) {
