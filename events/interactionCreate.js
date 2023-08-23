@@ -25,7 +25,9 @@ module.exports = {
             }
         } else if (interaction.isButton()) {
             if (interaction.customId == 'completeRankUpdate') {
-                interaction.message.delete();
+                await interaction.update('Clearing...');
+
+                await interaction.message.delete();
 
                 const logChannel =
                     interaction.client.channels.cache.get(LOG_CHANNEL_ID);
