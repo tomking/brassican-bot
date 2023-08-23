@@ -60,8 +60,8 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         try {
             discordGuild = await discordClient.guilds.fetch(GUILD_ID);
             discordMember = await discordGuild.members.fetch(memberDiscordId);
-            discordMember.roles.remove(Object.values(roleMap));
-            discordMember.roles.add(roleMap[newRank]);
+            await discordMember.roles.remove(Object.values(roleMap));
+            await discordMember.roles.add(roleMap[newRank]);
 
             // Log that user's discord rank was changed
             const logChannel = discordClient.channels.cache.get(LOG_CHANNEL_ID);
