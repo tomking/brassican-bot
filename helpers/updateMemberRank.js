@@ -57,6 +57,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
     if (newRank != memberData.currentRank) {
         memberData.currentRank = newRank;
 
+        // Update member's discord role
         try {
             discordGuild = await discordClient.guilds.fetch(GUILD_ID);
             discordMember = await discordGuild.members.fetch(memberDiscordId);
@@ -74,6 +75,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
             console.error("Error updating user's roles: ", error);
         }
 
+        // Create in-game rank update event
         const complete = new ButtonBuilder()
             .setCustomId('completeRankUpdate')
             .setLabel('Complete')
@@ -89,9 +91,9 @@ async function updateMemberRank(memberDiscordId, discordClient) {
                 .toString()} needs their rank in game updated to: ${newRank}`,
             components: [row],
         });
-
-        await memberData.save();
     }
+
+    await memberData.save();
 
     return;
 }
