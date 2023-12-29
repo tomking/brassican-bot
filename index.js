@@ -6,7 +6,7 @@ const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-// Load all commands from dir/subdirs
+// Load all commands from dir/subdirs on start
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
@@ -29,6 +29,7 @@ for (const folder of commandFolders) {
     }
 }
 
+// Load all event handlers from dir on start
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs
     .readdirSync(eventsPath)

@@ -1,7 +1,7 @@
 {
     "name": "brassican-bot",
     "version": "1.0.0",
-    "description": "A discord bot that manages things for the Bekt clan.",
+    "description": "A discord bot that manages the custom rank system for the Bekt clan.",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
