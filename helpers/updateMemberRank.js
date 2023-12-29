@@ -1,6 +1,7 @@
 LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
 RANK_UPDATES_CHANNEL = process.env.RANK_UPDATES_CHANNEL;
 GUILD_ID = process.env.GUILD_ID;
+
 // TODO: Pull these out to another location
 const roleMap = {
     Jade: process.env.JADE_RANK_ID,
