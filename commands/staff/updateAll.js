@@ -7,7 +7,7 @@ const updateAllMemberRanks = require('../../helpers/updateAllMemberRanks.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('updateAll')
+        .setName('updateall')
         .setDescription(
             '[STAFF ONLY] Attempt to update all user cabbage counts [WARNING THIS IS VERY DEMANDING]!'
         ),
