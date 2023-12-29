@@ -17,20 +17,11 @@ async function updateAllMemberRanks(discordClient) {
 
     // We pause execution for five minutes to allow plenty of time for WOM to attempt to update all clan members
     // See https://docs.wiseoldman.net/groups-api/group-endpoints for info on why this approach is preferred
-    await delay(300000);
+    //await delay(300000);
 
-    womMemberIDs = await models.Member.find(
-        {},
-        'womID -_id',
-        function (err, docs) {
-            if (err) {
-                console.error(err);
-                return;
-            }
+    womMemberIDs = await models.Member.find({}, 'womID -_id').exec();
 
-            return docs.map((doc) => doc.womID);
-        }
-    );
+    womMemberIDs = womMemberIDs.map((doc) => doc.womID);
 
     await womMemberIDs.forEach(async (womID) => {
         await updateMemberRank(womID, discordClient);
