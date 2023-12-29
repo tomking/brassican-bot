@@ -48,6 +48,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
     ).reduce((acc, val) => acc + val, playerDetails.ehp + playerDetails.ehb);
 
     let newRank = null;
+    // TODO: Date gating is still currently disabled. Waiting on decision re: what we want to do.
     if (new Date() - memberData.registeredDate < 30 * 24 * 60 * 60 * 1000) {
         newRank = mapPointsToRank(0);
     }
