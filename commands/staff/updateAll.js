@@ -9,7 +9,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('updateall')
         .setDescription(
-            '[STAFF ONLY] Attempt to update all user cabbage counts [WARNING: DONT RUN THIS UNLESS YOU HAVE A GOOD REASON]!'
+            '[STAFF ONLY] [WARNING: THIS IS DEMANDING] Attempt to update all user cabbage counts!'
         ),
     async execute(interaction) {
         await interaction.deferReply({ ephemeral: true });
