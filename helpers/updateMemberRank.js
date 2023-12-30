@@ -29,9 +29,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         });
 
         if (!memberData) {
-            await interaction.editReply(
-                "You aren't registered yet. Use `/register` to get signed up!"
-            );
+            console.error('Attempted to update unknown member!');
             return;
         }
 
@@ -40,7 +38,6 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         );
     } catch (error) {
         console.error('Error getting user data for update: ', error);
-        await interaction.editReply('Something went wrong. Please try again.');
         return;
     }
 

@@ -19,12 +19,12 @@ async function updateAllMemberRanks(discordClient) {
     // See https://docs.wiseoldman.net/groups-api/group-endpoints for info on why this approach is preferred
     //await delay(300000);
 
-    womMemberIDs = await models.Member.find({}, 'womID -_id').exec();
+    womMemberIDs = await models.Member.find({}, 'discordID -_id').exec();
 
-    womMemberIDs = womMemberIDs.map((doc) => doc.womID);
+    womMemberIDs = womMemberIDs.map((doc) => doc.discordID);
 
-    await womMemberIDs.forEach(async (womID) => {
-        await updateMemberRank(womID, discordClient);
+    await womMemberIDs.forEach(async (discordID) => {
+        await updateMemberRank(discordID, discordClient);
     });
 
     console.log(`Attempt to update all member's cabbage counts has finished.`);
