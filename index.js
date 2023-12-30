@@ -51,8 +51,7 @@ client.login(DISCORD_BOT_TOKEN);
 
 // Schedule a job to run every Monday at 00:00 UTC to update all member's cabbage counts
 cron.schedule(
-    //'0 0 * * 1',
-    '*/5 * * * *',
+    '0 0 * * 1',
     () => {
         console.log(
             `Running scheduled job to update all member's cabbage counts`

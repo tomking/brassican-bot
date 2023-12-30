@@ -17,7 +17,7 @@ async function updateAllMemberRanks(discordClient) {
 
     // We pause execution for five minutes to allow plenty of time for WOM to attempt to update all clan members
     // See https://docs.wiseoldman.net/groups-api/group-endpoints for info on why this approach is preferred
-    //await delay(300000);
+    await delay(300000);
 
     womMemberIDs = await models.Member.find({}, 'discordID -_id').exec();
 
