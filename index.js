@@ -3,6 +3,8 @@ DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const cron = require('node-cron');
+const updateAllMemberRanks = require('./helpers/updateAllMemberRanks');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -46,3 +48,18 @@ for (const file of eventFiles) {
 }
 
 client.login(DISCORD_BOT_TOKEN);
+
+// Schedule a job to run every Monday at 00:00 UTC to update all member's cabbage counts
+cron.schedule(
+    '0 0 * * 1',
+    () => {
+        console.log(
+            `Running scheduled job to update all member's cabbage counts`
+        );
+        updateAllMemberRanks(client);
+    },
+    {
+        scheduled: true,
+        timezone: 'UTC',
+    }
+);
