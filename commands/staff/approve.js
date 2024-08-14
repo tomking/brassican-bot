@@ -271,12 +271,17 @@ module.exports = {
 
             case 'infernal-cape':
                 submissionLogString = 'inferno completion';
-                memberData.itemizedCabbages.inferno = 50;
+                memberData.itemizedCabbages.inferno = 150;
+                break;
+
+            case 'quiver':
+                submissionLogString = 'quiver completion';
+                memberData.itemizedCabbages.quiver = 150;
                 break;
 
             case 'max-cape':
                 submissionLogString = 'max cape completion';
-                memberData.itemizedCabbages.max = 50;
+                memberData.itemizedCabbages.max = 150;
                 break;
 
             default:

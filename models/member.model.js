@@ -14,6 +14,7 @@ const Member = mongoose.model(
             ad: Number,
             max: Number,
             inferno: Number,
+            quiver: Number,
         },
         registeredDate: Date,
     })

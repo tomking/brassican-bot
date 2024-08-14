@@ -96,6 +96,7 @@ module.exports = {
                 ad: 0,
                 max: 0,
                 inferno: 0,
+                quiver: 0,
             },
         });
 
