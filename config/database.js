@@ -1,10 +1,18 @@
-MONGO_URL = process.env.MONGO_URL;
-CABBAGE_DB_NAME = process.env.CABBAGE_DB_NAME;
-
 const mongoose = require('mongoose');
 
-mongoose
-    .connect(MONGO_URL, { dbName: CABBAGE_DB_NAME })
-    .catch((error) => console.error('Database connection failed: ', error));
+const { Configuration } = require('../configuration');
 
-module.exports = mongoose;
+const initialize = () => {
+    mongoose
+        .connect(Configuration.MONGO_URL, {
+            dbName: Configuration.CABBAGE_DB_NAME,
+        })
+        .catch((error) => console.error('Database connection failed: ', error));
+};
+
+module.exports = {
+    initialize,
+    get Mongoose() {
+        return mongoose;
+    },
+};

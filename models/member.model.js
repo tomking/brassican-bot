@@ -1,8 +1,8 @@
-const mongoose = require('../config/database.js');
+const { Mongoose } = require('../config/database.js');
 
-const Member = mongoose.model(
+const Member = Mongoose.model(
     'Member',
-    new mongoose.Schema({
+    new Mongoose.Schema({
         womID: String,
         discordID: String,
         currentCabbages: Number,

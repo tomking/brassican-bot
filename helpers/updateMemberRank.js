@@ -1,8 +1,6 @@
-LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
-RANK_UPDATES_CHANNEL = process.env.RANK_UPDATES_CHANNEL;
-GUILD_ID = process.env.GUILD_ID;
-
 // TODO: Pull these out to another location
+
+// TODO
 const roleMap = {
     Jade: process.env.JADE_RANK_ID,
     'Red Topaz': process.env.RED_TOPAZ_RANK_ID,
@@ -15,9 +13,10 @@ const roleMap = {
     Zenyte: process.env.ZENYTE_RANK_ID,
 };
 
+const { Configuration } = require('../configuration');
 const mapPointsToRank = require('./mapPointsToRank.js');
 const models = require('../models');
-const womClient = require('../config/wom.js');
+const { WOMClient } = require('../config/wom.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 async function updateMemberRank(memberDiscordId, discordClient) {
@@ -33,7 +32,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
             return;
         }
 
-        playerDetails = await womClient.players.getPlayerDetailsById(
+        playerDetails = await WOMClient.players.getPlayerDetailsById(
             memberData.womID
         );
     } catch (error) {
@@ -58,13 +57,17 @@ async function updateMemberRank(memberDiscordId, discordClient) {
 
         // Update member's discord role
         try {
-            discordGuild = await discordClient.guilds.fetch(GUILD_ID);
+            discordGuild = await discordClient.guilds.fetch(
+                Configuration.GUILD_ID
+            );
             discordMember = await discordGuild.members.fetch(memberDiscordId);
             await discordMember.roles.remove(Object.values(roleMap));
             await discordMember.roles.add(roleMap[newRank]);
 
             // Log that user's discord rank was changed
-            const logChannel = discordClient.channels.cache.get(LOG_CHANNEL_ID);
+            const logChannel = discordClient.channels.cache.get(
+                Configuration.LOG_CHANNEL_ID
+            );
             logChannel.send(
                 `${discordClient.users.cache
                     .get(memberData.discordID)
@@ -82,8 +85,9 @@ async function updateMemberRank(memberDiscordId, discordClient) {
 
         const row = new ActionRowBuilder().addComponents(complete);
 
-        const rankUpdatesChannel =
-            discordClient.channels.cache.get(RANK_UPDATES_CHANNEL);
+        const rankUpdatesChannel = discordClient.channels.cache.get(
+            Configuration.RANK_UPDATES_CHANNEL
+        );
         rankUpdatesChannel.send({
             content: `${discordClient.users.cache
                 .get(memberData.discordID)
@@ -93,7 +97,6 @@ async function updateMemberRank(memberDiscordId, discordClient) {
     }
 
     await memberData.save();
-
     return;
 }
 

@@ -1,11 +1,19 @@
-WOM_API_KEY = process.env.WOM_API_KEY;
-DEVELOPER_DISCORD_CONTACT = process.env.DEVELOPER_DISCORD_CONTACT;
-
 const { WOMClient } = require('@wise-old-man/utils');
 
-const womClient = new WOMClient({
-    apiKey: WOM_API_KEY,
-    userAgent: DEVELOPER_DISCORD_CONTACT,
-});
+const { Configuration } = require('../configuration');
 
-module.exports = womClient;
+let womClient;
+
+const initialize = () => {
+    womClient = new WOMClient({
+        apiKey: Configuration.WOM_API_KEY,
+        userAgent: Configuration.DEVELOPER_DISCORD_CONTACT,
+    });
+};
+
+module.exports = {
+    initialize,
+    get WOMClient() {
+        return womClient;
+    },
+};

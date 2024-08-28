@@ -1,8 +1,8 @@
-LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
-
 const { SlashCommandBuilder } = require('discord.js');
+
+const { Configuration } = require('../../configuration.js');
 const models = require('../../models');
-const womClient = require('../../config/wom.js');
+const { WOMClient } = require('../../config/wom.js');
 const updateMemberRank = require('../../helpers/updateMemberRank.js');
 
 module.exports = {
@@ -46,7 +46,7 @@ module.exports = {
         // Get user info from WOM
         let womResult;
         try {
-            womResult = await womClient.players.getPlayerDetails(rsn);
+            womResult = await WOMClient.players.getPlayerDetails(rsn);
             if (!womResult) {
                 await interaction.editReply('The given RSN is invalid!');
                 return;
@@ -107,8 +107,9 @@ module.exports = {
         updateMemberRank(discordID, interaction.client);
 
         // Send log message that user was registered
-        const logChannel =
-            interaction.client.channels.cache.get(LOG_CHANNEL_ID);
+        const logChannel = interaction.client.channels.cache.get(
+            Configuration.LOG_CHANNEL_ID
+        );
         logChannel.send(
             `${interaction.member.toString()} has registered for the rank system using the RSN: ${rsn}`
         );
