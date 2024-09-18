@@ -6,7 +6,7 @@ updates:
           interval: 'weekly'
           day: 'monday'
           time: '00:00'
-          target-branch: 'dev'
-          ignore:
-              - dependency-name: '*'
-                update-types: ['version-update:semver-major'] # Ignore major updates unless specified in security updates
+      target-branch: 'dev'
+      ignore:
+          - dependency-name: '*'
+            update-types: ['version-update:semver-major'] # Ignore major updates unless specified in security updates
