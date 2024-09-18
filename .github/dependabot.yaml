@@ -1,0 +1,12 @@
+version: 2
+updates:
+    - package-ecosystem: 'npm'
+      directory: '/'
+      schedule:
+          interval: 'weekly'
+          day: 'monday'
+          time: '00:00'
+          target-branch: 'dev'
+          ignore:
+              - dependency-name: '*'
+                update-types: ['version-update:semver-major'] # Ignore major updates unless specified in security updates
