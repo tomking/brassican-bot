@@ -2,7 +2,7 @@ const { REST, Routes } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const { initialize, Configuration } = require('./configuration');
+const { initialize, Configuration } = require('./services/configuration');
 
 initialize();
 

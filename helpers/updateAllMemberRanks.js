@@ -1,5 +1,5 @@
-const { Configuration } = require('../configuration.js');
-const { WOMClient } = require('../config/wom.js');
+const { Configuration } = require('../services/configuration.js');
+const { getWOMClient } = require('../config/wom.js');
 const models = require('../models');
 const updateMemberRank = require('./updateMemberRank.js');
 
@@ -11,7 +11,8 @@ async function updateAllMemberRanks(discordClient) {
     // This is a very expensive operation
     // TODO: Investigate ways to reduce the cost of this (potentially avoid updating dead accounts/members)
 
-    await WOMClient.groups.updateAll(
+    const womClient = getWOMClient();
+    await womClient.groups.updateAll(
         Configuration.WOM_GROUP_ID,
         Configuration.WOM_GROUP_VERIFICATION_CODE
     );

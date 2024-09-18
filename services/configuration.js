@@ -28,7 +28,7 @@ const CONFIGURATION_SCHEMA = joi
     .required()
     .unknown();
 
-const initialize = () => {
+const initialize = async () => {
     dotenv.config();
     const { error } = CONFIGURATION_SCHEMA.validate(process.env);
 

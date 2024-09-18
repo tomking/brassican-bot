@@ -2,10 +2,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { Configuration } = require('./configuration');
+const { Configuration } = require('./services/configuration');
 
-const initialize = () => {
-    const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+let client;
+
+const initialize = async () => {
+    client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
     // Load all commands from dir/subdirs on start
     client.commands = new Collection();
@@ -46,9 +48,14 @@ const initialize = () => {
         }
     }
 
-    client.login(Configuration.DISCORD_BOT_TOKEN);
+    await client.login(Configuration.DISCORD_BOT_TOKEN);
+};
+
+const getDiscordClient = () => {
+    return client;
 };
 
 module.exports = {
     initialize,
+    getDiscordClient,
 };

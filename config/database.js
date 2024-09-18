@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-const { Configuration } = require('../configuration');
+const { Configuration } = require('../services/configuration');
 
-const initialize = () => {
+const initialize = async () => {
     mongoose
         .connect(Configuration.MONGO_URL, {
             dbName: Configuration.CABBAGE_DB_NAME,
@@ -10,9 +10,11 @@ const initialize = () => {
         .catch((error) => console.error('Database connection failed: ', error));
 };
 
+const getMongooseClient = () => {
+    return mongoose;
+};
+
 module.exports = {
     initialize,
-    get Mongoose() {
-        return mongoose;
-    },
+    getMongooseClient,
 };

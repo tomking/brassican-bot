@@ -13,10 +13,10 @@ const roleMap = {
     Zenyte: process.env.ZENYTE_RANK_ID,
 };
 
-const { Configuration } = require('../configuration');
+const { Configuration } = require('../services/configuration.js');
 const mapPointsToRank = require('./mapPointsToRank.js');
 const models = require('../models');
-const { WOMClient } = require('../config/wom.js');
+const { getWOMClient } = require('../config/wom.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 async function updateMemberRank(memberDiscordId, discordClient) {
@@ -32,7 +32,8 @@ async function updateMemberRank(memberDiscordId, discordClient) {
             return;
         }
 
-        playerDetails = await WOMClient.players.getPlayerDetailsById(
+        const womClient = getWOMClient();
+        playerDetails = await womClient.players.getPlayerDetailsById(
             memberData.womID
         );
     } catch (error) {

@@ -1,6 +1,6 @@
 const { Events } = require('discord.js');
 
-const { Configuration } = require('../configuration');
+const { Configuration } = require('../services/configuration');
 
 module.exports = {
     name: Events.InteractionCreate,

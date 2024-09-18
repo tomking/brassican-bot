@@ -1,8 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
 
-const { Configuration } = require('../../configuration.js');
+const { Configuration } = require('../../services/configuration.js');
 const models = require('../../models');
-const { WOMClient } = require('../../config/wom.js');
+const { getWOMClient } = require('../../config/wom.js');
 const updateMemberRank = require('../../helpers/updateMemberRank.js');
 
 module.exports = {
@@ -46,7 +46,8 @@ module.exports = {
         // Get user info from WOM
         let womResult;
         try {
-            womResult = await WOMClient.players.getPlayerDetails(rsn);
+            const womClient = getWOMClient();
+            womResult = await womClient.players.getPlayerDetails(rsn);
             if (!womResult) {
                 await interaction.editReply('The given RSN is invalid!');
                 return;

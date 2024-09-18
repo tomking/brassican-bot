@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 
-const { Configuration } = require('../../configuration.js');
+const { Configuration } = require('../../services/configuration.js');
 const updateAllMemberRanks = require('../../helpers/updateAllMemberRanks.js');
 
 module.exports = {
