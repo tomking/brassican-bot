@@ -1,18 +1,5 @@
 // TODO: Pull these out to another location
 
-// TODO
-const roleMap = {
-    Jade: process.env.JADE_RANK_ID,
-    'Red Topaz': process.env.RED_TOPAZ_RANK_ID,
-    Sapphire: process.env.SAPPHIRE_RANK_ID,
-    Emerald: process.env.EMERALD_RANK_ID,
-    Ruby: process.env.RUBY_RANK_ID,
-    Diamond: process.env.DIAMOND_RANK_ID,
-    'Dragon Stone': process.env.DRAGON_STONE_RANK_ID,
-    Onyx: process.env.ONYX_RANK_ID,
-    Zenyte: process.env.ZENYTE_RANK_ID,
-};
-
 const { Configuration } = require('../services/configuration.js');
 const mapPointsToRank = require('./mapPointsToRank.js');
 const models = require('../models');
@@ -20,6 +7,18 @@ const { getWOMClient } = require('../config/wom.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 async function updateMemberRank(memberDiscordId, discordClient) {
+    const roleMap = {
+        Jade: Configuration.JADE_RANK_ID,
+        'Red Topaz': Configuration.RED_TOPAZ_RANK_ID,
+        Sapphire: Configuration.SAPPHIRE_RANK_ID,
+        Emerald: Configuration.EMERALD_RANK_ID,
+        Ruby: Configuration.RUBY_RANK_ID,
+        Diamond: Configuration.DIAMOND_RANK_ID,
+        'Dragon Stone': Configuration.DRAGON_STONE_RANK_ID,
+        Onyx: Configuration.ONYX_RANK_ID,
+        Zenyte: Configuration.ZENYTE_RANK_ID,
+    };
+
     let memberData;
     let playerDetails;
     try {
@@ -53,7 +52,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
 
     newRank = mapPointsToRank(memberData.currentCabbages);
 
-    if (newRank != memberData.currentRank) {
+    if (newRank !== memberData.currentRank) {
         memberData.currentRank = newRank;
 
         // Update member's discord role
