@@ -23,7 +23,7 @@
     },
     "homepage": "https://github.com/tomking/brassican-bot#readme",
     "dependencies": {
-        "@wise-old-man/utils": "^3.0.0",
+        "@wise-old-man/utils": "^3.3.5",
         "discord.js": "^14.16.2",
         "dotenv": "^16.3.1",
         "mongoose": "^7.8.1",
