@@ -10,6 +10,102 @@ module.exports = {
         .setDescription('[STAFF ONLY] Approve a rank submission')
         .addSubcommand((subcommand) =>
             subcommand
+                .setName('max-cape')
+                .setDescription('[STAFF ONLY] Approve max cape')
+                .addUserOption((option) =>
+                    option
+                        .setName('user')
+                        .setDescription(
+                            'The member whose submission you are approving'
+                        )
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('infernal-cape')
+                .setDescription('[STAFF ONLY] Approve infernal cape')
+                .addUserOption((option) =>
+                    option
+                        .setName('user')
+                        .setDescription(
+                            'The member whose submission you are approving'
+                        )
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('quiver')
+                .setDescription("[STAFF ONLY] Approve Dizana's quiver")
+                .addUserOption((option) =>
+                    option
+                        .setName('user')
+                        .setDescription(
+                            'The member whose submission you are approving'
+                        )
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('blorva')
+                .setDescription(
+                    '[STAFF ONLY] Approve ancient blood ornament kit'
+                )
+                .addUserOption((option) =>
+                    option
+                        .setName('user')
+                        .setDescription(
+                            'The member whose submission you are approving'
+                        )
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('quest-points')
+                .setDescription('[STAFF ONLY] Approve quest points')
+                .addIntegerOption((option) =>
+                    option
+                        .setName('qp')
+                        .setDescription(
+                            'The current number of quest points the user has'
+                        )
+                        .setRequired(true)
+                )
+                .addUserOption((option) =>
+                    option
+                        .setName('user')
+                        .setDescription(
+                            'The member whose submission you are approving'
+                        )
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('collection-log')
+                .setDescription('[STAFF ONLY] Approve collection log slots')
+                .addIntegerOption((option) =>
+                    option
+                        .setName('slots')
+                        .setDescription(
+                            'The current number of collection log slots the user has filled'
+                        )
+                        .setRequired(true)
+                )
+                .addUserOption((option) =>
+                    option
+                        .setName('user')
+                        .setDescription(
+                            'The member whose submission you are approving'
+                        )
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
                 .setName('achievement-diary')
                 .setDescription(
                     '[STAFF ONLY] Approve an achievement diary tier'
@@ -97,53 +193,6 @@ module.exports = {
                         )
                         .setRequired(true)
                 )
-        )
-        .addSubcommand((subcommand) =>
-            subcommand
-                .setName('collection-log')
-                .setDescription('[STAFF ONLY] Approve collection log slots')
-                .addIntegerOption((option) =>
-                    option
-                        .setName('slots')
-                        .setDescription(
-                            'The current number of collection log slots the user has filled'
-                        )
-                        .setRequired(true)
-                )
-                .addUserOption((option) =>
-                    option
-                        .setName('user')
-                        .setDescription(
-                            'The member whose submission you are approving'
-                        )
-                        .setRequired(true)
-                )
-        )
-        .addSubcommand((subcommand) =>
-            subcommand
-                .setName('max-cape')
-                .setDescription('[STAFF ONLY] Approve max cape')
-                .addUserOption((option) =>
-                    option
-                        .setName('user')
-                        .setDescription(
-                            'The member whose submission you are approving'
-                        )
-                        .setRequired(true)
-                )
-        )
-        .addSubcommand((subcommand) =>
-            subcommand
-                .setName('infernal-cape')
-                .setDescription('[STAFF ONLY] Approve infernal cape')
-                .addUserOption((option) =>
-                    option
-                        .setName('user')
-                        .setDescription(
-                            'The member whose submission you are approving'
-                        )
-                        .setRequired(true)
-                )
         ),
     async execute(interaction) {
         await interaction.deferReply({ ephemeral: true });
@@ -188,93 +237,58 @@ module.exports = {
 
         let submissionLogString;
 
-        // Set the corresponding itemized cabbages based on submission
+        // Update memberData based on submission
         switch (interaction.options.getSubcommand()) {
-            case 'achievement-diary':
-                switch (interaction.options.getString('tier')) {
-                    case 'Easy':
-                        memberData.itemizedCabbages.ad = 5;
-                        break;
-
-                    case 'Medium':
-                        memberData.itemizedCabbages.ad = 10;
-                        break;
-
-                    case 'Hard':
-                        memberData.itemizedCabbages.ad = 20;
-                        break;
-
-                    case 'Elite':
-                        memberData.itemizedCabbages.ad = 40;
-                        break;
-
-                    default:
-                        memberData.itemizedCabbages.ad = 0;
-                        break;
-                }
-
-                submissionLogString = `${interaction.options
-                    .getString('tier')
-                    .toLowerCase()} achievement diaries completion`;
-
-                break;
-
-            case 'combat-achievements':
-                switch (interaction.options.getString('tier')) {
-                    case 'Easy':
-                        memberData.itemizedCabbages.ca = 5;
-                        break;
-
-                    case 'Medium':
-                        memberData.itemizedCabbages.ca = 10;
-                        break;
-
-                    case 'Hard':
-                        memberData.itemizedCabbages.ca = 20;
-                        break;
-
-                    case 'Elite':
-                        memberData.itemizedCabbages.ca = 40;
-                        break;
-
-                    case 'Master':
-                        memberData.itemizedCabbages.ca = 80;
-                        break;
-
-                    case 'Grandmaster':
-                        memberData.itemizedCabbages.ca = 160;
-                        break;
-
-                    default:
-                        memberData.itemizedCabbages.ca = 0;
-                        break;
-                }
-
-                submissionLogString = `${interaction.options
-                    .getString('tier')
-                    .toLowerCase()} combat achievements completion`;
-
-                break;
-
-            case 'collection-log':
-                memberData.itemizedCabbages.clog =
-                    Math.floor(interaction.options.getInteger('slots') / 100) *
-                    20;
-
-                submissionLogString = `${interaction.options.getInteger(
-                    'slots'
-                )} collection log slots`;
-
+            case 'max-cape':
+                submissionLogString = 'max cape completion';
+                memberData.accountProgression.max = true;
                 break;
 
             case 'infernal-cape':
                 submissionLogString = 'inferno completion';
-                memberData.itemizedCabbages.inferno = 50;
+                memberData.accountProgression.inferno = true;
                 break;
 
-            case 'max-cape':
-                submissionLogString = 'max cape completion';
-                memberData.itemizedCabbages.max = 50;
+            case 'quiver':
+                submissionLogString = 'quiver completion';
+                memberData.accountProgression.quiver = true;
+                break;
+
+            case 'blorva':
+                submissionLogString = 'blorva completion';
+                memberData.accountProgression.blorva = true;
+                break;
+
+            case 'quest-points':
+                memberData.accountProgression.questPoints =
+                    interaction.options.getInteger('qp');
+                submissionLogString = `${interaction.options.getInteger(
+                    'qp'
+                )} quest points`;
+                break;
+
+            case 'collection-log':
+                memberData.accountProgression.clogSlots =
+                    interaction.options.getInteger('slots');
+                submissionLogString = `${interaction.options.getInteger(
+                    'slots'
+                )} collection log slots`;
+                break;
+
+            case 'achievement-diary':
+                memberData.accountProgression.adTier =
+                    interaction.options.getString('tier');
+                submissionLogString = `${interaction.options
+                    .getString('tier')
+                    .toLowerCase()} achievement diaries completion`;
+                break;
+
+            case 'combat-achievements':
+                memberData.accountProgression.caTier =
+                    interaction.options.getString('tier');
+                submissionLogString = `${interaction.options
+                    .getString('tier')
+                    .toLowerCase()} combat achievements completion`;
                 break;
 
             default:

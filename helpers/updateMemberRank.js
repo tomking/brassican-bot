@@ -1,10 +1,12 @@
 // TODO: Pull these out to another location
 
 const { Configuration } = require('../services/configuration.js');
+const config2 = require('../config.json');
 const mapPointsToRank = require('./mapPointsToRank.js');
 const models = require('../models');
 const { getWOMClient } = require('../config/wom.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { checkPreferences } = require('joi');
 
 async function updateMemberRank(memberDiscordId, discordClient) {
     const roleMap = {
@@ -40,13 +42,28 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         return;
     }
 
-    memberData.currentCabbages = Object.values(
-        memberData.itemizedCabbages
-    ).reduce((acc, val) => acc + val, playerDetails.ehp + playerDetails.ehb);
+    // Calculate current cabbages
+    let cabbageCount =
+        playerDetails.ehp + playerDetails.ehb + memberData.eventCabbages;
+    if (memberData.accountProgression.max) cabbageCount += config2.maxCabbages;
+    if (memberData.accountProgression.inferno)
+        cabbageCount += config2.infernoCabbages;
+    if (memberData.accountProgression.quiver)
+        cabbageCount += config2.quiverCabbages;
+    if (memberData.accountProgression.blorva)
+        cabbageCount += config2.blorvaCabbages;
+    cabbageCount +=
+        Math.floor(memberData.accountProgression.clogSlots / 100) * 20;
+    // TODO: Formula for quest points
+    cabbageCount +=
+        config2.caTierCabbages[memberData.accountProgression.caTier] || 0;
+    cabbageCount +=
+        config2.adTierCabbages[memberData.accountProgression.adTier] || 0;
+    memberData.currentCabbages = cabbageCount;
 
     let newRank = null;
     // TODO: Date gating is still currently disabled. Waiting on decision re: what we want to do.
-    if (new Date() - memberData.registeredDate < 30 * 24 * 60 * 60 * 1000) {
+    if (new Date() - memberData.createdAt < 30 * 24 * 60 * 60 * 1000) {
         newRank = mapPointsToRank(0);
     }
 

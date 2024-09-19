@@ -84,20 +84,8 @@ module.exports = {
         }
 
         const newMember = new models.Member({
-            discordID: discordID,
             womID: womResult.id,
-            currentCabbages: 0,
-            currentRank: null,
-            miscCabbages: 0,
-            registeredDate: new Date(),
-            itemizedCabbages: {
-                extra: 0,
-                clog: 0,
-                ca: 0,
-                ad: 0,
-                max: 0,
-                inferno: 0,
-            },
+            discordID: discordID,
         });
 
         await newMember.save();
@@ -112,7 +100,7 @@ module.exports = {
             Configuration.LOG_CHANNEL_ID
         );
         logChannel.send(
-            `${interaction.member.toString()} has registered for the rank system using the RSN: ${rsn}`
+            `${interaction.member.toString()} has registered for the rank system using the RSN: \`${rsn}\``
         );
 
         return;

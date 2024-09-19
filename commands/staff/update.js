@@ -49,9 +49,14 @@ module.exports = {
                     .toString()}'s cabbage count encountered an error.`
             );
             console.log(error);
+            await interaction.editReply(
+                `The attempt to update member's cabbage count encountered an error.`
+            );
             return;
         }
-
+        await interaction.editReply(
+            `Member's cabbage count was succesfully updated.`
+        );
         return;
     },
 };

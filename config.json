@@ -1,0 +1,21 @@
+{
+    "maxCabbages": 50,
+    "infernoCabbages": 50,
+    "quiverCabbages": 0,
+    "blorvaCabbages": 0,
+    "adTierCabbages": {
+        "EASY": 5,
+        "MEDIUM": 10,
+        "HARD": 20,
+        "ELITE": 40
+    },
+    "caTierCabbages": {
+        "null": 0,
+        "EASY": 5,
+        "MEDIUM": 10,
+        "HARD": 20,
+        "ELITE": 40,
+        "MASTER": 80,
+        "GRANDMASTER": 160
+    }
+  }
