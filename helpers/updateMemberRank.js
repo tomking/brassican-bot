@@ -6,7 +6,6 @@ const mapPointsToRank = require('./mapPointsToRank.js');
 const models = require('../models');
 const { getWOMClient } = require('../config/wom.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { checkPreferences } = require('joi');
 
 async function updateMemberRank(memberDiscordId, discordClient) {
     const roleMap = {
