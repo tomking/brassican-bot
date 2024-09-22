@@ -26,7 +26,11 @@
         "@wise-old-man/utils": "^3.3.5",
         "discord.js": "^14.16.2",
         "dotenv": "^16.4.5",
+        "joi": "^17.13.3",
         "mongoose": "^8.6.3",
         "node-cron": "^3.0.3"
+    },
+    "devDependencies": {
+        "@types/node-cron": "^3.0.11"
     }
 }

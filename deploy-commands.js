@@ -1,9 +1,10 @@
-DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
-DISCORD_APP_ID = process.env.DISCORD_APP_ID;
-
 const { REST, Routes } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
+
+const { initialize, Configuration } = require('./services/configuration');
+
+initialize();
 
 const commands = [];
 const foldersPath = path.join(__dirname, 'commands');
@@ -14,6 +15,7 @@ for (const folder of commandFolders) {
     const commandFiles = fs
         .readdirSync(commandsPath)
         .filter((file) => file.endsWith('.js'));
+
     // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
     for (const file of commandFiles) {
         const filePath = path.join(commandsPath, file);
@@ -29,7 +31,7 @@ for (const folder of commandFolders) {
 }
 
 // Construct and prepare an instance of the REST module
-const rest = new REST().setToken(DISCORD_BOT_TOKEN);
+const rest = new REST().setToken(Configuration.DISCORD_BOT_TOKEN);
 
 // Deploy commands
 (async () => {
@@ -39,7 +41,7 @@ const rest = new REST().setToken(DISCORD_BOT_TOKEN);
         );
 
         const data = await rest.put(
-            Routes.applicationCommands(DISCORD_APP_ID),
+            Routes.applicationCommands(Configuration.DISCORD_APP_ID),
             { body: commands }
         );
 

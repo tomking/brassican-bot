@@ -1,8 +1,6 @@
-LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
-DISCORD_MOD_ROLE_ID = process.env.DISCORD_MOD_ROLE_ID;
-DISCORD_CA_ROLE_ID = process.env.DISCORD_CA_ROLE_ID;
-
 const { SlashCommandBuilder } = require('discord.js');
+
+const { Configuration } = require('../../services/configuration');
 const models = require('../../models');
 const updateMemberRank = require('../../helpers/updateMemberRank.js');
 
@@ -29,8 +27,8 @@ module.exports = {
         if (
             !interaction.member.roles.cache.some(
                 (role) =>
-                    role.id == DISCORD_MOD_ROLE_ID ||
-                    role.id == DISCORD_CA_ROLE_ID
+                    role.id == Configuration.DISCORD_MOD_ROLE_ID ||
+                    role.id == Configuration.DISCORD_CA_ROLE_ID
             )
         ) {
             await interaction.editReply(
@@ -79,8 +77,9 @@ module.exports = {
         updateMemberRank(discordID, interaction.client);
 
         // Send log message
-        const logChannel =
-            interaction.client.channels.cache.get(LOG_CHANNEL_ID);
+        const logChannel = interaction.client.channels.cache.get(
+            Configuration.LOG_CHANNEL_ID
+        );
         logChannel.send(
             `${interaction.options
                 .getUser('user')
