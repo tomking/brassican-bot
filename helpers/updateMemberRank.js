@@ -1,5 +1,3 @@
-// TODO: Pull these out to another location
-
 const { Configuration } = require('../services/configuration.js');
 const mapPointsToRank = require('./mapPointsToRank.js');
 const models = require('../models');
@@ -7,6 +5,7 @@ const { getWOMClient } = require('../config/wom.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 async function updateMemberRank(memberDiscordId, discordClient) {
+    // TODO: Pull these out to another location
     const roleMap = {
         Jade: Configuration.JADE_RANK_ID,
         'Red Topaz': Configuration.RED_TOPAZ_RANK_ID,
