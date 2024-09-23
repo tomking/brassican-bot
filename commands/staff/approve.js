@@ -64,16 +64,8 @@ module.exports = {
         )
         .addSubcommand((subcommand) =>
             subcommand
-                .setName('quest-points')
-                .setDescription('[STAFF ONLY] Approve quest points')
-                .addIntegerOption((option) =>
-                    option
-                        .setName('qp')
-                        .setDescription(
-                            'The current number of quest points the user has'
-                        )
-                        .setRequired(true)
-                )
+                .setName('quest-cape')
+                .setDescription('[STAFF ONLY] Approve quest cape')
                 .addUserOption((option) =>
                     option
                         .setName('user')
@@ -259,12 +251,9 @@ module.exports = {
                 memberData.accountProgression.blorva = true;
                 break;
 
-            case 'quest-points':
-                memberData.accountProgression.questPoints =
-                    interaction.options.getInteger('qp');
-                submissionLogString = `${interaction.options.getInteger(
-                    'qp'
-                )} quest points`;
+            case 'quest-cape':
+                submissionLogString = 'quest cape completion';
+                memberData.accountProgression.questCape = true;
                 break;
 
             case 'collection-log':

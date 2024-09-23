@@ -12,7 +12,7 @@ const MemberSchema = new mongooseClient.Schema({
         inferno: { type: Boolean, default: false },
         quiver: { type: Boolean, default: false },
         blorva: { type: Boolean, default: false },
-        questPoints: { type: Number, default: 0 },
+        questCape: { type: Boolean, default: false },
         clogSlots: { type: Number, default: 0 },
         caTier: { type: String, default: null, uppercase: true }, // For example "GRANDMASTER"
         adTier: { type: String, default: null, uppercase: true }, // For example "MEDIUM"

@@ -14,7 +14,7 @@ module.exports = {
                 $set: {
                     'accountProgression.quiver': false,
                     'accountProgression.blorva': false,
-                    'accountProgression.questPoints': 0,
+                    'accountProgression.questCape': false,
                 },
                 $rename: {
                     'accountProgression.extra': 'eventCabbages',
@@ -304,7 +304,7 @@ module.exports = {
                 $unset: {
                     'accountProgression.quiver': '',
                     'accountProgression.blorva': '',
-                    'accountProgression.questPoints': '',
+                    'accountProgression.questCape': '',
                 },
                 $rename: {
                     eventCabbages: 'accountProgression.extra',

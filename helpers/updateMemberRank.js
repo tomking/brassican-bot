@@ -51,9 +51,8 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         cabbageCount += config2.quiverCabbages;
     if (memberData.accountProgression.blorva)
         cabbageCount += config2.blorvaCabbages;
-    cabbageCount +=
-        Math.floor(memberData.accountProgression.clogSlots / 100) * 20;
-    // TODO: Formula for quest points
+    if (memberData.accountProgression.questCape)
+        cabbageCount += config2.questCapeCabbages;
     cabbageCount +=
         config2.caTierCabbages[memberData.accountProgression.caTier] || 0;
     cabbageCount +=
