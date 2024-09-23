@@ -1,9 +1,9 @@
 {
-    "maxCabbages": 50,
-    "infernoCabbages": 50,
-    "quiverCabbages": 0,
-    "blorvaCabbages": 0,
-    "questCapeCabbages": 0,
+    "maxCabbages": 100,
+    "infernoCabbages": 100,
+    "quiverCabbages": 100,
+    "blorvaCabbages": 100,
+    "questCapeCabbages": 100,
     "adTierCabbages": {
         "EASY": 5,
         "MEDIUM": 10,

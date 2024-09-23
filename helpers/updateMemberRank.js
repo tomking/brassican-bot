@@ -54,6 +54,8 @@ async function updateMemberRank(memberDiscordId, discordClient) {
     if (memberData.accountProgression.questCape)
         cabbageCount += config2.questCapeCabbages;
     cabbageCount +=
+        Math.floor(memberData.accountProgression.clogSlots / 100) * 20;
+    cabbageCount +=
         config2.caTierCabbages[memberData.accountProgression.caTier] || 0;
     cabbageCount +=
         config2.adTierCabbages[memberData.accountProgression.adTier] || 0;
