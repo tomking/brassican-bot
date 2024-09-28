@@ -8,6 +8,7 @@ const { getWOMClient } = require('../config/wom.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 async function updateMemberRank(memberDiscordId, discordClient) {
+    // TODO: Pull these out to another location
     const roleMap = {
         Jade: Environment.JADE_RANK_ID,
         'Red Topaz': Environment.RED_TOPAZ_RANK_ID,
