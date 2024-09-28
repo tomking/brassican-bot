@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 
-const { Configuration } = require('../../services/configuration.js');
+const { Environment } = require('../../services/environment');
 const models = require('../../models');
 const updateMemberRank = require('../../helpers/updateMemberRank.js');
 
@@ -193,8 +193,8 @@ module.exports = {
         if (
             !interaction.member.roles.cache.some(
                 (role) =>
-                    role.id == Configuration.DISCORD_MOD_ROLE_ID ||
-                    role.id == Configuration.DISCORD_CA_ROLE_ID
+                    role.id == Environment.DISCORD_MOD_ROLE_ID ||
+                    role.id == Environment.DISCORD_CA_ROLE_ID
             )
         ) {
             await interaction.editReply(
@@ -298,7 +298,7 @@ module.exports = {
 
         // Send log message
         const logChannel = interaction.client.channels.cache.get(
-            Configuration.LOG_CHANNEL_ID
+            Environment.LOG_CHANNEL_ID
         );
 
         logChannel.send(

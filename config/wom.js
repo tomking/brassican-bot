@@ -1,13 +1,13 @@
 const { WOMClient } = require('@wise-old-man/utils');
 
-const { Configuration } = require('../services/configuration');
+const { Environment } = require('../services/environment');
 
 let womClient;
 
 const initialize = async () => {
     womClient = new WOMClient({
-        apiKey: Configuration.WOM_API_KEY,
-        userAgent: Configuration.DEVELOPER_DISCORD_CONTACT,
+        apiKey: Environment.WOM_API_KEY,
+        userAgent: Environment.DEVELOPER_DISCORD_CONTACT,
     });
 };
 

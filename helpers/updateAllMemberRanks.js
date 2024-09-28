@@ -1,4 +1,4 @@
-const { Configuration } = require('../services/configuration.js');
+const { Environment } = require('../services/environment.js');
 const { getWOMClient } = require('../config/wom.js');
 const models = require('../models');
 const updateMemberRank = require('./updateMemberRank.js');
@@ -13,8 +13,8 @@ async function updateAllMemberRanks(discordClient) {
 
     const womClient = getWOMClient();
     await womClient.groups.updateAll(
-        Configuration.WOM_GROUP_ID,
-        Configuration.WOM_GROUP_VERIFICATION_CODE
+        Environment.WOM_GROUP_ID,
+        Environment.WOM_GROUP_VERIFICATION_CODE
     );
 
     // We pause execution for five minutes to allow plenty of time for WOM to attempt to update all clan members

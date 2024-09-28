@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const { config, database, down, up } = require('migrate-mongo');
 
-const { Configuration } = require('../services/configuration');
+const { Environment } = require('../services/environment');
 
 const initialize = async () => {
     try {
-        await mongoose.connect(Configuration.MONGO_URL, {
-            dbName: Configuration.CABBAGE_DB_NAME,
+        await mongoose.connect(Environment.MONGO_URL, {
+            dbName: Environment.CABBAGE_DB_NAME,
         });
     } catch (error) {
         console.error('Database connection failed: ', error);
@@ -14,8 +14,8 @@ const initialize = async () => {
     }
     config.set({
         mongodb: {
-            url: Configuration.MONGO_URL,
-            databaseName: Configuration.CABBAGE_DB_NAME,
+            url: Environment.MONGO_URL,
+            databaseName: Environment.CABBAGE_DB_NAME,
             options: {
                 useNewUrlParser: true, // removes a deprecation warning when connecting
                 useUnifiedTopology: true, // removes a deprecating warning when connecting

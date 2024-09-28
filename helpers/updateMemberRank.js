@@ -1,7 +1,7 @@
 // TODO: Pull these out to another location
 
-const { Configuration } = require('../services/configuration.js');
-const config2 = require('../config.json');
+const { Environment } = require('../services/environment.js');
+const Configuration = require('../config.json');
 const mapPointsToRank = require('./mapPointsToRank.js');
 const models = require('../models');
 const { getWOMClient } = require('../config/wom.js');
@@ -9,15 +9,15 @@ const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 async function updateMemberRank(memberDiscordId, discordClient) {
     const roleMap = {
-        Jade: Configuration.JADE_RANK_ID,
-        'Red Topaz': Configuration.RED_TOPAZ_RANK_ID,
-        Sapphire: Configuration.SAPPHIRE_RANK_ID,
-        Emerald: Configuration.EMERALD_RANK_ID,
-        Ruby: Configuration.RUBY_RANK_ID,
-        Diamond: Configuration.DIAMOND_RANK_ID,
-        'Dragon Stone': Configuration.DRAGON_STONE_RANK_ID,
-        Onyx: Configuration.ONYX_RANK_ID,
-        Zenyte: Configuration.ZENYTE_RANK_ID,
+        Jade: Environment.JADE_RANK_ID,
+        'Red Topaz': Environment.RED_TOPAZ_RANK_ID,
+        Sapphire: Environment.SAPPHIRE_RANK_ID,
+        Emerald: Environment.EMERALD_RANK_ID,
+        Ruby: Environment.RUBY_RANK_ID,
+        Diamond: Environment.DIAMOND_RANK_ID,
+        'Dragon Stone': Environment.DRAGON_STONE_RANK_ID,
+        Onyx: Environment.ONYX_RANK_ID,
+        Zenyte: Environment.ZENYTE_RANK_ID,
     };
 
     let memberData;
@@ -44,21 +44,22 @@ async function updateMemberRank(memberDiscordId, discordClient) {
     // Calculate current cabbages
     let cabbageCount =
         playerDetails.ehp + playerDetails.ehb + memberData.eventCabbages;
-    if (memberData.accountProgression.max) cabbageCount += config2.maxCabbages;
+    if (memberData.accountProgression.max)
+        cabbageCount += Configuration.maxCabbages;
     if (memberData.accountProgression.inferno)
-        cabbageCount += config2.infernoCabbages;
+        cabbageCount += Configuration.infernoCabbages;
     if (memberData.accountProgression.quiver)
-        cabbageCount += config2.quiverCabbages;
+        cabbageCount += Configuration.quiverCabbages;
     if (memberData.accountProgression.blorva)
-        cabbageCount += config2.blorvaCabbages;
+        cabbageCount += Configuration.blorvaCabbages;
     if (memberData.accountProgression.questCape)
-        cabbageCount += config2.questCapeCabbages;
+        cabbageCount += Configurationnfig2.questCapeCabbages;
     cabbageCount +=
         Math.floor(memberData.accountProgression.clogSlots / 100) * 20;
     cabbageCount +=
-        config2.caTierCabbages[memberData.accountProgression.caTier] || 0;
+        Configuration.caTierCabbages[memberData.accountProgression.caTier] || 0;
     cabbageCount +=
-        config2.adTierCabbages[memberData.accountProgression.adTier] || 0;
+        Configuration.adTierCabbages[memberData.accountProgression.adTier] || 0;
     memberData.currentCabbages = cabbageCount;
 
     let newRank = null;
@@ -75,7 +76,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         // Update member's discord role
         try {
             discordGuild = await discordClient.guilds.fetch(
-                Configuration.GUILD_ID
+                Environment.GUILD_ID
             );
             discordMember = await discordGuild.members.fetch(memberDiscordId);
             await discordMember.roles.remove(Object.values(roleMap));
@@ -83,7 +84,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
 
             // Log that user's discord rank was changed
             const logChannel = discordClient.channels.cache.get(
-                Configuration.LOG_CHANNEL_ID
+                Environment.LOG_CHANNEL_ID
             );
             logChannel.send(
                 `${discordClient.users.cache
@@ -103,7 +104,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         const row = new ActionRowBuilder().addComponents(complete);
 
         const rankUpdatesChannel = discordClient.channels.cache.get(
-            Configuration.RANK_UPDATES_CHANNEL
+            Environment.RANK_UPDATES_CHANNEL
         );
         rankUpdatesChannel.send({
             content: `${discordClient.users.cache

@@ -1,6 +1,6 @@
 const { Events } = require('discord.js');
 
-const { Configuration } = require('../services/configuration');
+const { Environment } = require('../services/environment');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -30,7 +30,7 @@ module.exports = {
                 await interaction.message.delete();
 
                 const logChannel = interaction.client.channels.cache.get(
-                    Configuration.LOG_CHANNEL_ID
+                    Environment.LOG_CHANNEL_ID
                 );
                 logChannel.send(
                     `${interaction.member.toString()} marked the following complete: \n    "${interaction.message.toString()}"`

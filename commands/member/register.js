@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 
-const { Configuration } = require('../../services/configuration.js');
+const { Environment } = require('../../services/environment');
 const models = require('../../models');
 const { getWOMClient } = require('../../config/wom.js');
 const updateMemberRank = require('../../helpers/updateMemberRank.js');
@@ -97,7 +97,7 @@ module.exports = {
 
         // Send log message that user was registered
         const logChannel = interaction.client.channels.cache.get(
-            Configuration.LOG_CHANNEL_ID
+            Environment.LOG_CHANNEL_ID
         );
         logChannel.send(
             `${interaction.member.toString()} has registered for the rank system using the RSN: \`${rsn}\``
