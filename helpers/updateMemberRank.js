@@ -54,7 +54,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
     if (memberData.accountProgression.blorva)
         cabbageCount += Configuration.blorvaCabbages;
     if (memberData.accountProgression.questCape)
-        cabbageCount += Configurationnfig2.questCapeCabbages;
+        cabbageCount += Configuration.questCapeCabbages;
     cabbageCount +=
         Math.floor(memberData.accountProgression.clogSlots / 100) * 20;
     cabbageCount +=
