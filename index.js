@@ -10,6 +10,4 @@ const scheduler = require('./services/scheduler');
     await wiseoldman.initialize();
     await discord.initialize();
     await scheduler.initialize();
-
-    console.log('TEST!! ;)');
 })();

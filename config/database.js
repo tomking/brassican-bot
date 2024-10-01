@@ -16,6 +16,10 @@ const initialize = async () => {
         mongodb: {
             url: Environment.MONGO_URL,
             databaseName: Environment.CABBAGE_DB_NAME,
+            options: {
+                useNewUrlParser: true, // removes a deprecation warning when connecting
+                useUnifiedTopology: true, // removes a deprecating warning when connecting
+            },
         },
         migrationsDir: 'migrations',
         changelogCollectionName: 'changelog',
