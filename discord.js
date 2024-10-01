@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { Configuration } = require('./services/configuration');
+const { Environment } = require('./services/environment');
 
 let client;
 
@@ -48,7 +48,7 @@ const initialize = async () => {
         }
     }
 
-    await client.login(Configuration.DISCORD_BOT_TOKEN);
+    await client.login(Environment.DISCORD_BOT_TOKEN);
 };
 
 const getDiscordClient = () => {

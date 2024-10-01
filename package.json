@@ -23,11 +23,12 @@
     },
     "homepage": "https://github.com/tomking/brassican-bot#readme",
     "dependencies": {
-        "@wise-old-man/utils": "^3.3.5",
-        "discord.js": "^14.16.2",
+        "@wise-old-man/utils": "^3.3.6",
+        "discord.js": "^14.16.3",
         "dotenv": "^16.4.5",
         "joi": "^17.13.3",
-        "mongoose": "^8.6.3",
+        "migrate-mongo": "^11.0.0",
+        "mongoose": "^8.7.0",
         "node-cron": "^3.0.3"
     },
     "devDependencies": {

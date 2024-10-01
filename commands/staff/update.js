@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 
-const { Configuration } = require('../../services/configuration.js');
+const { Environment } = require('../../services/environment');
 const updateMemberRank = require('../../helpers/updateMemberRank.js');
 
 module.exports = {
@@ -20,8 +20,8 @@ module.exports = {
         if (
             !interaction.member.roles.cache.some(
                 (role) =>
-                    role.id == Configuration.DISCORD_MOD_ROLE_ID ||
-                    role.id == Configuration.DISCORD_CA_ROLE_ID
+                    role.id == Environment.DISCORD_MOD_ROLE_ID ||
+                    role.id == Environment.DISCORD_CA_ROLE_ID
             )
         ) {
             await interaction.editReply(
@@ -40,7 +40,7 @@ module.exports = {
             updateMemberRank(discordID, interaction.client);
         } catch (error) {
             const logChannel = interaction.client.channels.cache.get(
-                Configuration.LOG_CHANNEL_ID
+                Environment.LOG_CHANNEL_ID
             );
 
             logChannel.send(
@@ -49,9 +49,14 @@ module.exports = {
                     .toString()}'s cabbage count encountered an error.`
             );
             console.log(error);
+            await interaction.editReply(
+                `The attempt to update member's cabbage count encountered an error.`
+            );
             return;
         }
-
+        await interaction.editReply(
+            `Member's cabbage count was successfully updated.`
+        );
         return;
     },
 };

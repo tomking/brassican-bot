@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 
-const { Configuration } = require('../../services/configuration');
+const { Environment } = require('../../services/environment');
 const models = require('../../models');
 const updateMemberRank = require('../../helpers/updateMemberRank.js');
 
@@ -19,6 +19,12 @@ module.exports = {
                 .setName('quantity')
                 .setDescription('The number of cabbages to give')
                 .setRequired(true)
+        )
+        .addStringOption((option) =>
+            option
+                .setName('reason')
+                .setDescription('cause of given cabbages')
+                .setRequired(false)
         ),
     async execute(interaction) {
         await interaction.deferReply({ ephemeral: true });
@@ -27,8 +33,8 @@ module.exports = {
         if (
             !interaction.member.roles.cache.some(
                 (role) =>
-                    role.id == Configuration.DISCORD_MOD_ROLE_ID ||
-                    role.id == Configuration.DISCORD_CA_ROLE_ID
+                    role.id == Environment.DISCORD_MOD_ROLE_ID ||
+                    role.id == Environment.DISCORD_CA_ROLE_ID
             )
         ) {
             await interaction.editReply(
@@ -61,8 +67,7 @@ module.exports = {
             return;
         }
 
-        memberData.itemizedCabbages.extra +=
-            interaction.options.getInteger('quantity');
+        memberData.eventCabbages += interaction.options.getInteger('quantity');
 
         await memberData.save();
 
@@ -78,16 +83,21 @@ module.exports = {
 
         // Send log message
         const logChannel = interaction.client.channels.cache.get(
-            Configuration.LOG_CHANNEL_ID
-        );
-        logChannel.send(
-            `${interaction.options
-                .getUser('user')
-                .toString()} has been awarded ${interaction.options.getInteger(
-                'quantity'
-            )} cabbages by ${interaction.member.toString()}`
+            Environment.LOG_CHANNEL_ID
         );
 
+        const userName = interaction.options.getUser('user').toString();
+        const amount = interaction.options.getInteger('quantity');
+        const approvingMod = interaction.member.toString();
+        let reason = interaction.options.getString('reason');
+        if (reason == null) {
+            reason = 'with no reason given';
+        } else {
+            reason = 'with reason: ' + reason;
+        }
+        logChannel.send(
+            `${userName} has been awarded ${amount} cabbages by ${approvingMod} ${reason}`
+        );
         return;
     },
 };

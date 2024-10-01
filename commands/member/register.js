@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 
-const { Configuration } = require('../../services/configuration.js');
+const { Environment } = require('../../services/environment');
 const models = require('../../models');
 const { getWOMClient } = require('../../config/wom.js');
 const updateMemberRank = require('../../helpers/updateMemberRank.js');
@@ -84,20 +84,8 @@ module.exports = {
         }
 
         const newMember = new models.Member({
-            discordID: discordID,
             womID: womResult.id,
-            currentCabbages: 0,
-            currentRank: null,
-            miscCabbages: 0,
-            registeredDate: new Date(),
-            itemizedCabbages: {
-                extra: 0,
-                clog: 0,
-                ca: 0,
-                ad: 0,
-                max: 0,
-                inferno: 0,
-            },
+            discordID: discordID,
         });
 
         await newMember.save();
@@ -109,10 +97,10 @@ module.exports = {
 
         // Send log message that user was registered
         const logChannel = interaction.client.channels.cache.get(
-            Configuration.LOG_CHANNEL_ID
+            Environment.LOG_CHANNEL_ID
         );
         logChannel.send(
-            `${interaction.member.toString()} has registered for the rank system using the RSN: ${rsn}`
+            `${interaction.member.toString()} has registered for the rank system using the RSN: \`${rsn}\``
         );
 
         return;
