@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { config, database, down, up } = require('migrate-mongo');
+const { config, database, up } = require('migrate-mongo');
 
 const { Environment } = require('../services/environment');
 
