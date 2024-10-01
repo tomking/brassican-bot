@@ -231,16 +231,6 @@ module.exports = {
 
         // Update memberData based on submission
         switch (interaction.options.getSubcommand()) {
-            case 'max-cape':
-                submissionLogString = 'max cape completion';
-                memberData.accountProgression.max = true;
-                break;
-
-            case 'infernal-cape':
-                submissionLogString = 'inferno completion';
-                memberData.accountProgression.inferno = true;
-                break;
-
             case 'quiver':
                 submissionLogString = 'quiver completion';
                 memberData.accountProgression.quiver = true;

@@ -40,6 +40,12 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         return;
     }
 
+    memberData.accountProgression.inferno =
+        playerDetails?.latestSnapshot?.data?.bosses?.['tzkal_zuk']?.kills >= 1;
+
+    memberData.accountProgression.max =
+        playerDetails?.latestSnapshot?.data?.skills?.overall?.level === 2277;
+
     memberData.currentCabbages = calculateCurrentCabbages(
         memberData,
         playerDetails
