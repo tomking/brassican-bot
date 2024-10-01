@@ -1,6 +1,6 @@
 const { Environment } = require('../services/environment.js');
-const Configuration = require('../config.json');
 const mapPointsToRank = require('./mapPointsToRank.js');
+const calculateCurrentCabbages = require('calculateCabbages.js');
 const models = require('../models');
 const { getWOMClient } = require('../config/wom.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
@@ -43,7 +43,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
     memberData.currentCabbages = calculateCurrentCabbages(
         memberData,
         playerDetails
-    );
+    ).reduce((acc, val) => acc + val, 0);
 
     let newRank = null;
 
@@ -95,38 +95,6 @@ async function updateMemberRank(memberDiscordId, discordClient) {
 
     await memberData.save();
     return;
-}
-
-// Maybe move this into a separate helper module in the future?
-function calculateCurrentCabbages(memberData, playerDetails) {
-    let cabbageCount =
-        playerDetails.ehp + playerDetails.ehb + memberData.eventCabbages;
-
-    if (memberData.accountProgression.max)
-        cabbageCount += Configuration.maxCabbages;
-
-    if (memberData.accountProgression.inferno)
-        cabbageCount += Configuration.infernoCabbages;
-
-    if (memberData.accountProgression.quiver)
-        cabbageCount += Configuration.quiverCabbages;
-
-    if (memberData.accountProgression.blorva)
-        cabbageCount += Configuration.blorvaCabbages;
-
-    if (memberData.accountProgression.questCape)
-        cabbageCount += Configuration.questCapeCabbages;
-
-    cabbageCount +=
-        Math.floor(memberData.accountProgression.clogSlots / 100) * 20;
-
-    cabbageCount +=
-        Configuration.caTierCabbages[memberData.accountProgression.caTier] || 0;
-
-    cabbageCount +=
-        Configuration.adTierCabbages[memberData.accountProgression.adTier] || 0;
-
-    return cabbageCount;
 }
 
 module.exports = updateMemberRank;
