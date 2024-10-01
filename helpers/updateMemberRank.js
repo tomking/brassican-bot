@@ -1,5 +1,3 @@
-// TODO: Pull these out to another location
-
 const { Environment } = require('../services/environment.js');
 const Configuration = require('../config.json');
 const mapPointsToRank = require('./mapPointsToRank.js');
