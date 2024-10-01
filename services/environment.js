@@ -1,7 +1,7 @@
 const joi = require('joi');
 const dotenv = require('dotenv');
 
-const CONFIGURATION_SCHEMA = joi
+const ENVIRONMENT_SCHEMA = joi
     .object({
         DISCORD_BOT_TOKEN: joi.string().required(),
         DISCORD_APP_ID: joi.string().required(),
@@ -30,7 +30,7 @@ const CONFIGURATION_SCHEMA = joi
 
 const initialize = async () => {
     dotenv.config();
-    const { error } = CONFIGURATION_SCHEMA.validate(process.env);
+    const { error } = ENVIRONMENT_SCHEMA.validate(process.env);
 
     if (error) {
         throw new Error(error.message);
@@ -39,7 +39,7 @@ const initialize = async () => {
 
 module.exports = {
     initialize,
-    get Configuration() {
+    get Environment() {
         return process.env;
     },
 };

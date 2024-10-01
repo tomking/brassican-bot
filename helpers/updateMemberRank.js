@@ -1,4 +1,5 @@
-const { Configuration } = require('../services/configuration.js');
+const { Environment } = require('../services/environment.js');
+const Configuration = require('../config.json');
 const mapPointsToRank = require('./mapPointsToRank.js');
 const models = require('../models');
 const { getWOMClient } = require('../config/wom.js');
@@ -7,15 +8,15 @@ const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 async function updateMemberRank(memberDiscordId, discordClient) {
     // TODO: Pull these out to another location
     const roleMap = {
-        Jade: Configuration.JADE_RANK_ID,
-        'Red Topaz': Configuration.RED_TOPAZ_RANK_ID,
-        Sapphire: Configuration.SAPPHIRE_RANK_ID,
-        Emerald: Configuration.EMERALD_RANK_ID,
-        Ruby: Configuration.RUBY_RANK_ID,
-        Diamond: Configuration.DIAMOND_RANK_ID,
-        'Dragon Stone': Configuration.DRAGON_STONE_RANK_ID,
-        Onyx: Configuration.ONYX_RANK_ID,
-        Zenyte: Configuration.ZENYTE_RANK_ID,
+        Jade: Environment.JADE_RANK_ID,
+        'Red Topaz': Environment.RED_TOPAZ_RANK_ID,
+        Sapphire: Environment.SAPPHIRE_RANK_ID,
+        Emerald: Environment.EMERALD_RANK_ID,
+        Ruby: Environment.RUBY_RANK_ID,
+        Diamond: Environment.DIAMOND_RANK_ID,
+        'Dragon Stone': Environment.DRAGON_STONE_RANK_ID,
+        Onyx: Environment.ONYX_RANK_ID,
+        Zenyte: Environment.ZENYTE_RANK_ID,
     };
 
     let memberData;
@@ -39,15 +40,12 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         return;
     }
 
-    memberData.currentCabbages = Object.values(
-        memberData.itemizedCabbages
-    ).reduce((acc, val) => acc + val, playerDetails.ehp + playerDetails.ehb);
+    memberData.currentCabbages = calculateCurrentCabbages(
+        memberData,
+        playerDetails
+    );
 
     let newRank = null;
-    // TODO: Date gating is still currently disabled. Waiting on decision re: what we want to do.
-    if (new Date() - memberData.registeredDate < 30 * 24 * 60 * 60 * 1000) {
-        newRank = mapPointsToRank(0);
-    }
 
     newRank = mapPointsToRank(memberData.currentCabbages);
 
@@ -57,7 +55,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         // Update member's discord role
         try {
             discordGuild = await discordClient.guilds.fetch(
-                Configuration.GUILD_ID
+                Environment.GUILD_ID
             );
             discordMember = await discordGuild.members.fetch(memberDiscordId);
             await discordMember.roles.remove(Object.values(roleMap));
@@ -65,7 +63,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
 
             // Log that user's discord rank was changed
             const logChannel = discordClient.channels.cache.get(
-                Configuration.LOG_CHANNEL_ID
+                Environment.LOG_CHANNEL_ID
             );
             logChannel.send(
                 `${discordClient.users.cache
@@ -85,7 +83,7 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         const row = new ActionRowBuilder().addComponents(complete);
 
         const rankUpdatesChannel = discordClient.channels.cache.get(
-            Configuration.RANK_UPDATES_CHANNEL
+            Environment.RANK_UPDATES_CHANNEL
         );
         rankUpdatesChannel.send({
             content: `${discordClient.users.cache
@@ -97,6 +95,38 @@ async function updateMemberRank(memberDiscordId, discordClient) {
 
     await memberData.save();
     return;
+}
+
+// Maybe move this into a separate helper module in the future?
+function calculateCurrentCabbages(memberData, playerDetails) {
+    let cabbageCount =
+        playerDetails.ehp + playerDetails.ehb + memberData.eventCabbages;
+
+    if (memberData.accountProgression.max)
+        cabbageCount += Configuration.maxCabbages;
+
+    if (memberData.accountProgression.inferno)
+        cabbageCount += Configuration.infernoCabbages;
+
+    if (memberData.accountProgression.quiver)
+        cabbageCount += Configuration.quiverCabbages;
+
+    if (memberData.accountProgression.blorva)
+        cabbageCount += Configuration.blorvaCabbages;
+
+    if (memberData.accountProgression.questCape)
+        cabbageCount += Configuration.questCapeCabbages;
+
+    cabbageCount +=
+        Math.floor(memberData.accountProgression.clogSlots / 100) * 20;
+
+    cabbageCount +=
+        Configuration.caTierCabbages[memberData.accountProgression.caTier] || 0;
+
+    cabbageCount +=
+        Configuration.adTierCabbages[memberData.accountProgression.adTier] || 0;
+
+    return cabbageCount;
 }
 
 module.exports = updateMemberRank;

@@ -2,7 +2,7 @@ const { REST, Routes } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const { initialize, Configuration } = require('./services/configuration');
+const { initialize, Environment } = require('./services/environment');
 
 initialize();
 
@@ -31,7 +31,7 @@ for (const folder of commandFolders) {
 }
 
 // Construct and prepare an instance of the REST module
-const rest = new REST().setToken(Configuration.DISCORD_BOT_TOKEN);
+const rest = new REST().setToken(Environment.DISCORD_BOT_TOKEN);
 
 // Deploy commands
 (async () => {
@@ -41,7 +41,7 @@ const rest = new REST().setToken(Configuration.DISCORD_BOT_TOKEN);
         );
 
         const data = await rest.put(
-            Routes.applicationCommands(Configuration.DISCORD_APP_ID),
+            Routes.applicationCommands(Environment.DISCORD_APP_ID),
             { body: commands }
         );
 
