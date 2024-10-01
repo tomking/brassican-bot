@@ -55,7 +55,7 @@ module.exports = {
             return;
         }
         await interaction.editReply(
-            `Member's cabbage count was succesfully updated.`
+            `Member's cabbage count was successfully updated.`
         );
         return;
     },
