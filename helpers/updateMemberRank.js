@@ -40,26 +40,10 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         return;
     }
 
-    // Calculate current cabbages
-    let cabbageCount =
-        playerDetails.ehp + playerDetails.ehb + memberData.eventCabbages;
-    if (memberData.accountProgression.max)
-        cabbageCount += Configuration.maxCabbages;
-    if (memberData.accountProgression.inferno)
-        cabbageCount += Configuration.infernoCabbages;
-    if (memberData.accountProgression.quiver)
-        cabbageCount += Configuration.quiverCabbages;
-    if (memberData.accountProgression.blorva)
-        cabbageCount += Configuration.blorvaCabbages;
-    if (memberData.accountProgression.questCape)
-        cabbageCount += Configuration.questCapeCabbages;
-    cabbageCount +=
-        Math.floor(memberData.accountProgression.clogSlots / 100) * 20;
-    cabbageCount +=
-        Configuration.caTierCabbages[memberData.accountProgression.caTier] || 0;
-    cabbageCount +=
-        Configuration.adTierCabbages[memberData.accountProgression.adTier] || 0;
-    memberData.currentCabbages = cabbageCount;
+    memberData.currentCabbages = calculateCurrentCabbages(
+        memberData,
+        playerDetails
+    );
 
     let newRank = null;
 
@@ -111,6 +95,38 @@ async function updateMemberRank(memberDiscordId, discordClient) {
 
     await memberData.save();
     return;
+}
+
+// Maybe move this into a separate helper module in the future?
+function calculateCurrentCabbages(memberData, playerDetails) {
+    let cabbageCount =
+        playerDetails.ehp + playerDetails.ehb + memberData.eventCabbages;
+
+    if (memberData.accountProgression.max)
+        cabbageCount += Configuration.maxCabbages;
+
+    if (memberData.accountProgression.inferno)
+        cabbageCount += Configuration.infernoCabbages;
+
+    if (memberData.accountProgression.quiver)
+        cabbageCount += Configuration.quiverCabbages;
+
+    if (memberData.accountProgression.blorva)
+        cabbageCount += Configuration.blorvaCabbages;
+
+    if (memberData.accountProgression.questCape)
+        cabbageCount += Configuration.questCapeCabbages;
+
+    cabbageCount +=
+        Math.floor(memberData.accountProgression.clogSlots / 100) * 20;
+
+    cabbageCount +=
+        Configuration.caTierCabbages[memberData.accountProgression.caTier] || 0;
+
+    cabbageCount +=
+        Configuration.adTierCabbages[memberData.accountProgression.adTier] || 0;
+
+    return cabbageCount;
 }
 
 module.exports = updateMemberRank;
