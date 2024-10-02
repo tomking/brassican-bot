@@ -3,6 +3,13 @@ const { getDiscordClient } = require('../../discord');
 const { calculateCurrentCabbages } = require('../../helpers/calculateCabbages');
 const models = require('../../models');
 
+const findEmoji = (client, name) => {
+    emoji = client.emojis.cache.find(
+        (emoji) => emoji.name.toLowerCase() === name.toLowerCase()
+    );
+    return emoji || 0;
+};
+
 const capitalize = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 };
@@ -14,19 +21,15 @@ const inlinefield = (name, value) => ({
 });
 
 const cabbageEmbed = (interaction, memberData) => {
-    // TODO: create a function to search emojis which online compares their lowercase name
     const client = getDiscordClient();
     const { accountProgression: account } = memberData;
     // Generate all neccesary info
     const { nickname } = interaction.member;
-    const checkmark = client.emojis.cache.find(
-        (emoji) => emoji.name === 'check'
-    );
+    const checkmark = findEmoji(client, 'check');
     const rankEmojiName = `${memberData.currentRank
         .toLowerCase()
         .replace(/ /g, '')}Gem`;
-    const rankEmoji =
-        client.emojis.cache.find((emoji) => emoji.name === rankEmojiName) || '';
+    const rankEmoji = findEmoji(client, rankEmojiName);
     const cabbages = Math.floor(memberData.currentCabbages);
     const cabbageBreakdown = calculateCurrentCabbages(memberData);
     // Generate embed fields
@@ -35,77 +38,61 @@ const cabbageEmbed = (interaction, memberData) => {
     const cabbagesText = [];
     let currEmoji;
     if (true) {
-        currEmoji = client.emojis.cache.find(
-            (emoji) => emoji.name === 'cabbageclassic'
-        );
+        currEmoji = findEmoji(client, 'cabbageclassic');
         achievementText.push(`${currEmoji} EHP + EHB`);
         statusText.push('-');
         cabbagesText.push(cabbageBreakdown.core);
     }
     if (memberData.eventCabbages > 0) {
-        currEmoji = client.emojis.cache.find((emoji) => emoji.name === 'BINGO');
+        currEmoji = findEmoji(client, 'bingo');
         achievementText.push(`${currEmoji} Events`);
         statusText.push('-');
         cabbagesText.push(memberData.eventCabbages);
     }
     if (account.max) {
-        currEmoji = client.emojis.cache.find(
-            (emoji) => emoji.name === 'maxCape'
-        );
+        currEmoji = findEmoji(client, 'maxcape');
         achievementText.push(`${currEmoji} Maxed`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.max);
     }
     if (account.inferno) {
-        currEmoji = client.emojis.cache.find(
-            (emoji) => emoji.name === 'infernoCape'
-        );
+        currEmoji = findEmoji(client, 'infernocape');
         achievementText.push(`${currEmoji} Inferno`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.inferno);
     }
     if (account.quiver) {
-        currEmoji = client.emojis.cache.find(
-            (emoji) => emoji.name === 'Quiver'
-        );
+        currEmoji = findEmoji(client, 'quiver');
         achievementText.push(`${currEmoji} Quiver`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.quiver);
     }
     if (account.blorva) {
-        currEmoji = client.emojis.cache.find(
-            (emoji) => emoji.name === 'uwuemoji'
-        );
+        currEmoji = findEmoji(client, 'uwuemoji');
         achievementText.push(`${currEmoji} Blorva`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.blorva);
     }
     if (account.questCape) {
-        currEmoji = client.emojis.cache.find((emoji) => emoji.name === 'dogo');
+        currEmoji = findEmoji(client, 'questpoint');
         achievementText.push(`${currEmoji} Quest Cape`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.questCape);
     }
     if (account.clogSlots > 0) {
-        currEmoji = client.emojis.cache.find(
-            (emoji) => emoji.name === 'Collection_log'
-        );
+        currEmoji = findEmoji(client, 'collection_log');
         achievementText.push(`${currEmoji} Clog slots`);
         statusText.push(account.clogSlots);
         cabbagesText.push(cabbageBreakdown.clogSlots);
     }
     if (account.caTier) {
-        currEmoji = client.emojis.cache.find(
-            (emoji) => emoji.name === 'Combat_achievements'
-        );
+        currEmoji = findEmoji(client, 'combat_achievements');
         achievementText.push(`${currEmoji} CA's`);
         statusText.push(capitalize(account.caTier));
         cabbagesText.push(cabbageBreakdown.caTier);
     }
     if (account.adTier) {
-        currEmoji = client.emojis.cache.find(
-            (emoji) => emoji.name === 'Achievement_Diaries'
-        );
+        currEmoji = findEmoji(client, 'achievement_diaries');
         achievementText.push(`${currEmoji} AD's`);
         statusText.push(capitalize(account.adTier));
         cabbagesText.push(cabbageBreakdown.adTier);
