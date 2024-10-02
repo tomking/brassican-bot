@@ -27,4 +27,4 @@ function calculateCurrentCabbages(memberData, playerDetails) {
     return cabbageBreakdown;
 }
 
-module.exports = calculateCurrentCabbages;
+module.exports = { calculateCurrentCabbages };
