@@ -23,7 +23,8 @@ function calculateCurrentCabbages(memberData, playerDetails) {
     cabbageBreakdown.core =
         playerDetails === undefined
             ? memberData.currentCabbages - sum
-            : Math.floor(playerDetails.ehp + playerDetails.ehb);
+            : playerDetails.ehp + playerDetails.ehb;
+    cabbageBreakdown.core = Math.floor(cabbageBreakdown.core);
     return cabbageBreakdown;
 }
 
