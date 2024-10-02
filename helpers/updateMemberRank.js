@@ -1,6 +1,6 @@
 const { Environment } = require('../services/environment.js');
 const mapPointsToRank = require('./mapPointsToRank.js');
-const calculateCurrentCabbages = require('./calculateCabbages.js');
+const { calculateCurrentCabbages } = require('./calculateCabbages.js');
 const models = require('../models');
 const { getWOMClient } = require('../config/wom.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
