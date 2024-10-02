@@ -7,7 +7,7 @@ const findEmoji = (client, name) => {
     emoji = client.emojis.cache.find(
         (emoji) => emoji.name.toLowerCase() === name.toLowerCase()
     );
-    return emoji || 0;
+    return emoji || '';
 };
 
 const capitalize = (string) => {
