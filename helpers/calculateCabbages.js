@@ -29,8 +29,8 @@ function getCabbageBreakdown(memberData, playerDetails) {
 }
 
 const cabbagesUntilNext = (currentAmount) => {
-    for (i of Configuration.rankCutoffs) {
-        if (i > currentAmount) return i - currentAmount;
+    for (const threshold of Configuration.rankCutoffs) {
+        if (threshold > currentAmount) return threshold - currentAmount;
     }
     return 'N/A'; // More cabbages than highest rank
 };

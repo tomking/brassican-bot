@@ -7,7 +7,7 @@ const {
 const models = require('../../models');
 
 const findEmoji = (client, name) => {
-    emoji = client.emojis.cache.find(
+    const emoji = client.emojis.cache.find(
         (emoji) => emoji.name.toLowerCase() === name.toLowerCase()
     );
     return emoji || '';
@@ -17,17 +17,16 @@ const capitalize = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 };
 
-const inlinefield = (name, value) => ({
+const embedfield = (name, value, inline) => ({
     name: name || ' ',
     value: value || ' ',
-    inline: true,
+    inline: inline || false,
 });
 
 const cabbageEmbed = (member, memberData) => {
     const client = getDiscordClient();
     const { accountProgression: account } = memberData;
     // Generate all neccesary info
-    const { nickname } = member;
     const checkmark = findEmoji(client, 'check');
     const rankEmojiName = `${memberData.currentRank
         .toLowerCase()
@@ -36,18 +35,16 @@ const cabbageEmbed = (member, memberData) => {
     const cabbages = Math.floor(memberData.currentCabbages);
     const cabbageBreakdown = getCabbageBreakdown(memberData);
     const untilNextTier = cabbagesUntilNext(cabbages);
-    const date_unix = Math.floor(Date.parse(memberData.updatedAt) / 1000);
+    const timestamp = Math.floor(Date.parse(memberData.updatedAt) / 1000);
     // Generate embed fields
     const achievementText = [];
     const statusText = [];
     const cabbagesText = [];
     let currEmoji;
-    if (true) {
-        currEmoji = findEmoji(client, 'cabbageclassic');
-        achievementText.push(`${currEmoji} EHP + EHB`);
-        statusText.push('-');
-        cabbagesText.push(cabbageBreakdown.core);
-    }
+    currEmoji = findEmoji(client, 'cabbageclassic');
+    achievementText.push(`${currEmoji} EHP + EHB`);
+    statusText.push('-');
+    cabbagesText.push(cabbageBreakdown.core);
     if (memberData.eventCabbages !== 0) {
         currEmoji = findEmoji(client, 'bingo');
         achievementText.push(`${currEmoji} Events`);
@@ -103,22 +100,17 @@ const cabbageEmbed = (member, memberData) => {
         cabbagesText.push(cabbageBreakdown.adTier);
     }
     // Generate embed
+    const nickname = capitalize(member.nickname);
     const embed = new EmbedBuilder()
         .addFields(
-            {
-                name: `${rankEmoji}  ${capitalize(nickname)}'s profile`,
-                value: ' ',
-            },
-            inlinefield('', '**Current cabbages**:\n**Until next tier**:'),
-            inlinefield('', `${cabbages}\n${untilNextTier}`),
-            inlinefield('', ''),
-            inlinefield('Achievements', achievementText.join('\n')),
-            inlinefield('Status', statusText.join('\n')),
-            inlinefield('Cabbages', cabbagesText.join('\n')),
-            {
-                name: ' ',
-                value: `**Last updated**: <t:${date_unix}>`,
-            }
+            embedfield(`${rankEmoji}  ${nickname}'s profile`, ''),
+            embedfield('', '**Current cabbages**:\n**Until next tier**:', true),
+            embedfield('', `${cabbages}\n${untilNextTier}`, true),
+            embedfield('', '', true),
+            embedfield('Achievements', achievementText.join('\n'), true),
+            embedfield('Status', statusText.join('\n'), true),
+            embedfield('Cabbages', cabbagesText.join('\n'), true),
+            embedfield('', `**Last updated**: <t:${timestamp}>`)
         )
         .setColor('#11ff00')
         .setFooter({
