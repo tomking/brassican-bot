@@ -1,4 +1,11 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {
+    SlashCommandBuilder,
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ComponentType,
+} = require('discord.js');
 const { getDiscordClient } = require('../../discord');
 const {
     getCabbageBreakdown,
@@ -17,11 +24,107 @@ const capitalize = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 };
 
+const pad = (input, spaces) => {
+    // Make sure input is converted to a string
+    const string = typeof input === 'string' ? input : input.toString();
+    if (string.length == spaces) {
+        return string;
+    } else if (spaces - string.length == 1) {
+        return pad(string + ' ', spaces);
+    } else if (spaces - string.length >= 2) {
+        return pad(' ' + string + ' ', spaces);
+    } else {
+        // string.length > spaces
+        return ' '.repeat(spaces);
+    }
+};
+
 const embedfield = (name, value, inline) => ({
     name: name || ' ',
     value: value || ' ',
     inline: inline || false,
 });
+
+const mobileBreakdown = (member, memberData) => {
+    const client = getDiscordClient();
+    const { accountProgression: account } = memberData;
+    // Generate all neccesary info
+    const rankEmojiName = `${memberData.currentRank
+        .toLowerCase()
+        .replace(/ /g, '')}Gem`;
+    const rankEmoji = findEmoji(client, rankEmojiName);
+    const cabbages = Math.floor(memberData.currentCabbages);
+    const cabbageBreakdown = getCabbageBreakdown(memberData);
+    const timestamp = Math.floor(Date.parse(memberData.updatedAt) / 1000);
+    const nickname = capitalize(member.nickname);
+    const nextTierAmount = cabbagesUntilNext(cabbages);
+    const nextTierText = nextTierAmount > 0 ? nextTierAmount.toString() : 'N/A';
+    // Generate text block
+    const textArray = [
+        `# ${rankEmoji}  ${nickname}'s profile`,
+        ' ',
+        `Current cabbages: ${cabbages}`,
+        `Cabbages until next tier: ${nextTierText}`,
+        `Last updated: <t:${timestamp}>\`\`\``,
+        '╔══════════════╦════════╦══════════╗',
+        '║ Achievements ║ Status ║ Cabbages ║',
+        '╠══════════════╩════════╩══════════╣',
+        `║   EHP + EHB  |        |${pad(cabbageBreakdown.core, 10)}║`,
+    ];
+    if (memberData.eventCabbages !== 0) {
+        const eventCabbages = pad(cabbageBreakdown.eventCabbages, 10);
+        textArray.push('╠--------------+--------+----------╣');
+        textArray.push(`║    Events    |        |${eventCabbages}║`);
+    }
+    if (account.max) {
+        const maxedCabbages = pad(cabbageBreakdown.max, 10);
+        textArray.push('╠--------------+--------+----------╣');
+        textArray.push(`║     Maxed    |   ok   |${maxedCabbages}║`);
+    }
+    if (account.inferno) {
+        const infernoCabbages = pad(cabbageBreakdown.inferno, 10);
+        textArray.push('╠--------------+--------+----------╣');
+        textArray.push(`║    Inferno   |   ok   |${infernoCabbages}║`);
+    }
+    if (account.quiver) {
+        const quiverCabbages = pad(cabbageBreakdown.quiver, 10);
+        textArray.push('╠--------------+--------+----------╣');
+        textArray.push(`║    Quiver    |   ok   |${quiverCabbages}║`);
+    }
+    if (account.blorva) {
+        const blorvaCabbages = pad(cabbageBreakdown.blorva, 10);
+        textArray.push('╠--------------+--------+----------╣');
+        textArray.push(`║    Blorva    |   ok   |${blorvaCabbages}║`);
+    }
+    if (account.questCape) {
+        const qpcCabbages = pad(cabbageBreakdown.questCape, 10);
+        textArray.push('╠--------------+--------+----------╣');
+        textArray.push(`║  Quest Cape  |   ok   |${qpcCabbages}║`);
+    }
+    if (account.adTier) {
+        const adCabbages = pad(cabbageBreakdown.adTier, 10);
+        const adTier = pad(account.adTier, 8);
+        textArray.push('╠--------------+--------+----------╣');
+        textArray.push(`║     AD's     |${adTier}|${adCabbages}║`);
+    }
+    if (account.caTier) {
+        const caCabbages = pad(cabbageBreakdown.caTier, 10);
+        const caTier = pad(
+            account.caTier === 'GRANDMASTER' ? 'GM' : account.caTier,
+            8
+        );
+        textArray.push('╠--------------+--------+----------╣');
+        textArray.push(`║     CA's     |${caTier}|${caCabbages}║`);
+    }
+    if (account.clogSlots > 0) {
+        const clogCabbages = pad(cabbageBreakdown.clogSlots, 10);
+        const clogAmount = pad(account.clogSlots, 8);
+        textArray.push('╠--------------+--------+----------╣');
+        textArray.push(`║  Clog slots  |${clogAmount}|${clogCabbages}║`);
+    }
+    textArray.push('╚══════════════════════════════════╝```');
+    return textArray.join('\n');
+};
 
 const cabbageEmbed = (member, memberData) => {
     const client = getDiscordClient();
@@ -105,7 +208,7 @@ const cabbageEmbed = (member, memberData) => {
     const nextTierText = nextTierAmount > 0 ? nextTierAmount.toString() : 'N/A';
     const embed = new EmbedBuilder()
         .addFields(
-            embedfield(`${rankEmoji}  ${nickname}'s profile`, ''),
+            embedfield(`${rankEmoji}  **${nickname}'s profile**`, ''),
             embedfield('', '**Current cabbages**:\n**Until next tier**:', true),
             embedfield('', `${cabbages}\n${nextTierText}`, true),
             embedfield('', '', true),
@@ -166,8 +269,28 @@ module.exports = {
             return;
         }
 
-        await interaction.editReply({
+        const button = new ButtonBuilder()
+            .setCustomId('mobileCabbageBreakdown')
+            .setLabel('Show mobile version?')
+            .setStyle(ButtonStyle.Secondary);
+        const row = new ActionRowBuilder().addComponents(button);
+
+        const reply = await interaction.editReply({
             embeds: [cabbageEmbed(member, memberData)],
+            components: [row],
+        });
+
+        const collector = reply.createMessageComponentCollector({
+            ComponentType: ComponentType.Button,
+            time: 60_000, // only wait for 60s
+        });
+
+        collector.on('collect', async (button) => {
+            await interaction.editReply({
+                content: mobileBreakdown(member, memberData),
+                embeds: [],
+                components: [],
+            });
         });
 
         return;
