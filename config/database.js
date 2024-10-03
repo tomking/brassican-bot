@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { config, database, down, up } = require('migrate-mongo');
+const { config, database, up } = require('migrate-mongo');
 
 const { Environment } = require('../services/environment');
 
@@ -16,10 +16,7 @@ const initialize = async () => {
         mongodb: {
             url: Environment.MONGO_URL,
             databaseName: Environment.CABBAGE_DB_NAME,
-            options: {
-                useNewUrlParser: true, // removes a deprecation warning when connecting
-                useUnifiedTopology: true, // removes a deprecating warning when connecting
-            },
+            options: {},
         },
         migrationsDir: 'migrations',
         changelogCollectionName: 'changelog',

@@ -1,4 +1,6 @@
 {
+    "rankCutoffs": [0, 100, 250, 500, 1000, 1500, 2500, 5000, 6500],
+    "rankNames": ["Jade","Red Topaz","Sapphire","Emerald","Ruby","Diamond","Dragon Stone","Onyx","Zenyte"],
     "maxCabbages": 100,
     "infernoCabbages": 100,
     "quiverCabbages": 100,
