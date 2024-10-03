@@ -6,6 +6,7 @@ function mapPointsToRank(points) {
             return rankNames[i];
         }
     }
+    return rankNames[0];
 }
 
 module.exports = mapPointsToRank;
