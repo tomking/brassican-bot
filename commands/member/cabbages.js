@@ -23,11 +23,11 @@ const inlinefield = (name, value) => ({
     inline: true,
 });
 
-const cabbageEmbed = (interaction, memberData) => {
+const cabbageEmbed = (member, memberData) => {
     const client = getDiscordClient();
     const { accountProgression: account } = memberData;
     // Generate all neccesary info
-    const { nickname } = interaction.member;
+    const { nickname } = member;
     const checkmark = findEmoji(client, 'check');
     const rankEmojiName = `${memberData.currentRank
         .toLowerCase()
@@ -133,10 +133,21 @@ const cabbageEmbed = (interaction, memberData) => {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('cabbages')
-        .setDescription('Get your current cabbage count!'),
+        .setDescription('Get your current cabbage count!')
+        .addUserOption((option) =>
+            option
+                .setName('member')
+                .setDescription(
+                    'The member you want to see the cabbage count of'
+                )
+                .setRequired(false)
+        ),
     async execute(interaction) {
         await interaction.deferReply({ ephemeral: true });
-        const discordID = interaction.user.id;
+        const member =
+            interaction?.options?.getMember('member') || interaction.member;
+        const discordID = member.id;
+        console.log(member.id);
 
         // Get user's information
         let memberData;
@@ -163,7 +174,7 @@ module.exports = {
         }
 
         await interaction.editReply({
-            embeds: [cabbageEmbed(interaction, memberData)],
+            embeds: [cabbageEmbed(member, memberData)],
         });
 
         return;
