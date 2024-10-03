@@ -32,7 +32,7 @@ const cabbagesUntilNext = (currentAmount) => {
     for (const threshold of Configuration.rankCutoffs) {
         if (threshold > currentAmount) return threshold - currentAmount;
     }
-    return 'N/A'; // More cabbages than highest rank
+    return -1; // More cabbages than highest rank
 };
 
 module.exports = { getCabbageBreakdown, cabbagesUntilNext };

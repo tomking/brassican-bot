@@ -34,7 +34,6 @@ const cabbageEmbed = (member, memberData) => {
     const rankEmoji = findEmoji(client, rankEmojiName);
     const cabbages = Math.floor(memberData.currentCabbages);
     const cabbageBreakdown = getCabbageBreakdown(memberData);
-    const untilNextTier = cabbagesUntilNext(cabbages);
     const timestamp = Math.floor(Date.parse(memberData.updatedAt) / 1000);
     // Generate embed fields
     const achievementText = [];
@@ -102,11 +101,13 @@ const cabbageEmbed = (member, memberData) => {
     }
     // Generate embed
     const nickname = capitalize(member.nickname);
+    const nextTierAmount = cabbagesUntilNext(cabbages);
+    const nextTierText = nextTierAmount > 0 ? nextTierAmount.toString() : 'N/A';
     const embed = new EmbedBuilder()
         .addFields(
             embedfield(`${rankEmoji}  ${nickname}'s profile`, ''),
             embedfield('', '**Current cabbages**:\n**Until next tier**:', true),
-            embedfield('', `${cabbages}\n${untilNextTier}`, true),
+            embedfield('', `${cabbages}\n${nextTierText}`, true),
             embedfield('', '', true),
             embedfield('Achievements', achievementText.join('\n'), true),
             embedfield('Status', statusText.join('\n'), true),
