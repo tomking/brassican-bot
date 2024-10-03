@@ -32,6 +32,7 @@ const cabbageEmbed = (interaction, memberData) => {
     const rankEmoji = findEmoji(client, rankEmojiName);
     const cabbages = Math.floor(memberData.currentCabbages);
     const cabbageBreakdown = calculateCurrentCabbages(memberData);
+    const date_unix = Math.floor(Date.parse(memberData.updatedAt) / 1000);
     // Generate embed fields
     const achievementText = [];
     const statusText = [];
@@ -109,7 +110,11 @@ const cabbageEmbed = (interaction, memberData) => {
             inlinefield('', ''),
             inlinefield('Achievements', achievementText.join('\n')),
             inlinefield('Status', statusText.join('\n')),
-            inlinefield('Cabbages', cabbagesText.join('\n'))
+            inlinefield('Cabbages', cabbagesText.join('\n')),
+            {
+                name: ' ',
+                value: `**Last updated**: <t:${date_unix}>`,
+            }
         )
         .setColor('#11ff00')
         .setFooter({
