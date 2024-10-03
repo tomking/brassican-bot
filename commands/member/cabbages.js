@@ -41,63 +41,63 @@ const cabbageEmbed = (member, memberData) => {
     const statusText = [];
     const cabbagesText = [];
     let currEmoji;
-    currEmoji = findEmoji(client, 'cabbageclassic');
-    achievementText.push(`${currEmoji} EHP + EHB`);
+    const emoji1 = findEmoji(client, 'cabbageclassic');
+    achievementText.push(`${emoji1} EHP + EHB`);
     statusText.push('-');
     cabbagesText.push(cabbageBreakdown.core);
     if (memberData.eventCabbages !== 0) {
-        currEmoji = findEmoji(client, 'bingo');
-        achievementText.push(`${currEmoji} Events`);
+        const emoji2 = findEmoji(client, 'bingo');
+        achievementText.push(`${emoji2} Events`);
         statusText.push('-');
         cabbagesText.push(memberData.eventCabbages);
     }
     if (account.max) {
-        currEmoji = findEmoji(client, 'maxcape');
-        achievementText.push(`${currEmoji} Maxed`);
+        const emoji3 = findEmoji(client, 'maxcape');
+        achievementText.push(`${emoji3} Maxed`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.max);
     }
     if (account.inferno) {
-        currEmoji = findEmoji(client, 'infernocape');
-        achievementText.push(`${currEmoji} Inferno`);
+        const emoji4 = findEmoji(client, 'infernocape');
+        achievementText.push(`${emoji4} Inferno`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.inferno);
     }
     if (account.quiver) {
-        currEmoji = findEmoji(client, 'quiver');
-        achievementText.push(`${currEmoji} Quiver`);
+        const emoji5 = findEmoji(client, 'quiver');
+        achievementText.push(`${emoji5} Quiver`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.quiver);
     }
     if (account.blorva) {
-        currEmoji = findEmoji(client, 'uwuemoji');
-        achievementText.push(`${currEmoji} Blorva`);
+        const emoji6 = findEmoji(client, 'uwuemoji');
+        achievementText.push(`${emoji6} Blorva`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.blorva);
     }
     if (account.questCape) {
-        currEmoji = findEmoji(client, 'questpoint');
-        achievementText.push(`${currEmoji} Quest Cape`);
+        const emoji7 = findEmoji(client, 'questpoint');
+        achievementText.push(`${emoji7} Quest Cape`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.questCape);
     }
-    if (account.clogSlots > 0) {
-        currEmoji = findEmoji(client, 'collection_log');
-        achievementText.push(`${currEmoji} Clog slots`);
-        statusText.push(account.clogSlots);
-        cabbagesText.push(cabbageBreakdown.clogSlots);
+    if (account.adTier) {
+        const emoji10 = findEmoji(client, 'achievement_diaries');
+        achievementText.push(`${emoji10} AD's`);
+        statusText.push(capitalize(account.adTier));
+        cabbagesText.push(cabbageBreakdown.adTier);
     }
     if (account.caTier) {
-        currEmoji = findEmoji(client, 'combat_achievements');
-        achievementText.push(`${currEmoji} CA's`);
+        const emoji9 = findEmoji(client, 'combat_achievements');
+        achievementText.push(`${emoji9} CA's`);
         statusText.push(capitalize(account.caTier));
         cabbagesText.push(cabbageBreakdown.caTier);
     }
-    if (account.adTier) {
-        currEmoji = findEmoji(client, 'achievement_diaries');
-        achievementText.push(`${currEmoji} AD's`);
-        statusText.push(capitalize(account.adTier));
-        cabbagesText.push(cabbageBreakdown.adTier);
+    if (account.clogSlots > 0) {
+        const emoji8 = findEmoji(client, 'collection_log');
+        achievementText.push(`${emoji8} Clog slots`);
+        statusText.push(account.clogSlots);
+        cabbagesText.push(cabbageBreakdown.clogSlots);
     }
     // Generate embed
     const nickname = capitalize(member.nickname);
