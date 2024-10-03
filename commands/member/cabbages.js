@@ -40,7 +40,8 @@ const cabbageEmbed = (member, memberData) => {
     const achievementText = [];
     const statusText = [];
     const cabbagesText = [];
-    let currEmoji;
+    // TODO: Do all these if-statements in a loop, info like achievement text,
+    // emojiname, statustext will have to be saved elsewhere
     const emoji1 = findEmoji(client, 'cabbageclassic');
     achievementText.push(`${emoji1} EHP + EHB`);
     statusText.push('-');
