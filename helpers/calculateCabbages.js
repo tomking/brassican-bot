@@ -1,8 +1,8 @@
 const Configuration = require('../config.json');
 
-function calculateCurrentCabbages(memberData, playerDetails) {
-    // We return an object with key-value pairs
-    // If playerDetails is undefined (not provided), we reverse engineer the core cabbages
+function getCabbageBreakdown(memberData, playerDetails) {
+    // We return an object with key-value pairs (<achievement-name>, <amount of cabbages>)
+    // If playerDetails is undefined or not provided, we reverse engineer the core cabbages
     const { accountProgression: account } = memberData;
     let cabbageBreakdown = {
         // TODO: change the amount of Clogs, CA and AD
@@ -28,4 +28,11 @@ function calculateCurrentCabbages(memberData, playerDetails) {
     return cabbageBreakdown;
 }
 
-module.exports = { calculateCurrentCabbages };
+const cabbagesUntilNext = (currentAmount) => {
+    for (i of Configuration.rankCutoffs) {
+        if (i > currentAmount) return i - currentAmount;
+    }
+    return 'N/A'; // More cabbages than highest rank
+};
+
+module.exports = { getCabbageBreakdown, cabbagesUntilNext };

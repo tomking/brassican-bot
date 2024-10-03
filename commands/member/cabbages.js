@@ -1,6 +1,9 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getDiscordClient } = require('../../discord');
-const { calculateCurrentCabbages } = require('../../helpers/calculateCabbages');
+const {
+    getCabbageBreakdown,
+    cabbagesUntilNext,
+} = require('../../helpers/calculateCabbages');
 const models = require('../../models');
 
 const findEmoji = (client, name) => {
@@ -31,7 +34,8 @@ const cabbageEmbed = (interaction, memberData) => {
         .replace(/ /g, '')}Gem`;
     const rankEmoji = findEmoji(client, rankEmojiName);
     const cabbages = Math.floor(memberData.currentCabbages);
-    const cabbageBreakdown = calculateCurrentCabbages(memberData);
+    const cabbageBreakdown = getCabbageBreakdown(memberData);
+    const untilNextTier = cabbagesUntilNext(cabbages);
     const date_unix = Math.floor(Date.parse(memberData.updatedAt) / 1000);
     // Generate embed fields
     const achievementText = [];
@@ -44,7 +48,7 @@ const cabbageEmbed = (interaction, memberData) => {
         statusText.push('-');
         cabbagesText.push(cabbageBreakdown.core);
     }
-    if (memberData.eventCabbages > 0) {
+    if (memberData.eventCabbages !== 0) {
         currEmoji = findEmoji(client, 'bingo');
         achievementText.push(`${currEmoji} Events`);
         statusText.push('-');
@@ -106,7 +110,7 @@ const cabbageEmbed = (interaction, memberData) => {
                 value: ' ',
             },
             inlinefield('', '**Current cabbages**:\n**Until next tier**:'),
-            inlinefield('', `${cabbages}\nnot yet implemented`),
+            inlinefield('', `${cabbages}\n${untilNextTier}`),
             inlinefield('', ''),
             inlinefield('Achievements', achievementText.join('\n')),
             inlinefield('Status', statusText.join('\n')),
