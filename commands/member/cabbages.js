@@ -41,61 +41,61 @@ const cabbageEmbed = (member, memberData) => {
     const cabbagesText = [];
     // TODO: Do all these if-statements in a loop, info like achievement text,
     // emojiname, statustext will have to be saved elsewhere
-    const emoji1 = findEmoji(client, 'cabbageclassic');
-    achievementText.push(`${emoji1} EHP + EHB`);
+    const cabbageEmoji = findEmoji(client, 'cabbageclassic');
+    achievementText.push(`${cabbageEmoji} EHP + EHB`);
     statusText.push('-');
     cabbagesText.push(cabbageBreakdown.core);
     if (memberData.eventCabbages !== 0) {
-        const emoji2 = findEmoji(client, 'bingo');
-        achievementText.push(`${emoji2} Events`);
+        const bingoEmoji = findEmoji(client, 'bingo');
+        achievementText.push(`${bingoEmoji} Events`);
         statusText.push('-');
         cabbagesText.push(memberData.eventCabbages);
     }
     if (account.max) {
-        const emoji3 = findEmoji(client, 'maxcape');
-        achievementText.push(`${emoji3} Maxed`);
+        const maxEmoji = findEmoji(client, 'maxcape');
+        achievementText.push(`${maxEmoji} Maxed`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.max);
     }
     if (account.inferno) {
-        const emoji4 = findEmoji(client, 'infernocape');
-        achievementText.push(`${emoji4} Inferno`);
+        const infernoEmoji = findEmoji(client, 'infernocape');
+        achievementText.push(`${infernoEmoji} Inferno`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.inferno);
     }
     if (account.quiver) {
-        const emoji5 = findEmoji(client, 'quiver');
-        achievementText.push(`${emoji5} Quiver`);
+        const quiverEmoji = findEmoji(client, 'quiver');
+        achievementText.push(`${quiverEmoji} Quiver`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.quiver);
     }
     if (account.blorva) {
-        const emoji6 = findEmoji(client, 'uwuemoji');
-        achievementText.push(`${emoji6} Blorva`);
+        const blorvaEmoji = findEmoji(client, 'uwuemoji');
+        achievementText.push(`${blorvaEmoji} Blorva`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.blorva);
     }
     if (account.questCape) {
-        const emoji7 = findEmoji(client, 'questpoint');
-        achievementText.push(`${emoji7} Quest Cape`);
+        const qpcEmoji = findEmoji(client, 'questpoint');
+        achievementText.push(`${qpcEmoji} Quest Cape`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.questCape);
     }
     if (account.adTier) {
-        const emoji10 = findEmoji(client, 'achievement_diaries');
-        achievementText.push(`${emoji10} AD's`);
+        const adTierEmoji = findEmoji(client, 'achievement_diaries');
+        achievementText.push(`${adTierEmoji} AD's`);
         statusText.push(capitalize(account.adTier));
         cabbagesText.push(cabbageBreakdown.adTier);
     }
     if (account.caTier) {
-        const emoji9 = findEmoji(client, 'combat_achievements');
-        achievementText.push(`${emoji9} CA's`);
+        const caTierEmoji = findEmoji(client, 'combat_achievements');
+        achievementText.push(`${caTierEmoji} CA's`);
         statusText.push(capitalize(account.caTier));
         cabbagesText.push(cabbageBreakdown.caTier);
     }
     if (account.clogSlots > 0) {
-        const emoji8 = findEmoji(client, 'collection_log');
-        achievementText.push(`${emoji8} Clog slots`);
+        const clogEmoji = findEmoji(client, 'collection_log');
+        achievementText.push(`${clogEmoji} Clog slots`);
         statusText.push(account.clogSlots);
         cabbagesText.push(cabbageBreakdown.clogSlots);
     }
