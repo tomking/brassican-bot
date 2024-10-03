@@ -147,7 +147,6 @@ module.exports = {
         const member =
             interaction?.options?.getMember('member') || interaction.member;
         const discordID = member.id;
-        console.log(member.id);
 
         // Get user's information
         let memberData;
