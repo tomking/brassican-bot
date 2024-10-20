@@ -269,30 +269,45 @@ module.exports = {
             return;
         }
 
-        const button = new ButtonBuilder()
+        const mobile_button = new ButtonBuilder()
             .setCustomId('mobileCabbageBreakdown')
             .setLabel('Show mobile version?')
             .setStyle(ButtonStyle.Secondary);
-        const row = new ActionRowBuilder().addComponents(button);
+        const pc_row = new ActionRowBuilder().addComponents(mobile_button);
 
+        const pc_button = new ButtonBuilder()
+            .setCustomId('pcCabbageBreakdown')
+            .setLabel('Show pc version?')
+            .setStyle(ButtonStyle.Secondary);
+        const mobile_row = new ActionRowBuilder().addComponents(pc_button);
+
+        // By default, use the embed version first
+        const embed = cabbageEmbed(member, memberData);
+        const text_version = mobileBreakdown(member, memberData);
         const reply = await interaction.editReply({
-            embeds: [cabbageEmbed(member, memberData)],
-            components: [row],
+            embeds: [embed],
+            components: [pc_row],
         });
 
         const collector = reply.createMessageComponentCollector({
             ComponentType: ComponentType.Button,
-            time: 60_000, // only wait for 60s
+            time: 120_000, // only listen for 120s
         });
 
-        collector.on('collect', async (button) => {
-            await interaction.editReply({
-                content: mobileBreakdown(member, memberData),
-                embeds: [],
-                components: [],
-            });
+        collector.on('collect', async (buttonInteraction) => {
+            if (buttonInteraction.customId === 'mobileCabbageBreakdown') {
+                await buttonInteraction.update({
+                    content: text_version,
+                    embeds: [],
+                    components: [mobile_row],
+                });
+            } else if (buttonInteraction.customId === 'pcCabbageBreakdown') {
+                await buttonInteraction.update({
+                    content: '',
+                    embeds: [embed],
+                    components: [pc_row],
+                });
+            }
         });
-
-        return;
     },
 };
