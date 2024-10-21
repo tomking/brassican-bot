@@ -10,32 +10,6 @@ module.exports = {
         .setDescription('[STAFF ONLY] Approve a rank submission')
         .addSubcommand((subcommand) =>
             subcommand
-                .setName('max-cape')
-                .setDescription('[STAFF ONLY] Approve max cape')
-                .addUserOption((option) =>
-                    option
-                        .setName('user')
-                        .setDescription(
-                            'The member whose submission you are approving'
-                        )
-                        .setRequired(true)
-                )
-        )
-        .addSubcommand((subcommand) =>
-            subcommand
-                .setName('infernal-cape')
-                .setDescription('[STAFF ONLY] Approve infernal cape')
-                .addUserOption((option) =>
-                    option
-                        .setName('user')
-                        .setDescription(
-                            'The member whose submission you are approving'
-                        )
-                        .setRequired(true)
-                )
-        )
-        .addSubcommand((subcommand) =>
-            subcommand
                 .setName('quiver')
                 .setDescription("[STAFF ONLY] Approve Dizana's quiver")
                 .addUserOption((option) =>
@@ -231,16 +205,6 @@ module.exports = {
 
         // Update memberData based on submission
         switch (interaction.options.getSubcommand()) {
-            case 'max-cape':
-                submissionLogString = 'max cape completion';
-                memberData.accountProgression.max = true;
-                break;
-
-            case 'infernal-cape':
-                submissionLogString = 'inferno completion';
-                memberData.accountProgression.inferno = true;
-                break;
-
             case 'quiver':
                 submissionLogString = 'quiver completion';
                 memberData.accountProgression.quiver = true;
