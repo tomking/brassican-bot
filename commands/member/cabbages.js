@@ -26,17 +26,14 @@ const capitalize = (string) => {
 
 const pad = (input, spaces) => {
     // Make sure input is converted to a string
-    const string = typeof input === 'string' ? input : input.toString();
-    if (string.length == spaces) {
-        return string;
-    } else if (spaces - string.length == 1) {
-        return pad(string + ' ', spaces);
-    } else if (spaces - string.length >= 2) {
-        return pad(' ' + string + ' ', spaces);
-    } else {
-        // string.length > spaces
-        return ' '.repeat(spaces);
+    let string = typeof input === 'string' ? input : input.toString();
+    if (string.length > spaces) return string.substring(0, spaces);
+    // Add spaces until you need either 0 or 1 more
+    while (string.length < spaces - 1) {
+        string = ' ' + string + ' ';
     }
+    if (string.length == spaces) return string;
+    return string + ' ';
 };
 
 const embedfield = (name, value, inline) => ({
