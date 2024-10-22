@@ -25,15 +25,10 @@ const capitalize = (string) => {
 };
 
 const pad = (input, spaces) => {
-    // Make sure input is converted to a string
-    let string = typeof input === 'string' ? input : input.toString();
-    if (string.length > spaces) return string.substring(0, spaces);
-    // Add spaces until you need either 0 or 1 more
-    while (string.length < spaces - 1) {
-        string = ' ' + string + ' ';
-    }
-    if (string.length == spaces) return string;
-    return string + ' ';
+    let string = String(input).substring(0, spaces);
+    return string
+        .padStart(Math.ceil((spaces + string.length) / 2))
+        .padEnd(spaces);
 };
 
 const embedfield = (name, value, inline) => ({
