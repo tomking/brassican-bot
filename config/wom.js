@@ -25,14 +25,12 @@ const canMakeCall = () => {
 };
 
 const requestWithRateLimit = async (apiCall) => {
-    if (canMakeCall()) {
-        return apiCall();
-    } else {
+    while (!canMakeCall()) {
         const delay = 60000 / WOM_RATE_LIMIT;
-        return new Promise((resolve) =>
-            setTimeout(() => resolve(requestWithRateLimit(apiCall)), delay)
-        );
+        await new Promise((resolve) => setTimeout(resolve, delay));
     }
+
+    return apiCall();
 };
 
 const initialize = async () => {
