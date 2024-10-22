@@ -48,7 +48,7 @@ const embedfield = (name, value, inline) => ({
 const mobileBreakdown = (member, memberData) => {
     const client = getDiscordClient();
     const { accountProgression: account } = memberData;
-    // Generate all neccesary info
+    // Generate all necessary info
     const rankEmojiName = `${memberData.currentRank
         .toLowerCase()
         .replace(/ /g, '')}Gem`;
