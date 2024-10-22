@@ -20,8 +20,11 @@ const findEmoji = (client, name) => {
     return emoji || '';
 };
 
-const capitalize = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+const capitalize = (input) => {
+    return (
+        String(input).charAt(0).toUpperCase() +
+        String(input).slice(1).toLowerCase()
+    );
 };
 
 const pad = (input, spaces) => {
