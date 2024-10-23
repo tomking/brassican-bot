@@ -12,7 +12,14 @@ const initialize = async () => {
             console.log(
                 `Running scheduled job to update all member's cabbage counts`
             );
+            const startTime = performance.now();
             updateAllMemberRanks(client);
+            const endTime = performance.now();
+            console.log(
+                `Scheduled job to update all member's cabbage counts is complete (This took ${
+                    endTime - startTime
+                } ms)`
+            );
         },
         {
             scheduled: true,
