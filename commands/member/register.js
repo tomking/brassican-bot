@@ -48,11 +48,15 @@ module.exports = {
         try {
             const womClient = getWOMClient();
             womResult = await womClient.players.getPlayerDetails(rsn);
-            if (!womResult) {
-                await interaction.editReply('The given RSN is invalid!');
+        } catch (error) {
+            if (error.name === 'NotFoundError') {
+                const womWebsite = `https://wiseoldman.net/players/${rsn}`;
+                const reply =
+                    "Unable to register with this RSN as it hasn't been tracked yet by WiseOldMan." +
+                    `Go to [this page](${womWebsite}) and click the track button in order to fix this.`;
+                await interaction.editReply(reply);
                 return;
             }
-        } catch (error) {
             console.error('Error getting user WOM entry: ', error);
             await interaction.editReply(
                 'Something went wrong. Please try again.'
