@@ -54,7 +54,7 @@ module.exports = {
                 const reply =
                     "Unable to register with this RSN as it hasn't been tracked yet by Wise Old Man. " +
                     `Please visit [this page](${womWebsite}) to start tracking your account. ` +
-                    'After that, run the `\\register` command again.';
+                    'After that, run the `/register` command again.';
                 await interaction.editReply(reply);
                 return;
             }
