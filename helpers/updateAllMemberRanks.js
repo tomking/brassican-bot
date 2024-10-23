@@ -27,6 +27,7 @@ async function updateAllMemberRanks(discordClient) {
 
     await womMemberIDs.forEach(async (discordID) => {
         await updateMemberRank(discordID, discordClient);
+        await delay(5000);
     });
 
     console.log(`Attempt to update all member's cabbage counts has finished.`);
