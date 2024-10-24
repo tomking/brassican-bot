@@ -5,7 +5,6 @@ import {
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
-    ButtonInteraction,
     ChatInputCommandInteraction,
 } from 'discord.js';
 

@@ -42,7 +42,12 @@ module.exports = {
                 props: false,
             },
         ],
-        'prettier/prettier': 'error',
+        'prettier/prettier': [
+            'error',
+            {
+                endOfLine: 'auto',
+            },
+        ],
         'no-unused-vars': 'off',
         'require-jsdoc': 'off',
         'new-cap': 'off',
@@ -55,12 +60,6 @@ module.exports = {
         ],
         '@typescript-eslint/no-shadow': ['error'],
     },
-    "prettier/prettier": [
-        "error",
-        {
-        "endOfLine": "auto"
-        }
-    ],
     overrides: [
         {
             files: ['**/*.test.ts'],
