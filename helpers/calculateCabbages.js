@@ -16,7 +16,7 @@ function getCabbageBreakdown(memberData, playerDetails) {
         quiver: account.quiver ? Configuration.quiverCabbages : 0,
         blorva: account.blorva ? Configuration.blorvaCabbages : 0,
         questCape: account.questCape ? Configuration.questCapeCabbages : 0,
-        clogSlots: Math.floor(account.clogSlots / 100) * 20,
+        clogSlots: clogCabbages,
         caTier: Configuration.caTierCabbages[account.caTier] || 0,
         adTier: Configuration.adTierCabbages[account.adTier] || 0,
     };
