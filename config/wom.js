@@ -1,7 +1,7 @@
 const { WOMClient } = require('@wise-old-man/utils');
 const { Environment } = require('../services/environment');
 
-const WOM_RATE_LIMIT = 2;
+const WOM_RATE_LIMIT = Environment.WOM_API_KEY ? 100 : 20;
 const TIME_PER_TOKEN = 60000 / WOM_RATE_LIMIT;
 
 let womClient;
