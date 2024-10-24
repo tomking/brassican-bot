@@ -1,46 +1,47 @@
-const {
+import {
     SlashCommandBuilder,
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
-} = require('discord.js');
-const { getDiscordClient } = require('../../discord');
-const {
+    ButtonInteraction,
+    ChatInputCommandInteraction,
+} from 'discord.js';
+
+import { getDiscordClient, ModifiedDiscordClient } from '../../discord';
+import {
     getCabbageBreakdown,
     cabbagesUntilNext,
-} = require('../../helpers/calculateCabbages');
-const models = require('../../models');
+} from '../../helpers/calculateCabbages';
+import { Member } from '../../models/member';
 
-const findEmoji = (client, name) => {
+const findEmoji = (client: ModifiedDiscordClient, name: string) => {
     const emoji = client.emojis.cache.find(
-        (emoji) => emoji.name.toLowerCase() === name.toLowerCase()
+        (cachedEmoji) => cachedEmoji?.name?.toLowerCase() === name.toLowerCase()
     );
+
     return emoji || '';
 };
 
-const capitalize = (input) => {
-    return (
-        String(input).charAt(0).toUpperCase() +
-        String(input).slice(1).toLowerCase()
-    );
+const capitalize = (input: string) => {
+    return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
 };
 
-const pad = (input, spaces) => {
-    let string = String(input).substring(0, spaces);
+const pad = (input: string | number, spaces: number) => {
+    const string = String(input).substring(0, spaces);
     return string
         .padStart(Math.ceil((spaces + string.length) / 2))
         .padEnd(spaces);
 };
 
-const embedfield = (name, value, inline) => ({
+const embedfield = (name: string, value: string, inline?: boolean) => ({
     name: name || ' ',
     value: value || ' ',
-    inline: inline || false,
+    inline: !!inline,
 });
 
-const mobileBreakdown = (member, memberData) => {
+const mobileBreakdown = (member: any, memberData: any) => {
     const client = getDiscordClient();
     const { accountProgression: account } = memberData;
     // Generate all necessary info
@@ -121,7 +122,7 @@ const mobileBreakdown = (member, memberData) => {
     return textArray.join('\n');
 };
 
-const cabbageEmbed = (member, memberData) => {
+const cabbageEmbed = (member: any, memberData: any) => {
     const client = getDiscordClient();
     const { accountProgression: account } = memberData;
     // Generate all neccesary info
@@ -222,87 +223,82 @@ const cabbageEmbed = (member, memberData) => {
     return embed;
 };
 
-module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('cabbages')
-        .setDescription('Get your current cabbage count!')
-        .addUserOption((option) =>
-            option
-                .setName('member')
-                .setDescription(
-                    'The member you want to see the cabbage count of'
-                )
-                .setRequired(false)
-        ),
-    async execute(interaction) {
-        await interaction.deferReply({ ephemeral: true });
-        const member =
-            interaction?.options?.getMember('member') || interaction.member;
-        const discordID = member.id;
+export const data = new SlashCommandBuilder()
+    .setName('cabbages')
+    .setDescription('Get your current cabbage count!')
+    .addUserOption((option) =>
+        option
+            .setName('member')
+            .setDescription('The member you want to see the cabbage count of')
+            .setRequired(false)
+    );
 
-        // Get user's information
-        let memberData;
-        try {
-            memberData = await models.Member.findOne({
-                discordID: discordID,
-            });
+export const execute = async (interaction: ChatInputCommandInteraction) => {
+    await interaction.deferReply({ ephemeral: true });
+    const member =
+        interaction?.options?.getMember('member') || interaction.member;
+    const discordID = interaction.user.id;
 
-            if (!memberData) {
-                await interaction.editReply(
-                    "You aren't registered yet. Use `/register` to get signed up!"
-                );
-                return;
-            }
-        } catch (error) {
-            console.error(
-                'Error checking if discord ID is already registered: ',
-                error
-            );
+    // Get user's information
+    let memberData;
+    try {
+        memberData = await Member.findOne({
+            discordID: discordID,
+        });
+
+        if (!memberData) {
             await interaction.editReply(
-                'Something went wrong. Please try again.'
+                "You aren't registered yet. Use `/register` to get signed up!"
             );
             return;
         }
+    } catch (error) {
+        console.error(
+            'Error checking if discord ID is already registered: ',
+            error
+        );
+        await interaction.editReply('Something went wrong. Please try again.');
+        return;
+    }
 
-        const mobile_button = new ButtonBuilder()
-            .setCustomId('mobileCabbageBreakdown')
-            .setLabel('Show mobile version?')
-            .setStyle(ButtonStyle.Secondary);
-        const pc_row = new ActionRowBuilder().addComponents(mobile_button);
+    const mobile_button = new ButtonBuilder()
+        .setCustomId('mobileCabbageBreakdown')
+        .setLabel('Show mobile version?')
+        .setStyle(ButtonStyle.Secondary);
+    const pc_row = new ActionRowBuilder().addComponents(mobile_button);
 
-        const pc_button = new ButtonBuilder()
-            .setCustomId('pcCabbageBreakdown')
-            .setLabel('Show pc version?')
-            .setStyle(ButtonStyle.Secondary);
-        const mobile_row = new ActionRowBuilder().addComponents(pc_button);
+    const pc_button = new ButtonBuilder()
+        .setCustomId('pcCabbageBreakdown')
+        .setLabel('Show pc version?')
+        .setStyle(ButtonStyle.Secondary);
+    const mobile_row = new ActionRowBuilder().addComponents(pc_button);
 
-        // By default, use the embed version first
-        const embed = cabbageEmbed(member, memberData);
-        const text_version = mobileBreakdown(member, memberData);
-        const reply = await interaction.editReply({
-            embeds: [embed],
-            components: [pc_row],
-        });
+    // By default, use the embed version first
+    const embed = cabbageEmbed(member, memberData);
+    const text_version = mobileBreakdown(member, memberData);
+    const reply = await interaction.editReply({
+        embeds: [embed],
+        components: [pc_row as any],
+    });
 
-        const collector = reply.createMessageComponentCollector({
-            ComponentType: ComponentType.Button,
-            time: 120_000, // only listen for 120s
-        });
+    const collector = reply.createMessageComponentCollector({
+        componentType: ComponentType.Button,
+        time: 120_000, // only listen for 120s
+    });
 
-        collector.on('collect', async (buttonInteraction) => {
-            if (buttonInteraction.customId === 'mobileCabbageBreakdown') {
-                await buttonInteraction.update({
-                    content: text_version,
-                    embeds: [],
-                    components: [mobile_row],
-                });
-            } else if (buttonInteraction.customId === 'pcCabbageBreakdown') {
-                await buttonInteraction.update({
-                    content: '',
-                    embeds: [embed],
-                    components: [pc_row],
-                });
-            }
-        });
-    },
+    collector.on('collect', async (buttonInteraction: any) => {
+        if (buttonInteraction.customId === 'mobileCabbageBreakdown') {
+            await buttonInteraction.update({
+                content: text_version,
+                embeds: [],
+                components: [mobile_row],
+            });
+        } else if (buttonInteraction.customId === 'pcCabbageBreakdown') {
+            await buttonInteraction.update({
+                content: '',
+                embeds: [embed],
+                components: [pc_row],
+            });
+        }
+    });
 };

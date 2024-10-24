@@ -1,11 +1,15 @@
-const { Environment } = require('../services/environment.js');
-const mapPointsToRank = require('./mapPointsToRank.js');
-const { getCabbageBreakdown } = require('./calculateCabbages.js');
-const models = require('../models');
-const { getWOMClient } = require('../config/wom.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
-async function updateMemberRank(memberDiscordId, discordClient) {
+import { Environment } from '../services/environment';
+import { mapPointsToRank } from './mapPointsToRank';
+import { getCabbageBreakdown } from './calculateCabbages';
+import { Member, IMember } from '../models/member';
+import { getWOMClient } from '../config/wom';
+
+export const updateMemberRank = async (
+    memberDiscordId: any,
+    discordClient: any
+) => {
     // TODO: Pull these out to another location
     const roleMap = {
         Jade: Environment.JADE_RANK_ID,
@@ -17,12 +21,12 @@ async function updateMemberRank(memberDiscordId, discordClient) {
         'Dragon Stone': Environment.DRAGON_STONE_RANK_ID,
         Onyx: Environment.ONYX_RANK_ID,
         Zenyte: Environment.ZENYTE_RANK_ID,
-    };
+    } as { [key: string]: string };
 
-    let memberData;
+    let memberData: IMember | null;
     let playerDetails;
     try {
-        memberData = await models.Member.findOne({
+        memberData = await Member.findOne({
             discordID: memberDiscordId,
         });
 
@@ -53,10 +57,11 @@ async function updateMemberRank(memberDiscordId, discordClient) {
 
         // Update member's discord role
         try {
-            discordGuild = await discordClient.guilds.fetch(
+            const discordGuild = await discordClient.guilds.fetch(
                 Environment.GUILD_ID
             );
-            discordMember = await discordGuild.members.fetch(memberDiscordId);
+            const discordMember =
+                await discordGuild.members.fetch(memberDiscordId);
             await discordMember.roles.remove(Object.values(roleMap));
             await discordMember.roles.add(roleMap[newRank]);
 
@@ -94,6 +99,4 @@ async function updateMemberRank(memberDiscordId, discordClient) {
 
     await memberData.save();
     return;
-}
-
-module.exports = updateMemberRank;
+};

@@ -1,7 +1,27 @@
-const { getMongooseClient } = require('../config/database.js');
+import * as mongoose from 'mongoose';
 
-const mongooseClient = getMongooseClient();
-const MemberSchema = new mongooseClient.Schema({
+import { getMongooseClient } from '../config/database';
+
+export interface IMember extends mongoose.Document {
+    womID: string;
+    discordID: string;
+    currentCabbages: number;
+    currentRank: string;
+    eventCabbages: number;
+    accountProgression: {
+        max: boolean;
+        inferno: boolean;
+        quiver: boolean;
+        blorva: boolean;
+        questCape: boolean;
+        clogSlots: number;
+        caTier: 'EASY' | 'MEDIUM' | 'HARD' | 'ELITE' | 'MASTER' | 'GRANDMASTER';
+        adTier: 'EASY' | 'MEDIUM' | 'HARD' | 'ELITE';
+    };
+}
+
+export const mongooseClient = getMongooseClient();
+export const MemberSchema = new mongooseClient.Schema<IMember>({
     womID: { type: String, required: true },
     discordID: { type: String, required: true },
     currentCabbages: { type: Number, default: 0 },
@@ -20,5 +40,4 @@ const MemberSchema = new mongooseClient.Schema({
 });
 
 MemberSchema.set('timestamps', true);
-const Member = mongooseClient.model('Member', MemberSchema);
-module.exports = { Member };
+export const Member = mongooseClient.model<IMember>('Member', MemberSchema);
