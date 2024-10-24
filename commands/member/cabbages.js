@@ -53,8 +53,6 @@ const mobileBreakdown = (member, memberData) => {
     const timestamp = Math.floor(Date.parse(memberData.updatedAt) / 1000);
     const nickname =
         member.nickname || member.user.globalName || member.user.username;
-    console.log(nickname);
-    console.log(member);
     const nextTierAmount = cabbagesUntilNext(cabbages);
     const nextTierText = nextTierAmount > 0 ? nextTierAmount.toString() : 'N/A';
     // Generate text block
