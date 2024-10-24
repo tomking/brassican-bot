@@ -1,8 +1,37 @@
 const { WOMClient } = require('@wise-old-man/utils');
-
 const { Environment } = require('../services/environment');
 
+const WOM_RATE_LIMIT = 100;
+
 let womClient;
+let availTokens = WOM_RATE_LIMIT;
+let lastTokenReplenish = Date.now();
+
+const replenishTokens = () => {
+    const now = Date.now();
+    const elapsedTime = now - lastTokenReplenish;
+    const tokensToAdd = Math.floor((elapsedTime / 60000) * WOM_RATE_LIMIT);
+    availTokens = Math.min(availTokens + tokensToAdd, WOM_RATE_LIMIT);
+    lastTokenReplenish = now;
+};
+
+const canMakeCall = () => {
+    replenishTokens();
+    if (availTokens > 0) {
+        availTokens -= 1;
+        return true;
+    }
+    return false;
+};
+
+const requestWithRateLimit = async (apiCall) => {
+    while (!canMakeCall()) {
+        const delay = 60000 / WOM_RATE_LIMIT;
+        await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+
+    return apiCall();
+};
 
 const initialize = async () => {
     womClient = new WOMClient({
@@ -12,7 +41,15 @@ const initialize = async () => {
 };
 
 const getWOMClient = () => {
-    return womClient;
+    return new Proxy(womClient, {
+        get(target, prop) {
+            if (typeof target[prop] === 'function') {
+                return (...args) =>
+                    requestWithRateLimit(() => target[prop](...args));
+            }
+            return target[prop];
+        },
+    });
 };
 
 module.exports = {
