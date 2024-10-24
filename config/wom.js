@@ -12,8 +12,6 @@ const replenishTokens = () => {
     const now = Date.now();
     const elapsedTime = now - lastTokenReplenish;
     const tokensToAdd = Math.floor(elapsedTime / TIME_PER_TOKEN);
-    console.log('elapsed time', elapsedTime);
-    console.log('tokenstoAdd', tokensToAdd);
     availTokens = Math.min(availTokens + tokensToAdd, WOM_RATE_LIMIT);
     lastTokenReplenish = lastTokenReplenish + tokensToAdd * TIME_PER_TOKEN;
 };
