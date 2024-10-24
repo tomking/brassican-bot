@@ -1,12 +1,16 @@
-const fs = require('node:fs');
-const path = require('node:path');
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { Environment } = require('./services/environment');
+import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import { Environment } from './services/environment';
 
-let client;
+export type ModifiedDiscordClient = Client & {
+    commands?: Collection<string, any>;
+};
 
-const initialize = async () => {
+let client: ModifiedDiscordClient;
+
+export const initialize = async () => {
     client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
     // Load all commands from dir/subdirs on start
@@ -18,7 +22,7 @@ const initialize = async () => {
         const commandsPath = path.join(foldersPath, folder);
         const commandFiles = fs
             .readdirSync(commandsPath)
-            .filter((file) => file.endsWith('.js'));
+            .filter((file) => file.endsWith('.ts'));
         for (const file of commandFiles) {
             const filePath = path.join(commandsPath, file);
             const command = require(filePath);
@@ -36,26 +40,21 @@ const initialize = async () => {
     const eventsPath = path.join(__dirname, 'events');
     const eventFiles = fs
         .readdirSync(eventsPath)
-        .filter((file) => file.endsWith('.js'));
+        .filter((file) => file.endsWith('.ts'));
 
     for (const file of eventFiles) {
         const filePath = path.join(eventsPath, file);
         const event = require(filePath);
         if (event.once) {
-            client.once(event.name, (...args) => event.execute(...args));
+            client.once(event.name, (...args: any[]) => event.execute(...args));
         } else {
-            client.on(event.name, (...args) => event.execute(...args));
+            client.on(event.name, (...args: any[]) => event.execute(...args));
         }
     }
 
     await client.login(Environment.DISCORD_BOT_TOKEN);
 };
 
-const getDiscordClient = () => {
+export const getDiscordClient = () => {
     return client;
-};
-
-module.exports = {
-    initialize,
-    getDiscordClient,
 };

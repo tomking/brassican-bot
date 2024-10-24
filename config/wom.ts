@@ -1,10 +1,10 @@
-const { WOMClient } = require('@wise-old-man/utils');
-const { Environment } = require('../services/environment');
+import { WOMClient } from '@wise-old-man/utils';
+import { Environment } from '../services/environment';
 
 const WOM_RATE_LIMIT = Environment.WOM_API_KEY ? 100 : 20;
 const TIME_PER_TOKEN_MS = 60000 / WOM_RATE_LIMIT;
 
-let womClient;
+let womClient: WOMClient;
 let availTokens = WOM_RATE_LIMIT;
 let lastTokenReplenish = Date.now();
 
@@ -25,7 +25,7 @@ const canMakeCall = () => {
     return false;
 };
 
-const requestWithRateLimit = async (apiCall) => {
+const requestWithRateLimit = async (apiCall: any) => {
     while (!canMakeCall()) {
         await new Promise((resolve) => setTimeout(resolve, TIME_PER_TOKEN_MS));
     }
@@ -33,7 +33,7 @@ const requestWithRateLimit = async (apiCall) => {
     return apiCall();
 };
 
-const initialize = async () => {
+export const initialize = async () => {
     womClient = new WOMClient({
         apiKey: Environment.WOM_API_KEY,
         userAgent: Environment.DEVELOPER_DISCORD_CONTACT,
@@ -41,9 +41,9 @@ const initialize = async () => {
 };
 
 const handler = {
-    get(target, key) {
+    get(target: any, key: any) {
         if (typeof target[key] === 'function') {
-            return (...args) =>
+            return (...args: any[]) =>
                 requestWithRateLimit(() => target[key](...args));
         }
 
@@ -55,11 +55,6 @@ const handler = {
     },
 };
 
-const getWOMClient = () => {
+export const getWOMClient = () => {
     return new Proxy(womClient, handler);
-};
-
-module.exports = {
-    initialize,
-    getWOMClient,
 };

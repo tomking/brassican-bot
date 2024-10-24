@@ -1,5 +1,5 @@
-const joi = require('joi');
-const dotenv = require('dotenv');
+import * as joi from 'joi';
+import * as dotenv from 'dotenv';
 
 const ENVIRONMENT_SCHEMA = joi
     .object({
@@ -28,7 +28,7 @@ const ENVIRONMENT_SCHEMA = joi
     .required()
     .unknown();
 
-const initialize = async () => {
+export const initialize = async () => {
     dotenv.config();
     const { error } = ENVIRONMENT_SCHEMA.validate(process.env);
 
@@ -37,9 +37,4 @@ const initialize = async () => {
     }
 };
 
-module.exports = {
-    initialize,
-    get Environment() {
-        return process.env;
-    },
-};
+export const Environment = process.env;

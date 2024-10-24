@@ -1,8 +1,8 @@
-const { REST, Routes } = require('discord.js');
-const fs = require('node:fs');
-const path = require('node:path');
+import { REST, Routes } from 'discord.js';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
-const { initialize, Environment } = require('./services/environment');
+import { initialize, Environment } from './services/environment';
 
 initialize();
 
@@ -14,7 +14,7 @@ for (const folder of commandFolders) {
     const commandsPath = path.join(foldersPath, folder);
     const commandFiles = fs
         .readdirSync(commandsPath)
-        .filter((file) => file.endsWith('.js'));
+        .filter((file) => file.endsWith('.ts'));
 
     // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
     for (const file of commandFiles) {
@@ -31,7 +31,7 @@ for (const folder of commandFolders) {
 }
 
 // Construct and prepare an instance of the REST module
-const rest = new REST().setToken(Environment.DISCORD_BOT_TOKEN);
+const rest = new REST().setToken(Environment.DISCORD_BOT_TOKEN!);
 
 // Deploy commands
 (async () => {
@@ -40,8 +40,8 @@ const rest = new REST().setToken(Environment.DISCORD_BOT_TOKEN);
             `Started refreshing ${commands.length} application (/) commands.`
         );
 
-        const data = await rest.put(
-            Routes.applicationCommands(Environment.DISCORD_APP_ID),
+        const data: any = await rest.put(
+            Routes.applicationCommands(Environment.DISCORD_APP_ID!),
             { body: commands }
         );
 
