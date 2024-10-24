@@ -5,7 +5,8 @@ function getCabbageBreakdown(memberData, playerDetails) {
     // If playerDetails is undefined or not provided, we reverse engineer the core cabbages
     const { accountProgression: account } = memberData;
     let clogCabbages = Math.floor(account.clogSlots / 100) * 25;
-    Configuration.clogCabbages.forEach(({ milestone, bonusCabbages }) => {
+    const milestoneBonusList = Configuration.clogCabbages || [];
+    milestoneBonusList.forEach(({ milestone, bonusCabbages }) => {
         if (account.clogSlots >= milestone) clogCabbages += bonusCabbages;
     });
     let cabbageBreakdown = {
