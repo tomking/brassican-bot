@@ -55,6 +55,12 @@ module.exports = {
         ],
         '@typescript-eslint/no-shadow': ['error'],
     },
+    "prettier/prettier": [
+        "error",
+        {
+        "endOfLine": "auto"
+        }
+    ],
     overrides: [
         {
             files: ['**/*.test.ts'],
