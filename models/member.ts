@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-import { getMongooseClient } from '../config/database';
+import { getMongooseClient } from '../config/database.ts';
 
 export interface IMember extends mongoose.Document {
     womID: string;
@@ -18,6 +18,8 @@ export interface IMember extends mongoose.Document {
         caTier: 'EASY' | 'MEDIUM' | 'HARD' | 'ELITE' | 'MASTER' | 'GRANDMASTER';
         adTier: 'EASY' | 'MEDIUM' | 'HARD' | 'ELITE';
     };
+    updatedAt: string;
+    createdAt: string;
 }
 
 export const mongooseClient = getMongooseClient();

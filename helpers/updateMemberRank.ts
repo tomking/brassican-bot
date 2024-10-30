@@ -1,14 +1,20 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    Client,
+    TextChannel,
+} from 'discord.js';
 
-import { Environment } from '../services/environment';
-import { mapPointsToRank } from './mapPointsToRank';
-import { getCabbageBreakdown } from './calculateCabbages';
-import { Member, IMember } from '../models/member';
-import { getWOMClient } from '../config/wom';
+import { Environment } from '../services/environment.ts';
+import { mapPointsToRank } from './mapPointsToRank.ts';
+import { getCabbageBreakdown } from './calculateCabbages.ts';
+import { IMember, Member } from '../models/member.ts';
+import { getWOMClient } from '../config/wom.ts';
 
 export const updateMemberRank = async (
-    memberDiscordId: any,
-    discordClient: any
+    memberDiscordId: string,
+    discordClient: Client,
 ) => {
     // TODO: Pull these out to another location
     const roleMap = {
@@ -37,7 +43,7 @@ export const updateMemberRank = async (
 
         const womClient = getWOMClient();
         playerDetails = await womClient.players.getPlayerDetailsById(
-            memberData.womID
+            memberData.womID,
         );
     } catch (error) {
         console.error('Error getting user data for update: ', error);
@@ -45,7 +51,7 @@ export const updateMemberRank = async (
     }
 
     memberData.currentCabbages = Object.values(
-        getCabbageBreakdown(memberData, playerDetails)
+        getCabbageBreakdown(memberData, playerDetails),
     ).reduce((acc, val) => acc + val, 0);
 
     let newRank = null;
@@ -58,21 +64,25 @@ export const updateMemberRank = async (
         // Update member's discord role
         try {
             const discordGuild = await discordClient.guilds.fetch(
-                Environment.GUILD_ID
+                Environment.GUILD_ID,
             );
-            const discordMember =
-                await discordGuild.members.fetch(memberDiscordId);
+            const discordMember = await discordGuild.members.fetch(
+                memberDiscordId,
+            );
             await discordMember.roles.remove(Object.values(roleMap));
             await discordMember.roles.add(roleMap[newRank]);
 
             // Log that user's discord rank was changed
             const logChannel = discordClient.channels.cache.get(
-                Environment.LOG_CHANNEL_ID
-            );
+                Environment.LOG_CHANNEL_ID,
+            ) as TextChannel;
+
             logChannel.send(
-                `${discordClient.users.cache
-                    .get(memberData.discordID)
-                    .toString()}'s rank was updated on Discord to: ${newRank}`
+                `${
+                    discordClient.users.cache
+                        .get(memberData.discordID)!
+                        .toString()
+                }'s rank was updated on Discord to: ${newRank}`,
             );
         } catch (error) {
             console.error("Error updating user's roles: ", error);
@@ -84,15 +94,20 @@ export const updateMemberRank = async (
             .setLabel('Complete')
             .setStyle(ButtonStyle.Success);
 
-        const row = new ActionRowBuilder().addComponents(complete);
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+            complete,
+        );
 
         const rankUpdatesChannel = discordClient.channels.cache.get(
-            Environment.RANK_UPDATES_CHANNEL
-        );
+            Environment.RANK_UPDATES_CHANNEL,
+        ) as TextChannel;
+
         rankUpdatesChannel.send({
-            content: `${discordClient.users.cache
-                .get(memberData.discordID)
-                .toString()} needs their rank in game updated to: ${newRank}`,
+            content: `${
+                discordClient.users.cache
+                    .get(memberData.discordID)!
+                    .toString()
+            } needs their rank in game updated to: ${newRank}`,
             components: [row],
         });
     }

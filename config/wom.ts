@@ -1,5 +1,6 @@
 import { WOMClient } from '@wise-old-man/utils';
-import { Environment } from '../services/environment';
+
+import { Environment } from '../services/environment.ts';
 
 const WOM_RATE_LIMIT = Environment.WOM_API_KEY ? 100 : 20;
 const TIME_PER_TOKEN_MS = 60000 / WOM_RATE_LIMIT;
@@ -33,10 +34,10 @@ const requestWithRateLimit = async (apiCall: any) => {
     return apiCall();
 };
 
-export const initialize = async () => {
+export const initialize = () => {
     womClient = new WOMClient({
-        apiKey: Environment.WOM_API_KEY,
-        userAgent: Environment.DEVELOPER_DISCORD_CONTACT,
+        apiKey: Environment?.WOM_API_KEY,
+        userAgent: Environment?.DEVELOPER_DISCORD_CONTACT,
     });
 };
 

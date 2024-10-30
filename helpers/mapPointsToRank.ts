@@ -1,10 +1,10 @@
-import { rankCutoffs, rankNames } from '../config.json';
+import Configuration from '../config.json' with { type: 'json' };
 
-export const mapPointsToRank = (points: any) => {
-    for (let i = rankCutoffs.length - 1; i >= 0; i--) {
-        if (points >= rankCutoffs[i]) {
-            return rankNames[i];
+export const mapPointsToRank = (points: number) => {
+    for (let i = Configuration.rankCutoffs.length - 1; i >= 0; i--) {
+        if (points >= Configuration.rankCutoffs[i]) {
+            return Configuration.rankNames[i];
         }
     }
-    return rankNames[0];
+    return Configuration.rankNames[0];
 };

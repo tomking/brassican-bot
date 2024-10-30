@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { config, database, up } from 'migrate-mongo';
 
-import { Environment } from '../services/environment';
+import { Environment } from '../services/environment.ts';
 
 export const initialize = async () => {
     try {

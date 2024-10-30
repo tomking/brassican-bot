@@ -6,7 +6,8 @@ export const data = new SlashCommandBuilder()
 
 export const execute = async (interaction: any) => {
     await interaction.reply({
-        content: `Pong! (Websocket heartbeat: ${interaction.client.ws.ping}ms.)`,
+        content:
+            `Pong! (Websocket heartbeat: ${interaction.client.ws.ping}ms.)`,
         ephemeral: true,
     });
 };

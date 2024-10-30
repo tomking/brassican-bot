@@ -1,9 +1,9 @@
-import * as Configuration from '../config.json';
-import { IMember } from '../models/member';
+import Configuration from '../config.json' with { type: 'json' };
+import { IMember } from '../models/member.ts';
 
 export const getCabbageBreakdown = (
     memberData: IMember,
-    playerDetails?: any
+    playerDetails?: any,
 ) => {
     // We return an object with key-value pairs (<achievement-name>, <amount of cabbages>)
     // If playerDetails is undefined or not provided, we reverse engineer the core cabbages
@@ -23,13 +23,12 @@ export const getCabbageBreakdown = (
 
     const sum = Object.values(cabbageBreakdown).reduce(
         (acc, val) => acc + val,
-        0
+        0,
     );
 
-    cabbageBreakdown.core =
-        playerDetails === undefined
-            ? memberData.currentCabbages - sum
-            : playerDetails.ehp + playerDetails.ehb;
+    cabbageBreakdown.core = playerDetails === undefined
+        ? memberData.currentCabbages - sum
+        : playerDetails.ehp + playerDetails.ehb;
     cabbageBreakdown.core = Math.floor(cabbageBreakdown.core);
     return cabbageBreakdown;
 };

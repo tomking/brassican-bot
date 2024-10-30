@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from 'discord.js';
 
-import { Environment } from '../../services/environment';
-import { Member } from '../../models/member';
-import { updateMemberRank } from '../../helpers/updateMemberRank';
+import { Environment } from '../../services/environment.ts';
+import { Member } from '../../models/member.ts';
+import { updateMemberRank } from '../../helpers/updateMemberRank.ts';
 
 export const data = new SlashCommandBuilder()
     .setName('approve')
@@ -15,7 +15,7 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName('user')
                     .setDescription(
-                        'The member whose submission you are approving'
+                        'The member whose submission you are approving',
                     )
                     .setRequired(true)
             )
@@ -28,7 +28,7 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName('user')
                     .setDescription(
-                        'The member whose submission you are approving'
+                        'The member whose submission you are approving',
                     )
                     .setRequired(true)
             )
@@ -41,7 +41,7 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName('user')
                     .setDescription(
-                        'The member whose submission you are approving'
+                        'The member whose submission you are approving',
                     )
                     .setRequired(true)
             )
@@ -54,7 +54,7 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName('user')
                     .setDescription(
-                        'The member whose submission you are approving'
+                        'The member whose submission you are approving',
                     )
                     .setRequired(true)
             )
@@ -67,7 +67,7 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName('user')
                     .setDescription(
-                        'The member whose submission you are approving'
+                        'The member whose submission you are approving',
                     )
                     .setRequired(true)
             )
@@ -80,7 +80,7 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName('slots')
                     .setDescription(
-                        'The current number of collection log slots the user has filled'
+                        'The current number of collection log slots the user has filled',
                     )
                     .setRequired(true)
             )
@@ -88,7 +88,7 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName('user')
                     .setDescription(
-                        'The member whose submission you are approving'
+                        'The member whose submission you are approving',
                     )
                     .setRequired(true)
             )
@@ -101,7 +101,7 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName('tier')
                     .setDescription(
-                        'The highest tier the user has fully completed'
+                        'The highest tier the user has fully completed',
                     )
                     .setRequired(true)
                     .addChoices(
@@ -120,14 +120,14 @@ export const data = new SlashCommandBuilder()
                         {
                             name: 'Elite',
                             value: 'Elite',
-                        }
+                        },
                     )
             )
             .addUserOption((option) =>
                 option
                     .setName('user')
                     .setDescription(
-                        'The member whose submission you are approving'
+                        'The member whose submission you are approving',
                     )
                     .setRequired(true)
             )
@@ -140,7 +140,7 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName('tier')
                     .setDescription(
-                        'The highest tier the user has fully completed'
+                        'The highest tier the user has fully completed',
                     )
                     .setRequired(true)
                     .addChoices(
@@ -167,14 +167,14 @@ export const data = new SlashCommandBuilder()
                         {
                             name: 'Grandmaster',
                             value: 'Grandmaster',
-                        }
+                        },
                     )
             )
             .addUserOption((option) =>
                 option
                     .setName('user')
                     .setDescription(
-                        'The member whose submission you are approving'
+                        'The member whose submission you are approving',
                     )
                     .setRequired(true)
             )
@@ -188,11 +188,11 @@ export const execute = async (interaction: any) => {
         !interaction.member.roles.cache.some(
             (role: any) =>
                 role.id === Environment.DISCORD_MOD_ROLE_ID ||
-                role.id === Environment.DISCORD_CA_ROLE_ID
+                role.id === Environment.DISCORD_CA_ROLE_ID,
         )
     ) {
         await interaction.editReply(
-            'Only members of staff can use this command!'
+            'Only members of staff can use this command!',
         );
         return;
     }
@@ -213,7 +213,7 @@ export const execute = async (interaction: any) => {
     } catch (error) {
         console.error(
             'Error checking if discord ID is already registered: ',
-            error
+            error,
         );
         await interaction.editReply('Something went wrong. Please try again.');
         return;
@@ -249,27 +249,33 @@ export const execute = async (interaction: any) => {
             break;
 
         case 'collection-log':
-            memberData.accountProgression.clogSlots =
-                interaction.options.getInteger('slots');
-            submissionLogString = `${interaction.options.getInteger(
-                'slots'
-            )} collection log slots`;
+            memberData.accountProgression.clogSlots = interaction.options
+                .getInteger('slots');
+            submissionLogString = `${
+                interaction.options.getInteger(
+                    'slots',
+                )
+            } collection log slots`;
             break;
 
         case 'achievement-diary':
-            memberData.accountProgression.adTier =
-                interaction.options.getString('tier');
-            submissionLogString = `${interaction.options
-                .getString('tier')
-                .toLowerCase()} achievement diaries completion`;
+            memberData.accountProgression.adTier = interaction.options
+                .getString('tier');
+            submissionLogString = `${
+                interaction.options
+                    .getString('tier')
+                    .toLowerCase()
+            } achievement diaries completion`;
             break;
 
         case 'combat-achievements':
-            memberData.accountProgression.caTier =
-                interaction.options.getString('tier');
-            submissionLogString = `${interaction.options
-                .getString('tier')
-                .toLowerCase()} combat achievements completion`;
+            memberData.accountProgression.caTier = interaction.options
+                .getString('tier');
+            submissionLogString = `${
+                interaction.options
+                    .getString('tier')
+                    .toLowerCase()
+            } combat achievements completion`;
             break;
 
         default:
@@ -281,22 +287,26 @@ export const execute = async (interaction: any) => {
 
     // Complete the interaction
     await interaction.editReply(
-        `${interaction.options
-            .getUser('user')
-            .toString()}'s submission of ${submissionLogString} has been approved successfully!`
+        `${
+            interaction.options
+                .getUser('user')
+                .toString()
+        }'s submission of ${submissionLogString} has been approved successfully!`,
     );
 
     updateMemberRank(discordID, interaction.client);
 
     // Send log message
     const logChannel = interaction.client.channels.cache.get(
-        Environment.LOG_CHANNEL_ID
+        Environment.LOG_CHANNEL_ID,
     );
 
     logChannel.send(
-        `${interaction.options
-            .getUser('user')
-            .toString()}'s submission of ${submissionLogString} has been approved by ${interaction.member.toString()}`
+        `${
+            interaction.options
+                .getUser('user')
+                .toString()
+        }'s submission of ${submissionLogString} has been approved by ${interaction.member.toString()}`,
     );
 
     return;

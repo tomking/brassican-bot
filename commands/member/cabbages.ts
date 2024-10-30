@@ -1,23 +1,24 @@
 import {
-    SlashCommandBuilder,
-    EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
-    ComponentType,
     ChatInputCommandInteraction,
+    ComponentType,
+    EmbedBuilder,
+    SlashCommandBuilder,
 } from 'discord.js';
 
-import { getDiscordClient, ModifiedDiscordClient } from '../../discord';
+import { getDiscordClient, ModifiedDiscordClient } from '../../discord.ts';
 import {
-    getCabbageBreakdown,
     cabbagesUntilNext,
-} from '../../helpers/calculateCabbages';
-import { Member } from '../../models/member';
+    getCabbageBreakdown,
+} from '../../helpers/calculateCabbages.ts';
+import { Member } from '../../models/member.ts';
 
 const findEmoji = (client: ModifiedDiscordClient, name: string) => {
     const emoji = client.emojis.cache.find(
-        (cachedEmoji) => cachedEmoji?.name?.toLowerCase() === name.toLowerCase()
+        (cachedEmoji) =>
+            cachedEmoji?.name?.toLowerCase() === name.toLowerCase(),
     );
 
     return emoji || '';
@@ -44,9 +45,11 @@ const mobileBreakdown = (member: any, memberData: any) => {
     const client = getDiscordClient();
     const { accountProgression: account } = memberData;
     // Generate all necessary info
-    const rankEmojiName = `${memberData.currentRank
-        .toLowerCase()
-        .replace(/ /g, '')}Gem`;
+    const rankEmojiName = `${
+        memberData.currentRank
+            .toLowerCase()
+            .replace(/ /g, '')
+    }Gem`;
     const rankEmoji = findEmoji(client, rankEmojiName);
     const cabbages = Math.floor(memberData.currentCabbages);
     const cabbageBreakdown = getCabbageBreakdown(memberData);
@@ -106,7 +109,7 @@ const mobileBreakdown = (member: any, memberData: any) => {
         const caCabbages = pad(cabbageBreakdown.caTier, 10);
         const caTier = pad(
             account.caTier === 'GRANDMASTER' ? 'GM' : account.caTier,
-            8
+            8,
         );
         textArray.push('╠--------------+--------+----------╣');
         textArray.push(`║     CA's     |${caTier}|${caCabbages}║`);
@@ -126,9 +129,11 @@ const cabbageEmbed = (member: any, memberData: any) => {
     const { accountProgression: account } = memberData;
     // Generate all neccesary info
     const checkmark = findEmoji(client, 'check');
-    const rankEmojiName = `${memberData.currentRank
-        .toLowerCase()
-        .replace(/ /g, '')}Gem`;
+    const rankEmojiName = `${
+        memberData.currentRank
+            .toLowerCase()
+            .replace(/ /g, '')
+    }Gem`;
     const rankEmoji = findEmoji(client, rankEmojiName);
     const cabbages = Math.floor(memberData.currentCabbages);
     const cabbageBreakdown = getCabbageBreakdown(memberData);
@@ -210,7 +215,7 @@ const cabbageEmbed = (member: any, memberData: any) => {
             embedfield('Achievements', achievementText.join('\n'), true),
             embedfield('Status', statusText.join('\n'), true),
             embedfield('Cabbages', cabbagesText.join('\n'), true),
-            embedfield('', `**Last updated**: <t:${timestamp}>`)
+            embedfield('', `**Last updated**: <t:${timestamp}>`),
         )
         .setColor('#11ff00')
         .setFooter({
@@ -234,8 +239,8 @@ export const data = new SlashCommandBuilder()
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
     await interaction.deferReply({ ephemeral: true });
-    const member =
-        interaction?.options?.getMember('member') || interaction.member;
+    const member = interaction?.options?.getMember('member') ||
+        interaction.member;
     const discordID = interaction.user.id;
 
     // Get user's information
@@ -247,14 +252,14 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 
         if (!memberData) {
             await interaction.editReply(
-                "You aren't registered yet. Use `/register` to get signed up!"
+                "You aren't registered yet. Use `/register` to get signed up!",
             );
             return;
         }
     } catch (error) {
         console.error(
             'Error checking if discord ID is already registered: ',
-            error
+            error,
         );
         await interaction.editReply('Something went wrong. Please try again.');
         return;

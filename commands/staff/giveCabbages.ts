@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from 'discord.js';
 
-import { Environment } from '../../services/environment';
-import { Member } from '../../models/member';
-import { updateMemberRank } from '../../helpers/updateMemberRank';
+import { Environment } from '../../services/environment.ts';
+import { Member } from '../../models/member.ts';
+import { updateMemberRank } from '../../helpers/updateMemberRank.ts';
 
 export const data = new SlashCommandBuilder()
     .setName('givecabbages')
@@ -34,11 +34,11 @@ export const execute = async (interaction: any) => {
         !interaction.member.roles.cache.some(
             (role: any) =>
                 role.id === Environment.DISCORD_MOD_ROLE_ID ||
-                role.id === Environment.DISCORD_CA_ROLE_ID
+                role.id === Environment.DISCORD_CA_ROLE_ID,
         )
     ) {
         await interaction.editReply(
-            'Only members of staff can use this command!'
+            'Only members of staff can use this command!',
         );
         return;
     }
@@ -59,7 +59,7 @@ export const execute = async (interaction: any) => {
     } catch (error) {
         console.error(
             'Error checking if discord ID is already registered: ',
-            error
+            error,
         );
         await interaction.editReply('Something went wrong. Please try again.');
         return;
@@ -70,18 +70,22 @@ export const execute = async (interaction: any) => {
     await memberData.save();
 
     await interaction.editReply(
-        `${interaction.options
-            .getUser('user')
-            .toString()} has been awarded ${interaction.options.getInteger(
-            'quantity'
-        )} cabbages! `
+        `${
+            interaction.options
+                .getUser('user')
+                .toString()
+        } has been awarded ${
+            interaction.options.getInteger(
+                'quantity',
+            )
+        } cabbages! `,
     );
 
     updateMemberRank(discordID, interaction.client);
 
     // Send log message
     const logChannel = interaction.client.channels.cache.get(
-        Environment.LOG_CHANNEL_ID
+        Environment.LOG_CHANNEL_ID,
     );
 
     const userName = interaction.options.getUser('user').toString();
@@ -94,7 +98,7 @@ export const execute = async (interaction: any) => {
         reason = 'with reason: ' + reason;
     }
     logChannel.send(
-        `${userName} has been awarded ${amount} cabbages by ${approvingMod} ${reason}`
+        `${userName} has been awarded ${amount} cabbages by ${approvingMod} ${reason}`,
     );
 
     return;

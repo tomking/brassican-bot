@@ -1,40 +1,45 @@
-import * as joi from 'joi';
-import * as dotenv from 'dotenv';
+import process from 'node:process';
 
-const ENVIRONMENT_SCHEMA = joi
-    .object({
-        DISCORD_BOT_TOKEN: joi.string().required(),
-        DISCORD_APP_ID: joi.string().required(),
-        MONGO_URL: joi.string().required(),
-        CABBAGE_DB_NAME: joi.string().required(),
-        WOM_GROUP_ID: joi.string().required(),
-        WOM_GROUP_VERIFICATION_CODE: joi.string().required(),
-        DISCORD_MOD_ROLE_ID: joi.string().required(),
-        DISCORD_CA_ROLE_ID: joi.string().required(),
-        LOG_CHANNEL_ID: joi.string().required(),
-        GUILD_ID: joi.string().required(),
-        RANK_UPDATES_CHANNEL: joi.string().required(),
-        JADE_RANK_ID: joi.string().required(),
-        RED_TOPAZ_RANK_ID: joi.string().required(),
-        SAPPHIRE_RANK_ID: joi.string().required(),
-        EMERALD_RANK_ID: joi.string().required(),
-        RUBY_RANK_ID: joi.string().required(),
-        DIAMOND_RANK_ID: joi.string().required(),
-        DRAGON_STONE_RANK_ID: joi.string().required(),
-        ONYX_RANK_ID: joi.string().required(),
-        ZENYTE_RANK_ID: joi.string().required(),
-    })
-    .strict()
-    .required()
-    .unknown();
+import * as z from 'zod';
+import 'jsr:@std/dotenv/load';
 
-export const initialize = async () => {
-    dotenv.config();
-    const { error } = ENVIRONMENT_SCHEMA.validate(process.env);
+const ENVIRONMENT_SCHEMA = z.object({
+    DISCORD_BOT_TOKEN: z.string(),
+    DISCORD_APP_ID: z.string(),
+    MONGO_URL: z.string(),
+    CABBAGE_DB_NAME: z.string(),
+    WOM_GROUP_ID: z.string(),
+    WOM_GROUP_VERIFICATION_CODE: z.string(),
+    DISCORD_MOD_ROLE_ID: z.string(),
+    DISCORD_CA_ROLE_ID: z.string(),
+    LOG_CHANNEL_ID: z.string(),
+    GUILD_ID: z.string(),
+    RANK_UPDATES_CHANNEL: z.string(),
+    WOM_API_KEY: z.string().optional(),
+    DEVELOPER_DISCORD_CONTACT: z.string().optional(),
+    JADE_RANK_ID: z.string(),
+    RED_TOPAZ_RANK_ID: z.string(),
+    SAPPHIRE_RANK_ID: z.string(),
+    EMERALD_RANK_ID: z.string(),
+    RUBY_RANK_ID: z.string(),
+    DIAMOND_RANK_ID: z.string(),
+    DRAGON_STONE_RANK_ID: z.string(),
+    ONYX_RANK_ID: z.string(),
+    ZENYTE_RANK_ID: z.string(),
+});
 
-    if (error) {
-        throw new Error(error.message);
+type Environment = z.infer<typeof ENVIRONMENT_SCHEMA>;
+
+export const initialize = () => {
+    try {
+        ENVIRONMENT_SCHEMA.parse(process.env);
+    } catch (error: unknown) {
+        if (error instanceof z.ZodError) {
+            throw new Error(JSON.stringify(error.issues, null, 2));
+        } else if (error instanceof Error) {
+            throw error;
+        }
     }
 };
 
-export const Environment = process.env;
+export const Environment = process.env as Environment;
