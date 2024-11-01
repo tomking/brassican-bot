@@ -14,7 +14,7 @@ export const updateAllMemberRanks = async (discordClient: Client) => {
 
     const womClient = getWOMClient();
     await womClient.groups.updateAll(
-        parseInt(Environment.WOM_GROUP_ID, 10),
+        Environment.WOM_GROUP_ID,
         Environment.WOM_GROUP_VERIFICATION_CODE,
     );
 

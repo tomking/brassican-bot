@@ -8,7 +8,7 @@ const ENVIRONMENT_SCHEMA = z.object({
     DISCORD_APP_ID: z.string(),
     MONGO_URL: z.string(),
     CABBAGE_DB_NAME: z.string(),
-    WOM_GROUP_ID: z.string(),
+    WOM_GROUP_ID: z.coerce.number(),
     WOM_GROUP_VERIFICATION_CODE: z.string(),
     DISCORD_MOD_ROLE_ID: z.string(),
     DISCORD_CA_ROLE_ID: z.string(),
@@ -28,11 +28,13 @@ const ENVIRONMENT_SCHEMA = z.object({
     ZENYTE_RANK_ID: z.string(),
 });
 
-type Environment = z.infer<typeof ENVIRONMENT_SCHEMA>;
+type EnvironmentType = z.infer<typeof ENVIRONMENT_SCHEMA>;
+
+let parsedEnvironment: EnvironmentType;
 
 export const initialize = () => {
     try {
-        ENVIRONMENT_SCHEMA.parse(process.env);
+        parsedEnvironment = ENVIRONMENT_SCHEMA.parse(process.env);
     } catch (error: unknown) {
         if (error instanceof z.ZodError) {
             throw new Error(JSON.stringify(error.issues, null, 2));
@@ -42,4 +44,4 @@ export const initialize = () => {
     }
 };
 
-export const Environment = process.env as Environment;
+export { parsedEnvironment as Environment };
