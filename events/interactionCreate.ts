@@ -1,14 +1,16 @@
-import { Events, TextChannel } from 'discord.js';
+import { BaseInteraction, Events, TextChannel } from 'discord.js';
 
 import { Environment } from '../services/environment.ts';
+import { ModifiedDiscordClient } from '../discord.ts';
 
 export const name = Events.InteractionCreate;
 
-export const execute = async (interaction: any) => {
+export const execute = async (interaction: BaseInteraction) => {
     if (interaction.isChatInputCommand()) {
-        const command = interaction.client.commands.get(
-            interaction.commandName,
-        );
+        const command = (interaction.client as ModifiedDiscordClient).commands
+            ?.get(
+                interaction.commandName,
+            );
 
         if (!command) {
             console.error(
@@ -34,7 +36,7 @@ export const execute = async (interaction: any) => {
             ) as TextChannel;
 
             logChannel.send(
-                `${interaction.member.toString()} marked the following complete: \n    "${interaction.message.toString()}"`,
+                `${interaction.member?.toString()} marked the following complete: \n    "${interaction.message.toString()}"`,
             );
         }
     } else if (interaction.isStringSelectMenu()) {

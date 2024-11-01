@@ -1,24 +1,28 @@
 import {
+    ButtonInteraction,
+    ChatInputCommandInteraction,
+    Emoji,
+    GuildMember,
+} from 'discord.js';
+import {
     ActionRowBuilder,
     ButtonBuilder,
-    ButtonStyle,
-    ChatInputCommandInteraction,
-    ComponentType,
     EmbedBuilder,
     SlashCommandBuilder,
-} from 'discord.js';
+} from '@discordjs/builders';
+import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 
 import { getDiscordClient, ModifiedDiscordClient } from '../../discord.ts';
 import {
     cabbagesUntilNext,
     getCabbageBreakdown,
 } from '../../helpers/calculateCabbages.ts';
-import { Member } from '../../models/member.ts';
+import { IMember, Member } from '../../models/member.ts';
 
 const findEmoji = (client: ModifiedDiscordClient, name: string) => {
     const emoji = client.emojis.cache.find(
-        (cachedEmoji) =>
-            cachedEmoji?.name?.toLowerCase() === name.toLowerCase(),
+        (cachedEmoji: Emoji) =>
+            cachedEmoji.name?.toLowerCase() === name.toLowerCase(),
     );
 
     return emoji || '';
@@ -41,7 +45,7 @@ const embedfield = (name: string, value: string, inline?: boolean) => ({
     inline: !!inline,
 });
 
-const mobileBreakdown = (member: any, memberData: any) => {
+const mobileBreakdown = (member: GuildMember, memberData: IMember) => {
     const client = getDiscordClient();
     const { accountProgression: account } = memberData;
     // Generate all necessary info
@@ -124,7 +128,7 @@ const mobileBreakdown = (member: any, memberData: any) => {
     return textArray.join('\n');
 };
 
-const cabbageEmbed = (member: any, memberData: any) => {
+const cabbageEmbed = (member: GuildMember, memberData: IMember) => {
     const client = getDiscordClient();
     const { accountProgression: account } = memberData;
     // Generate all neccesary info
@@ -217,7 +221,7 @@ const cabbageEmbed = (member: any, memberData: any) => {
             embedfield('Cabbages', cabbagesText.join('\n'), true),
             embedfield('', `**Last updated**: <t:${timestamp}>`),
         )
-        .setColor('#11ff00')
+        .setColor([17, 255, 0])
         .setFooter({
             text: 'Brassican Bot',
             iconURL:
@@ -239,12 +243,12 @@ export const data = new SlashCommandBuilder()
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
     await interaction.deferReply({ ephemeral: true });
-    const member = interaction?.options?.getMember('member') ||
-        interaction.member;
+    const member = (interaction?.options?.getMember('member') ||
+        interaction.member) as GuildMember;
     const discordID = interaction.user.id;
 
     // Get user's information
-    let memberData;
+    let memberData: IMember | null;
     try {
         memberData = await Member.findOne({
             discordID: discordID,
@@ -269,20 +273,24 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
         .setCustomId('mobileCabbageBreakdown')
         .setLabel('Show mobile version?')
         .setStyle(ButtonStyle.Secondary);
-    const pc_row = new ActionRowBuilder().addComponents(mobile_button);
+    const pc_row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        mobile_button,
+    );
 
     const pc_button = new ButtonBuilder()
         .setCustomId('pcCabbageBreakdown')
         .setLabel('Show pc version?')
         .setStyle(ButtonStyle.Secondary);
-    const mobile_row = new ActionRowBuilder().addComponents(pc_button);
+    const mobile_row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        pc_button,
+    );
 
     // By default, use the embed version first
     const embed = cabbageEmbed(member, memberData);
     const text_version = mobileBreakdown(member, memberData);
     const reply = await interaction.editReply({
         embeds: [embed],
-        components: [pc_row as any],
+        components: [pc_row],
     });
 
     const collector = reply.createMessageComponentCollector({
@@ -290,7 +298,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
         time: 120_000, // only listen for 120s
     });
 
-    collector.on('collect', async (buttonInteraction: any) => {
+    collector.on('collect', async (buttonInteraction: ButtonInteraction) => {
         if (buttonInteraction.customId === 'mobileCabbageBreakdown') {
             await buttonInteraction.update({
                 content: text_version,

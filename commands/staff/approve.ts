@@ -1,7 +1,13 @@
-import { SlashCommandBuilder } from 'discord.js';
+import {
+    ChatInputCommandInteraction,
+    GuildMember,
+    Role,
+    TextChannel,
+} from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 import { Environment } from '../../services/environment.ts';
-import { Member } from '../../models/member.ts';
+import { AD_TIER, CA_TIER, Member } from '../../models/member.ts';
 import { updateMemberRank } from '../../helpers/updateMemberRank.ts';
 
 export const data = new SlashCommandBuilder()
@@ -180,13 +186,13 @@ export const data = new SlashCommandBuilder()
             )
     );
 
-export const execute = async (interaction: any) => {
+export const execute = async (interaction: ChatInputCommandInteraction) => {
     await interaction.deferReply({ ephemeral: true });
 
     // Check if calling user is a member of staff (mod or CA)
     if (
-        !interaction.member.roles.cache.some(
-            (role: any) =>
+        !(interaction.member as GuildMember).roles.cache.some(
+            (role: Role) =>
                 role.id === Environment.DISCORD_MOD_ROLE_ID ||
                 role.id === Environment.DISCORD_CA_ROLE_ID,
         )
@@ -197,7 +203,11 @@ export const execute = async (interaction: any) => {
         return;
     }
 
-    const discordID = interaction.options.getUser('user').id;
+    const discordID = interaction.options.getUser('user')?.id;
+    if (!discordID) {
+        await interaction.editReply('Invalid user ID!');
+        return;
+    }
 
     // Check if user is already registered with this discord ID
     let memberData;
@@ -250,7 +260,7 @@ export const execute = async (interaction: any) => {
 
         case 'collection-log':
             memberData.accountProgression.clogSlots = interaction.options
-                .getInteger('slots');
+                .getInteger('slots')!;
             submissionLogString = `${
                 interaction.options.getInteger(
                     'slots',
@@ -260,21 +270,21 @@ export const execute = async (interaction: any) => {
 
         case 'achievement-diary':
             memberData.accountProgression.adTier = interaction.options
-                .getString('tier');
+                .getString('tier')! as AD_TIER;
             submissionLogString = `${
                 interaction.options
                     .getString('tier')
-                    .toLowerCase()
+                    ?.toLowerCase()
             } achievement diaries completion`;
             break;
 
         case 'combat-achievements':
             memberData.accountProgression.caTier = interaction.options
-                .getString('tier');
+                .getString('tier')! as CA_TIER;
             submissionLogString = `${
                 interaction.options
                     .getString('tier')
-                    .toLowerCase()
+                    ?.toLowerCase()
             } combat achievements completion`;
             break;
 
@@ -290,7 +300,7 @@ export const execute = async (interaction: any) => {
         `${
             interaction.options
                 .getUser('user')
-                .toString()
+                ?.toString()
         }'s submission of ${submissionLogString} has been approved successfully!`,
     );
 
@@ -299,14 +309,14 @@ export const execute = async (interaction: any) => {
     // Send log message
     const logChannel = interaction.client.channels.cache.get(
         Environment.LOG_CHANNEL_ID,
-    );
+    ) as TextChannel;
 
     logChannel.send(
         `${
             interaction.options
                 .getUser('user')
-                .toString()
-        }'s submission of ${submissionLogString} has been approved by ${interaction.member.toString()}`,
+                ?.toString()
+        }'s submission of ${submissionLogString} has been approved by ${interaction.member?.toString()}`,
     );
 
     return;

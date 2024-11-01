@@ -1,9 +1,10 @@
+import { PlayerDetails } from '@wise-old-man/utils';
 import Configuration from '../config.json' with { type: 'json' };
 import { IMember } from '../models/member.ts';
 
 export const getCabbageBreakdown = (
     memberData: IMember,
-    playerDetails?: any,
+    playerDetails?: PlayerDetails,
 ) => {
     // We return an object with key-value pairs (<achievement-name>, <amount of cabbages>)
     // If playerDetails is undefined or not provided, we reverse engineer the core cabbages

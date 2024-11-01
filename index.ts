@@ -6,6 +6,6 @@ import * as scheduler from './services/scheduler.ts';
 
 environment.initialize();
 await database.initialize();
-await wiseoldman.initialize();
+wiseoldman.initialize();
 await discord.initialize();
 scheduler.initialize();

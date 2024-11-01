@@ -41,15 +41,18 @@ export const initialize = () => {
     });
 };
 
-const handler = {
-    get(target: any, key: any) {
+const handler: ProxyHandler<WOMClient> = {
+    get(target, key: keyof WOMClient) {
         if (typeof target[key] === 'function') {
-            return (...args: any[]) =>
+            return (...args: unknown[]) =>
                 requestWithRateLimit(() => target[key](...args));
         }
 
-        if (typeof target[key] === 'object' && target[key] !== null) {
-            return new Proxy(target[key], handler);
+        if (
+            typeof target[key] === 'object' &&
+            target[key] !== null
+        ) {
+            return new Proxy(target[key], handler as ProxyHandler<object>);
         }
 
         return target[key];

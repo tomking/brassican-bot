@@ -1,11 +1,18 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import { Client, Collection } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { GatewayIntentBits } from 'discord-api-types/v10';
 import { Environment } from './services/environment.ts';
 
 export type ModifiedDiscordClient = Client & {
-    commands?: Collection<string, any>;
+    commands?: Collection<string, {
+        name: string;
+        once?: boolean;
+        data: SlashCommandBuilder;
+        execute: (...args: unknown[]) => Promise<void>;
+    }>;
 };
 
 let client: ModifiedDiscordClient;
@@ -25,7 +32,13 @@ export const initialize = async () => {
             .filter((file) => file.endsWith('.ts'));
         for (const file of commandFiles) {
             const filePath = path.join(commandsPath, file);
-            const command: any = await import(`file://${filePath}`);
+            const command: {
+                name: string;
+                once?: boolean;
+                data: SlashCommandBuilder;
+                execute: (...args: unknown[]) => Promise<void>;
+            } = await import(`file://${filePath}`);
+
             if ('data' in command && 'execute' in command) {
                 client.commands.set(command.data.name, command);
             } else {
@@ -44,11 +57,23 @@ export const initialize = async () => {
 
     for (const file of eventFiles) {
         const filePath = path.join(eventsPath, file);
-        const event: any = await import(`file://${filePath}`);
+
+        const event: {
+            name: string;
+            once?: boolean;
+            execute: (...args: unknown[]) => Promise<void>;
+        } = await import(`file://${filePath}`);
+
         if (event.once) {
-            client.once(event.name, (...args: any[]) => event.execute(...args));
+            client.once(
+                event.name,
+                (...args: unknown[]) => event.execute(...args),
+            );
         } else {
-            client.on(event.name, (...args: any[]) => event.execute(...args));
+            client.on(
+                event.name,
+                (...args: unknown[]) => event.execute(...args),
+            );
         }
     }
 

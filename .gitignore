@@ -131,5 +131,3 @@ dist
 
 # migrate-mongo-config file
 migrate-mongo.config.js
-
-.vscode

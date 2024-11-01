@@ -1,16 +1,13 @@
-import {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    Client,
-    TextChannel,
-} from 'discord.js';
+import { Client, TextChannel } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
+import { ButtonStyle } from 'discord-api-types/v10';
 
 import { Environment } from '../services/environment.ts';
 import { mapPointsToRank } from './mapPointsToRank.ts';
 import { getCabbageBreakdown } from './calculateCabbages.ts';
 import { IMember, Member } from '../models/member.ts';
 import { getWOMClient } from '../config/wom.ts';
+import { PlayerDetails } from '@wise-old-man/utils';
 
 export const updateMemberRank = async (
     memberDiscordId: string,
@@ -30,7 +27,7 @@ export const updateMemberRank = async (
     } as { [key: string]: string };
 
     let memberData: IMember | null;
-    let playerDetails;
+    let playerDetails: PlayerDetails | null;
     try {
         memberData = await Member.findOne({
             discordID: memberDiscordId,
@@ -43,7 +40,7 @@ export const updateMemberRank = async (
 
         const womClient = getWOMClient();
         playerDetails = await womClient.players.getPlayerDetailsById(
-            memberData.womID,
+            parseInt(memberData.womID, 10),
         );
     } catch (error) {
         console.error('Error getting user data for update: ', error);

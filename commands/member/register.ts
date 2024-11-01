@@ -1,4 +1,5 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, TextChannel } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 import { Environment } from '../../services/environment.ts';
 import { Member } from '../../models/member.ts';
@@ -17,9 +18,9 @@ export const data = new SlashCommandBuilder()
             .setRequired(true)
     );
 
-export const execute = async (interaction: any) => {
+export const execute = async (interaction: ChatInputCommandInteraction) => {
     await interaction.deferReply({ ephemeral: true });
-    const rsn = interaction.options.getString('rsn');
+    const rsn = interaction.options.getString('rsn')!;
     const discordID = interaction.user.id;
 
     // Check if user is already registered with this discord ID
@@ -46,8 +47,8 @@ export const execute = async (interaction: any) => {
     try {
         const womClient = getWOMClient();
         womResult = await womClient.players.getPlayerDetails(rsn);
-    } catch (error: any) {
-        if (error.name === 'NotFoundError') {
+    } catch (error) {
+        if (error instanceof Error && error.name === 'NotFoundError') {
             const womWebsite = `https://wiseoldman.net/players/${rsn}`;
             const reply =
                 "Unable to register with this RSN as it hasn't been tracked yet by Wise Old Man. " +
@@ -56,6 +57,7 @@ export const execute = async (interaction: any) => {
             await interaction.editReply(reply);
             return;
         }
+
         console.error('Error getting user WOM entry: ', error);
         await interaction.editReply('Something went wrong. Please try again.');
         return;
@@ -97,9 +99,10 @@ export const execute = async (interaction: any) => {
     // Send log message that user was registered
     const logChannel = interaction.client.channels.cache.get(
         Environment.LOG_CHANNEL_ID,
-    );
+    ) as TextChannel;
+
     logChannel.send(
-        `${interaction.member.toString()} has registered for the rank system using the RSN: \`${rsn}\``,
+        `${interaction.member?.toString()} has registered for the rank system using the RSN: \`${rsn}\``,
     );
 
     return;

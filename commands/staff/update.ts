@@ -1,4 +1,10 @@
-import { SlashCommandBuilder } from 'discord.js';
+import {
+    ChatInputCommandInteraction,
+    GuildMember,
+    Role,
+    TextChannel,
+} from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 import { Environment } from '../../services/environment.ts';
 import { updateMemberRank } from '../../helpers/updateMemberRank.ts';
@@ -13,13 +19,13 @@ export const data = new SlashCommandBuilder()
             .setRequired(true)
     );
 
-export const execute = async (interaction: any) => {
+export const execute = async (interaction: ChatInputCommandInteraction) => {
     await interaction.deferReply({ ephemeral: true });
 
     // Check if calling user is a member of staff (mod or CA)
     if (
-        !interaction.member.roles.cache.some(
-            (role: any) =>
+        !(interaction.member as GuildMember).roles.cache.some(
+            (role: Role) =>
                 role.id === Environment.DISCORD_MOD_ROLE_ID ||
                 role.id === Environment.DISCORD_CA_ROLE_ID,
         )
@@ -34,19 +40,19 @@ export const execute = async (interaction: any) => {
         `Request received, attempting to update member's cabbage count.`,
     );
 
-    const discordID = interaction.options.getUser('user').id;
+    const discordID = interaction.options.getUser('user')!.id;
 
     try {
         updateMemberRank(discordID, interaction.client);
     } catch (error) {
         const logChannel = interaction.client.channels.cache.get(
             Environment.LOG_CHANNEL_ID,
-        );
+        ) as TextChannel;
 
         logChannel.send(
-            `${interaction.member.toString()}'s attempt to update ${
+            `${interaction.member?.toString()}'s attempt to update ${
                 interaction.options
-                    .getUser('user')
+                    .getUser('user')!
                     .toString()
             }'s cabbage count encountered an error.`,
         );

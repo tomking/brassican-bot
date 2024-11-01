@@ -2,6 +2,20 @@ import * as mongoose from 'mongoose';
 
 import { getMongooseClient } from '../config/database.ts';
 
+export type CA_TIER =
+    | 'EASY'
+    | 'MEDIUM'
+    | 'HARD'
+    | 'ELITE'
+    | 'MASTER'
+    | 'GRANDMASTER';
+
+export type AD_TIER =
+    | 'EASY'
+    | 'MEDIUM'
+    | 'HARD'
+    | 'ELITE';
+
 export interface IMember extends mongoose.Document {
     womID: string;
     discordID: string;
@@ -15,8 +29,8 @@ export interface IMember extends mongoose.Document {
         blorva: boolean;
         questCape: boolean;
         clogSlots: number;
-        caTier: 'EASY' | 'MEDIUM' | 'HARD' | 'ELITE' | 'MASTER' | 'GRANDMASTER';
-        adTier: 'EASY' | 'MEDIUM' | 'HARD' | 'ELITE';
+        caTier: CA_TIER;
+        adTier: AD_TIER;
     };
     updatedAt: string;
     createdAt: string;

@@ -1,11 +1,15 @@
 {
   "version": "4",
+  "remote": {},
   "specifiers": {
     "jsr:@std/assert@1": "1.0.6",
     "jsr:@std/dotenv@*": "0.225.2",
     "jsr:@std/dotenv@~0.225.2": "0.225.2",
     "jsr:@std/internal@^1.0.4": "1.0.4",
+    "npm:@discordjs/builders@^1.9.0": "1.9.0",
     "npm:@wise-old-man/utils@^3.3.6": "3.3.6",
+    "npm:discord-api-types@~0.37.103": "0.37.103",
+    "npm:discord.js@*": "14.16.3",
     "npm:discord.js@^14.16.3": "14.16.3",
     "npm:migrate-mongo@11": "11.0.0_mongodb@6.10.0",
     "npm:mongoose@^8.7.3": "8.7.3",
@@ -173,6 +177,9 @@
     },
     "discord-api-types@0.37.100": {
       "integrity": "sha512-a8zvUI0GYYwDtScfRd/TtaNBDTXwP5DiDVX7K5OmE+DRT57gBqKnwtOC5Ol8z0mRW8KQfETIgiB8U0YZ9NXiCA=="
+    },
+    "discord-api-types@0.37.103": {
+      "integrity": "sha512-r+qitxXKe2l6KFw5odPdZSSqdEou+7eNC7BfbZ7mny5Me/K06wCTeKUMVeH/YsI9+4QQudskeQ307kr/7ppQ1A=="
     },
     "discord-api-types@0.37.83": {
       "integrity": "sha512-urGGYeWtWNYMKnYlZnOnDHm8fVRffQs3U0SpE8RHeiuLKb/u92APS8HoQnPTFbnXmY1vVnXjXO4dOxcAn3J+DA=="
@@ -349,8 +356,8 @@
     "ts-mixer@6.0.4": {
       "integrity": "sha512-ufKpbmrugz5Aou4wcr5Wc1UUFWOLhq+Fm6qa6P0w0K5Qw2yhaUoiWszhCVuNQyNwrlGiscHOmqYoAox1PtvgjA=="
     },
-    "tslib@2.8.0": {
-      "integrity": "sha512-jWVzBLplnCmoaTr13V9dYbiQ99wvZRd0vNWaDRg+aVYRcjDF3nDksxFDE/+fkXnKhpnUUkmx5pK/v8mCtLVqZA=="
+    "tslib@2.8.1": {
+      "integrity": "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w=="
     },
     "undici-types@6.19.8": {
       "integrity": "sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw=="
@@ -385,7 +392,9 @@
     "dependencies": [
       "jsr:@std/assert@1",
       "jsr:@std/dotenv@~0.225.2",
+      "npm:@discordjs/builders@^1.9.0",
       "npm:@wise-old-man/utils@^3.3.6",
+      "npm:discord-api-types@~0.37.103",
       "npm:discord.js@^14.16.3",
       "npm:migrate-mongo@11",
       "npm:mongoose@^8.7.3",

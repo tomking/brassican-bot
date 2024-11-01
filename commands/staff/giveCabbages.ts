@@ -1,4 +1,10 @@
-import { SlashCommandBuilder } from 'discord.js';
+import {
+    ChatInputCommandInteraction,
+    GuildMember,
+    Role,
+    TextChannel,
+} from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 import { Environment } from '../../services/environment.ts';
 import { Member } from '../../models/member.ts';
@@ -26,13 +32,13 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
     );
 
-export const execute = async (interaction: any) => {
+export const execute = async (interaction: ChatInputCommandInteraction) => {
     await interaction.deferReply({ ephemeral: true });
 
     // Check if calling user is a member of staff (mod or CA)
     if (
-        !interaction.member.roles.cache.some(
-            (role: any) =>
+        !(interaction.member as GuildMember).roles.cache.some(
+            (role: Role) =>
                 role.id === Environment.DISCORD_MOD_ROLE_ID ||
                 role.id === Environment.DISCORD_CA_ROLE_ID,
         )
@@ -43,7 +49,7 @@ export const execute = async (interaction: any) => {
         return;
     }
 
-    const discordID = interaction.options.getUser('user').id;
+    const discordID = interaction.options.getUser('user')!.id;
 
     // Check if user is already registered with this discord ID
     let memberData;
@@ -65,14 +71,14 @@ export const execute = async (interaction: any) => {
         return;
     }
 
-    memberData.eventCabbages += interaction.options.getInteger('quantity');
+    memberData.eventCabbages += interaction.options.getInteger('quantity')!;
 
     await memberData.save();
 
     await interaction.editReply(
         `${
             interaction.options
-                .getUser('user')
+                .getUser('user')!
                 .toString()
         } has been awarded ${
             interaction.options.getInteger(
@@ -86,20 +92,23 @@ export const execute = async (interaction: any) => {
     // Send log message
     const logChannel = interaction.client.channels.cache.get(
         Environment.LOG_CHANNEL_ID,
-    );
+    ) as TextChannel;
 
-    const userName = interaction.options.getUser('user').toString();
+    const userName = interaction.options.getUser('user')!.toString();
     const amount = interaction.options.getInteger('quantity');
-    const approvingMod = interaction.member.toString();
+    const approvingMod = interaction.member?.toString();
     let reason = interaction.options.getString('reason');
     if (reason === null) {
         reason = 'with no reason given';
     } else {
         reason = 'with reason: ' + reason;
     }
-    logChannel.send(
-        `${userName} has been awarded ${amount} cabbages by ${approvingMod} ${reason}`,
-    );
+
+    if (logChannel) {
+        logChannel.send(
+            `${userName} has been awarded ${amount} cabbages by ${approvingMod} ${reason}`,
+        );
+    }
 
     return;
 };
