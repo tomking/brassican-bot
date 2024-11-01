@@ -1,11 +1,11 @@
 module.exports = {
-    async up(db, client) {
+    async up(db) {
         // Rename itemizedCabbages
         await db.collection('members').updateMany(
             {}, // match all
             {
                 $rename: { itemizedCabbages: 'accountProgression' },
-            }
+            },
         );
         // Rename existing and add new fields
         await db.collection('members').updateMany(
@@ -22,7 +22,7 @@ module.exports = {
                     'accountProgression.ad': 'accountProgression.adTier',
                     'accountProgression.ca': 'accountProgression.caTier',
                 },
-            }
+            },
         );
         // Convert value of fields: e.g. max=50 -> max=true
         await db.collection('members').updateMany(
@@ -157,11 +157,11 @@ module.exports = {
                         },
                     },
                 },
-            ]
+            ],
         );
     },
 
-    async down(db, client) {
+    async down(db) {
         // Revert value of fields: e.g. max=true -> max=50
         await db.collection('members').updateMany(
             {}, // match all
@@ -295,7 +295,7 @@ module.exports = {
                         },
                     },
                 },
-            ]
+            ],
         );
         // Rename existing and add new fields
         await db.collection('members').updateMany(
@@ -312,14 +312,14 @@ module.exports = {
                     'accountProgression.adTier': 'accountProgression.ad',
                     'accountProgression.caTier': 'accountProgression.ca',
                 },
-            }
+            },
         );
         // Rename itemizedCabbages
         await db.collection('members').updateMany(
             {}, // match all
             {
                 $rename: { accountProgression: 'itemizedCabbages' },
-            }
+            },
         );
     },
 };
