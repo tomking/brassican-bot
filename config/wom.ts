@@ -9,6 +9,8 @@ let womClient: WOMClient;
 let availTokens = WOM_RATE_LIMIT;
 let lastTokenReplenish = Date.now();
 
+export type GenericWOMFunction = <T>(...args: unknown[]) => T;
+
 const replenishTokens = () => {
     const now = Date.now();
     const elapsedTime = now - lastTokenReplenish;
@@ -26,7 +28,7 @@ const canMakeCall = () => {
     return false;
 };
 
-const requestWithRateLimit = async (apiCall: any) => {
+const requestWithRateLimit = async (apiCall: GenericWOMFunction) => {
     while (!canMakeCall()) {
         await new Promise((resolve) => setTimeout(resolve, TIME_PER_TOKEN_MS));
     }
@@ -45,7 +47,9 @@ const handler: ProxyHandler<WOMClient> = {
     get(target, key: keyof WOMClient) {
         if (typeof target[key] === 'function') {
             return (...args: unknown[]) =>
-                requestWithRateLimit(() => target[key](...args));
+                requestWithRateLimit(() =>
+                    (target[key] as GenericWOMFunction)(...args)
+                );
         }
 
         if (
