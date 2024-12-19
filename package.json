@@ -28,7 +28,7 @@
         "dotenv": "^16.4.5",
         "joi": "^17.13.3",
         "migrate-mongo": "^11.0.0",
-        "mongoose": "^8.8.4",
+        "mongoose": "^8.9.0",
         "node-cron": "^3.0.3"
     },
     "devDependencies": {
