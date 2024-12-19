@@ -16,6 +16,11 @@
     "quiverCabbages": 100,
     "blorvaCabbages": 100,
     "questCapeCabbages": 100,
+    "clogCabbages": [
+        { "milestone": 0, "bonusCabbages": 0 },
+        { "milestone": 0, "bonusCabbages": 0 },
+        { "milestone": 0, "bonusCabbages": 0 }
+    ],
     "adTierCabbages": {
         "EASY": 5,
         "MEDIUM": 10,

@@ -58,7 +58,8 @@ const mobileBreakdown = (member: GuildMember, memberData: IMember) => {
     const cabbages = Math.floor(memberData.currentCabbages);
     const cabbageBreakdown = getCabbageBreakdown(memberData);
     const timestamp = Math.floor(Date.parse(memberData.updatedAt) / 1000);
-    const nickname = member.nickname ?? member.user.globalName;
+    const nickname =
+        member.nickname || member.user.globalName || member.user.username;
     const nextTierAmount = cabbagesUntilNext(cabbages);
     const nextTierText = nextTierAmount > 0 ? nextTierAmount.toString() : 'N/A';
     // Generate text block
@@ -207,7 +208,8 @@ const cabbageEmbed = (member: GuildMember, memberData: IMember) => {
         cabbagesText.push(cabbageBreakdown.clogSlots);
     }
     // Generate embed
-    const nickname = member.nickname ?? member.user.globalName;
+    const nickname =
+        member.nickname || member.user.globalName || member.user.username;
     const nextTierAmount = cabbagesUntilNext(cabbages);
     const nextTierText = nextTierAmount > 0 ? nextTierAmount.toString() : 'N/A';
     const embed = new EmbedBuilder()

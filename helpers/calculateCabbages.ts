@@ -9,15 +9,21 @@ export const getCabbageBreakdown = (
     // We return an object with key-value pairs (<achievement-name>, <amount of cabbages>)
     // If playerDetails is undefined or not provided, we reverse engineer the core cabbages
     const { accountProgression: account } = memberData;
+    let clogCabbages = Math.floor(account.clogSlots / 100) * 25;
+    const milestoneBonusList = Configuration.clogCabbages || [];
+    milestoneBonusList.forEach(({ milestone, bonusCabbages }) => {
+        if (account.clogSlots >= milestone) clogCabbages += bonusCabbages;
+    });
+
     const cabbageBreakdown = {
-        // TODO: change the amount of Clogs, CA and AD
+        // TODO: change the amount of Clogs, CA and AD in config.json
         eventCabbages: memberData.eventCabbages,
         max: account.max ? Configuration.maxCabbages : 0,
         inferno: account.inferno ? Configuration.infernoCabbages : 0,
         quiver: account.quiver ? Configuration.quiverCabbages : 0,
         blorva: account.blorva ? Configuration.blorvaCabbages : 0,
         questCape: account.questCape ? Configuration.questCapeCabbages : 0,
-        clogSlots: Math.floor(account.clogSlots / 100) * 20,
+        clogSlots: clogCabbages,
         caTier: Configuration.caTierCabbages[account.caTier] || 0,
         adTier: Configuration.adTierCabbages[account.adTier] || 0,
     } as { [key: string]: number };
