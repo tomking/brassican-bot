@@ -1,18 +1,11 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { Client, Collection } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { GatewayIntentBits } from 'discord-api-types/v10';
-import { Environment } from './services/environment.ts';
+import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import { Environment } from './services/environment';
 
 export type ModifiedDiscordClient = Client & {
-    commands?: Collection<string, {
-        name: string;
-        once?: boolean;
-        data: SlashCommandBuilder;
-        execute: (...args: unknown[]) => Promise<void>;
-    }>;
+    commands?: Collection<string, any>;
 };
 
 let client: ModifiedDiscordClient;
@@ -22,7 +15,7 @@ export const initialize = async () => {
 
     // Load all commands from dir/subdirs on start
     client.commands = new Collection();
-    const foldersPath = path.join(import.meta.dirname!, 'commands');
+    const foldersPath = path.join(__dirname, 'commands');
     const commandFolders = fs.readdirSync(foldersPath);
 
     for (const folder of commandFolders) {
@@ -32,48 +25,30 @@ export const initialize = async () => {
             .filter((file) => file.endsWith('.ts'));
         for (const file of commandFiles) {
             const filePath = path.join(commandsPath, file);
-            const command: {
-                name: string;
-                once?: boolean;
-                data: SlashCommandBuilder;
-                execute: (...args: unknown[]) => Promise<void>;
-            } = await import(`file://${filePath}`);
-
+            const command = require(filePath);
             if ('data' in command && 'execute' in command) {
                 client.commands.set(command.data.name, command);
             } else {
                 console.log(
-                    `[WARNING] (RUN) The command at ${filePath} is missing a required "data" or "execute" property.`,
+                    `[WARNING] (RUN) The command at ${filePath} is missing a required "data" or "execute" property.`
                 );
             }
         }
     }
 
     // Load all event handlers from dir on start
-    const eventsPath = path.join(import.meta.dirname!, 'events');
+    const eventsPath = path.join(__dirname, 'events');
     const eventFiles = fs
         .readdirSync(eventsPath)
         .filter((file) => file.endsWith('.ts'));
 
     for (const file of eventFiles) {
         const filePath = path.join(eventsPath, file);
-
-        const event: {
-            name: string;
-            once?: boolean;
-            execute: (...args: unknown[]) => Promise<void>;
-        } = await import(`file://${filePath}`);
-
+        const event = require(filePath);
         if (event.once) {
-            client.once(
-                event.name,
-                (...args: unknown[]) => event.execute(...args),
-            );
+            client.once(event.name, (...args: any[]) => event.execute(...args));
         } else {
-            client.on(
-                event.name,
-                (...args: unknown[]) => event.execute(...args),
-            );
+            client.on(event.name, (...args: any[]) => event.execute(...args));
         }
     }
 

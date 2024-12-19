@@ -1,7 +1,7 @@
 import * as cron from 'node-cron';
 
-import { updateAllMemberRanks } from '../helpers/updateAllMemberRanks.ts';
-import { getDiscordClient } from '../discord.ts';
+import { updateAllMemberRanks } from '../helpers/updateAllMemberRanks';
+import { getDiscordClient } from '../discord';
 
 export const initialize = () => {
     // Schedule a job to run every Monday at 00:00 UTC to update all member's cabbage counts
@@ -10,7 +10,7 @@ export const initialize = () => {
         '0 0 * * 1',
         () => {
             console.log(
-                `Running scheduled job to update all member's cabbage counts`,
+                `Running scheduled job to update all member's cabbage counts`
             );
             const startTime = performance.now();
             updateAllMemberRanks(client);
@@ -18,12 +18,12 @@ export const initialize = () => {
             console.log(
                 `Scheduled job to update all member's cabbage counts is complete (This took ${
                     endTime - startTime
-                } ms)`,
+                } ms)`
             );
         },
         {
             scheduled: true,
             timezone: 'UTC',
-        },
+        }
     );
 };

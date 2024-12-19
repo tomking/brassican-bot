@@ -1,11 +1,13 @@
-import * as environment from './services/environment.ts';
-import * as database from './config/database.ts';
-import * as discord from './discord.ts';
-import * as wiseoldman from './config/wom.ts';
-import * as scheduler from './services/scheduler.ts';
+import * as environment from './services/environment';
+import * as database from './config/database';
+import * as discord from './discord';
+import * as wiseoldman from './config/wom';
+import * as scheduler from './services/scheduler';
 
-environment.initialize();
-await database.initialize();
-wiseoldman.initialize();
-await discord.initialize();
-scheduler.initialize();
+(async () => {
+    environment.initialize();
+    await database.initialize();
+    wiseoldman.initialize();
+    await discord.initialize();
+    scheduler.initialize();
+})();

@@ -1,10 +1,13 @@
-import { ChatInputCommandInteraction, TextChannel } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
+import {
+    ChatInputCommandInteraction,
+    TextChannel,
+    SlashCommandBuilder,
+} from 'discord.js';
 
-import { Environment } from '../../services/environment.ts';
-import { Member } from '../../models/member.ts';
-import { getWOMClient } from '../../config/wom.ts';
-import { updateMemberRank } from '../../helpers/updateMemberRank.ts';
+import { Environment } from '../../services/environment';
+import { Member } from '../../models/member';
+import { getWOMClient } from '../../config/wom';
+import { updateMemberRank } from '../../helpers/updateMemberRank';
 
 export const data = new SlashCommandBuilder()
     .setName('register')
@@ -13,7 +16,7 @@ export const data = new SlashCommandBuilder()
         option
             .setName('rsn')
             .setDescription(
-                'The current account name of your main OSRS account',
+                'The current account name of your main OSRS account'
             )
             .setRequired(true)
     );
@@ -36,7 +39,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     } catch (error) {
         console.error(
             'Error checking if discord ID is already registered: ',
-            error,
+            error
         );
         await interaction.editReply('Something went wrong. Please try again.');
         return;
@@ -71,14 +74,14 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 
         if (memberFromWOMID) {
             await interaction.editReply(
-                'The given RSN is already registered with another member!',
+                'The given RSN is already registered with another member!'
             );
             return;
         }
     } catch (error) {
         console.error(
             'Error checking if wom ID is already registered: ',
-            error,
+            error
         );
         await interaction.editReply('Something went wrong. Please try again.');
         return;
@@ -91,18 +94,18 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 
     await newMember.save();
     await interaction.editReply(
-        "You're all set! Keep an eye out for your new rank to be applied soon!",
+        "You're all set! Keep an eye out for your new rank to be applied soon!"
     );
 
     updateMemberRank(discordID, interaction.client);
 
     // Send log message that user was registered
     const logChannel = interaction.client.channels.cache.get(
-        Environment.LOG_CHANNEL_ID,
+        Environment.LOG_CHANNEL_ID
     ) as TextChannel;
 
     logChannel.send(
-        `${interaction.member?.toString()} has registered for the rank system using the RSN: \`${rsn}\``,
+        `${interaction.member?.toString()} has registered for the rank system using the RSN: \`${rsn}\``
     );
 
     return;

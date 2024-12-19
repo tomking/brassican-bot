@@ -1,0 +1,7 @@
+coverage
+*.json
+.eslintrc
+.eslintignore
+.dockerignore
+.prettierrc
+build

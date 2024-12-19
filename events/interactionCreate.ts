@@ -1,20 +1,19 @@
 import { BaseInteraction, Events, TextChannel } from 'discord.js';
 
-import { Environment } from '../services/environment.ts';
-import { ModifiedDiscordClient } from '../discord.ts';
+import { Environment } from '../services/environment';
+import { ModifiedDiscordClient } from '../discord';
 
 export const name = Events.InteractionCreate;
 
 export const execute = async (interaction: BaseInteraction) => {
     if (interaction.isChatInputCommand()) {
-        const command = (interaction.client as ModifiedDiscordClient).commands
-            ?.get(
-                interaction.commandName,
-            );
+        const command = (
+            interaction.client as ModifiedDiscordClient
+        ).commands?.get(interaction.commandName);
 
         if (!command) {
             console.error(
-                `No command matching ${interaction.commandName} was found.`,
+                `No command matching ${interaction.commandName} was found.`
             );
             return;
         }
@@ -32,11 +31,11 @@ export const execute = async (interaction: BaseInteraction) => {
             await interaction.message.delete();
 
             const logChannel = interaction.client.channels.cache.get(
-                Environment.LOG_CHANNEL_ID,
+                Environment.LOG_CHANNEL_ID
             ) as TextChannel;
 
             logChannel.send(
-                `${interaction.member?.toString()} marked the following complete: \n    "${interaction.message.toString()}"`,
+                `${interaction.member?.toString()} marked the following complete: \n    "${interaction.message.toString()}"`
             );
         }
     } else if (interaction.isStringSelectMenu()) {

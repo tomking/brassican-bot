@@ -1,4 +1,4 @@
-import Configuration from '../config.json' with { type: 'json' };
+import * as Configuration from '../config.json';
 
 export const mapPointsToRank = (points: number) => {
     for (let i = Configuration.rankCutoffs.length - 1; i >= 0; i--) {
@@ -6,5 +6,6 @@ export const mapPointsToRank = (points: number) => {
             return Configuration.rankNames[i];
         }
     }
+
     return Configuration.rankNames[0];
 };

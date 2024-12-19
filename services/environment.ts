@@ -1,7 +1,6 @@
-import process from 'node:process';
-
+import * as process from 'node:process';
 import * as z from 'zod';
-import 'jsr:@std/dotenv/load';
+import * as dotenv from 'dotenv';
 
 const ENVIRONMENT_SCHEMA = z.object({
     DISCORD_BOT_TOKEN: z.string(),
@@ -33,6 +32,8 @@ type EnvironmentType = z.infer<typeof ENVIRONMENT_SCHEMA>;
 let parsedEnvironment: EnvironmentType;
 
 export const initialize = () => {
+    dotenv.config();
+
     try {
         parsedEnvironment = ENVIRONMENT_SCHEMA.parse(process.env);
     } catch (error: unknown) {

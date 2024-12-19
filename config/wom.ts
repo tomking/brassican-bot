@@ -1,6 +1,6 @@
 import { WOMClient } from '@wise-old-man/utils';
 
-import { Environment } from '../services/environment.ts';
+import { Environment } from '../services/environment';
 
 let WOM_RATE_LIMIT: number;
 let TIME_PER_TOKEN_MS: number;
@@ -58,10 +58,7 @@ const handler: ProxyHandler<WOMClient> = {
                 );
         }
 
-        if (
-            typeof target[key] === 'object' &&
-            target[key] !== null
-        ) {
+        if (typeof target[key] === 'object' && target[key] !== null) {
             return new Proxy(target[key], handler as ProxyHandler<object>);
         }
 

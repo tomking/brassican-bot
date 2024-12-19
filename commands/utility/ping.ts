@@ -1,5 +1,4 @@
-import { ChatInputCommandInteraction } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
     .setName('ping')
@@ -7,8 +6,7 @@ export const data = new SlashCommandBuilder()
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
     await interaction.reply({
-        content:
-            `Pong! (Websocket heartbeat: ${interaction.client.ws.ping}ms.)`,
+        content: `Pong! (Websocket heartbeat: ${interaction.client.ws.ping}ms.)`,
         ephemeral: true,
     });
 };

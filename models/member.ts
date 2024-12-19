@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-import { getMongooseClient } from '../config/database.ts';
+import { getMongooseClient } from '../config/database';
 
 export type CA_TIER =
     | 'EASY'
@@ -10,11 +10,7 @@ export type CA_TIER =
     | 'MASTER'
     | 'GRANDMASTER';
 
-export type AD_TIER =
-    | 'EASY'
-    | 'MEDIUM'
-    | 'HARD'
-    | 'ELITE';
+export type AD_TIER = 'EASY' | 'MEDIUM' | 'HARD' | 'ELITE';
 
 export interface IMember extends mongoose.Document {
     womID: string;

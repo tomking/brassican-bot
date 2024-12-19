@@ -3,12 +3,12 @@ import {
     GuildMember,
     Role,
     TextChannel,
+    SlashCommandBuilder,
 } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
 
-import { Environment } from '../../services/environment.ts';
-import { Member } from '../../models/member.ts';
-import { updateMemberRank } from '../../helpers/updateMemberRank.ts';
+import { Environment } from '../../services/environment';
+import { Member } from '../../models/member';
+import { updateMemberRank } from '../../helpers/updateMemberRank';
 
 export const data = new SlashCommandBuilder()
     .setName('givecabbages')
@@ -40,11 +40,11 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
         !(interaction.member as GuildMember).roles.cache.some(
             (role: Role) =>
                 role.id === Environment.DISCORD_MOD_ROLE_ID ||
-                role.id === Environment.DISCORD_CA_ROLE_ID,
+                role.id === Environment.DISCORD_CA_ROLE_ID
         )
     ) {
         await interaction.editReply(
-            'Only members of staff can use this command!',
+            'Only members of staff can use this command!'
         );
         return;
     }
@@ -65,7 +65,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     } catch (error) {
         console.error(
             'Error checking if discord ID is already registered: ',
-            error,
+            error
         );
         await interaction.editReply('Something went wrong. Please try again.');
         return;
@@ -76,22 +76,18 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     await memberData.save();
 
     await interaction.editReply(
-        `${
-            interaction.options
-                .getUser('user')!
-                .toString()
-        } has been awarded ${
-            interaction.options.getInteger(
-                'quantity',
-            )
-        } cabbages! `,
+        `${interaction.options
+            .getUser('user')!
+            .toString()} has been awarded ${interaction.options.getInteger(
+            'quantity'
+        )} cabbages! `
     );
 
     updateMemberRank(discordID, interaction.client);
 
     // Send log message
     const logChannel = interaction.client.channels.cache.get(
-        Environment.LOG_CHANNEL_ID,
+        Environment.LOG_CHANNEL_ID
     ) as TextChannel;
 
     const userName = interaction.options.getUser('user')!.toString();
@@ -106,7 +102,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 
     if (logChannel) {
         logChannel.send(
-            `${userName} has been awarded ${amount} cabbages by ${approvingMod} ${reason}`,
+            `${userName} has been awarded ${amount} cabbages by ${approvingMod} ${reason}`
         );
     }
 

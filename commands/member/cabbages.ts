@@ -3,26 +3,24 @@ import {
     ChatInputCommandInteraction,
     Emoji,
     GuildMember,
-} from 'discord.js';
-import {
     ActionRowBuilder,
     ButtonBuilder,
     EmbedBuilder,
     SlashCommandBuilder,
-} from '@discordjs/builders';
+} from 'discord.js';
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 
-import { getDiscordClient, ModifiedDiscordClient } from '../../discord.ts';
+import { getDiscordClient, ModifiedDiscordClient } from '../../discord';
 import {
     cabbagesUntilNext,
     getCabbageBreakdown,
-} from '../../helpers/calculateCabbages.ts';
-import { IMember, Member } from '../../models/member.ts';
+} from '../../helpers/calculateCabbages';
+import { IMember, Member } from '../../models/member';
 
 const findEmoji = (client: ModifiedDiscordClient, name: string) => {
     const emoji = client.emojis.cache.find(
         (cachedEmoji: Emoji) =>
-            cachedEmoji.name?.toLowerCase() === name.toLowerCase(),
+            cachedEmoji.name?.toLowerCase() === name.toLowerCase()
     );
 
     return emoji || '';
@@ -49,11 +47,9 @@ const mobileBreakdown = (member: GuildMember, memberData: IMember) => {
     const client = getDiscordClient();
     const { accountProgression: account } = memberData;
     // Generate all necessary info
-    const rankEmojiName = `${
-        memberData.currentRank
-            .toLowerCase()
-            .replace(/ /g, '')
-    }Gem`;
+    const rankEmojiName = `${memberData.currentRank
+        .toLowerCase()
+        .replace(/ /g, '')}Gem`;
     const rankEmoji = findEmoji(client, rankEmojiName);
     const cabbages = Math.floor(memberData.currentCabbages);
     const cabbageBreakdown = getCabbageBreakdown(memberData);
@@ -114,7 +110,7 @@ const mobileBreakdown = (member: GuildMember, memberData: IMember) => {
         const caCabbages = pad(cabbageBreakdown.caTier, 10);
         const caTier = pad(
             account.caTier === 'GRANDMASTER' ? 'GM' : account.caTier,
-            8,
+            8
         );
         textArray.push('╠--------------+--------+----------╣');
         textArray.push(`║     CA's     |${caTier}|${caCabbages}║`);
@@ -134,11 +130,9 @@ const cabbageEmbed = (member: GuildMember, memberData: IMember) => {
     const { accountProgression: account } = memberData;
     // Generate all neccesary info
     const checkmark = findEmoji(client, 'check');
-    const rankEmojiName = `${
-        memberData.currentRank
-            .toLowerCase()
-            .replace(/ /g, '')
-    }Gem`;
+    const rankEmojiName = `${memberData.currentRank
+        .toLowerCase()
+        .replace(/ /g, '')}Gem`;
     const rankEmoji = findEmoji(client, rankEmojiName);
     const cabbages = Math.floor(memberData.currentCabbages);
     const cabbageBreakdown = getCabbageBreakdown(memberData);
@@ -221,7 +215,7 @@ const cabbageEmbed = (member: GuildMember, memberData: IMember) => {
             embedfield('Achievements', achievementText.join('\n'), true),
             embedfield('Status', statusText.join('\n'), true),
             embedfield('Cabbages', cabbagesText.join('\n'), true),
-            embedfield('', `**Last updated**: <t:${timestamp}>`),
+            embedfield('', `**Last updated**: <t:${timestamp}>`)
         )
         .setColor([17, 255, 0])
         .setFooter({
@@ -258,14 +252,14 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
 
         if (!memberData) {
             await interaction.editReply(
-                "You aren't registered yet. Use `/register` to get signed up!",
+                "You aren't registered yet. Use `/register` to get signed up!"
             );
             return;
         }
     } catch (error) {
         console.error(
             'Error checking if discord ID is already registered: ',
-            error,
+            error
         );
         await interaction.editReply('Something went wrong. Please try again.');
         return;
@@ -276,7 +270,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
         .setLabel('Show mobile version?')
         .setStyle(ButtonStyle.Secondary);
     const pc_row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        mobile_button,
+        mobile_button
     );
 
     const pc_button = new ButtonBuilder()
@@ -284,7 +278,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
         .setLabel('Show pc version?')
         .setStyle(ButtonStyle.Secondary);
     const mobile_row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        pc_button,
+        pc_button
     );
 
     // By default, use the embed version first
