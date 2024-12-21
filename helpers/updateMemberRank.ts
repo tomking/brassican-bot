@@ -51,6 +51,13 @@ export const updateMemberRank = async (
         return;
     }
 
+    memberData.accountProgression.inferno =
+        (playerDetails?.latestSnapshot?.data?.bosses?.['tzkal_zuk']?.kills ||
+            0) >= 1;
+
+    memberData.accountProgression.max =
+        playerDetails?.latestSnapshot?.data?.skills?.overall?.level === 2277;
+
     memberData.currentCabbages = Object.values(
         getCabbageBreakdown(memberData, playerDetails)
     ).reduce((acc, val) => acc + val, 0);
