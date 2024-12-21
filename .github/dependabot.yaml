@@ -9,4 +9,6 @@ updates:
       target-branch: 'dev'
       ignore:
           - dependency-name: '*'
-            update-types: ['version-update:semver-major'] # Ignore major updates unless specified in security updates
+            update-types: [
+                'version-update:semver-major',
+            ] # Ignore major updates unless specified in security updates

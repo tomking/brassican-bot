@@ -1,9 +1,26 @@
 {
+    "rankCutoffs": [0, 100, 250, 500, 1000, 1500, 2500, 5000, 6500],
+    "rankNames": [
+        "Jade",
+        "Red Topaz",
+        "Sapphire",
+        "Emerald",
+        "Ruby",
+        "Diamond",
+        "Dragon Stone",
+        "Onyx",
+        "Zenyte"
+    ],
     "maxCabbages": 100,
     "infernoCabbages": 100,
     "quiverCabbages": 100,
     "blorvaCabbages": 100,
     "questCapeCabbages": 100,
+    "clogCabbages": [
+        { "milestone": 0, "bonusCabbages": 0 },
+        { "milestone": 0, "bonusCabbages": 0 },
+        { "milestone": 0, "bonusCabbages": 0 }
+    ],
     "adTierCabbages": {
         "EASY": 5,
         "MEDIUM": 10,
@@ -18,4 +35,4 @@
         "MASTER": 80,
         "GRANDMASTER": 160
     }
-  }
+}
