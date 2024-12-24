@@ -5,7 +5,7 @@ import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import { Environment } from './services/environment';
 
 export type ModifiedDiscordClient = Client & {
-    commands?: Collection<string, any>;
+    commands?: Collection<string, unknown>;
 };
 
 let client: ModifiedDiscordClient;
@@ -46,9 +46,13 @@ export const initialize = async () => {
         const filePath = path.join(eventsPath, file);
         const event = require(filePath);
         if (event.once) {
-            client.once(event.name, (...args: any[]) => event.execute(...args));
+            client.once(event.name, (...args: unknown[]) =>
+                event.execute(...args)
+            );
         } else {
-            client.on(event.name, (...args: any[]) => event.execute(...args));
+            client.on(event.name, (...args: unknown[]) =>
+                event.execute(...args)
+            );
         }
     }
 

@@ -13,7 +13,7 @@
         "outDir": "build",
         "resolveJsonModule": true,
         "moduleResolution": "node",
-        "esModuleInterop": false,
+        "esModuleInterop": true,
         "skipLibCheck": true,
         "target": "ES2020"
     },
