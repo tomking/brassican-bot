@@ -3,7 +3,8 @@
         "strict": true, // might chance this back to false
         "typeRoots": [
             "node_modules/@types",
-            "typings-custom"
+            "typings-custom",
+            "./types"
         ],
         "experimentalDecorators": true,
         "module": "commonjs",
