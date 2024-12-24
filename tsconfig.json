@@ -1,10 +1,8 @@
 {
     "compilerOptions": {
-        "strict": true, // might chance this back to false
+        "strict": true,
         "typeRoots": [
-            "node_modules/@types",
-            "typings-custom",
-            "./types"
+            "node_modules/@types"
         ],
         "experimentalDecorators": true,
         "module": "commonjs",
