@@ -1,15 +1,17 @@
 import { execute } from './approve';
 import { Member } from '../../models/member';
-import { ChatInputCommandInteraction, GuildMember } from 'discord.js';
+import { ChatInputCommandInteraction } from 'discord.js';
 
 jest.mock('../../models/member');
 
 describe('commands | staff | approve', () => {
-    let interaction: any;
+    let interaction: ChatInputCommandInteraction;
+    let accessMock: jest.Mock;
 
     beforeEach(() => {
         jest.clearAllMocks();
 
+        accessMock = jest.fn();
         interaction = {
             deferReply: jest.fn(),
             editReply: jest.fn(),
@@ -19,11 +21,11 @@ describe('commands | staff | approve', () => {
             member: {
                 roles: {
                     cache: {
-                        some: jest.fn().mockReturnValue(true),
+                        some: accessMock.mockReturnValue(true),
                     },
                 },
-            } as unknown as GuildMember,
-        };
+            },
+        } as unknown as ChatInputCommandInteraction;
     });
 
     test('When a user calls the command, then the command reply should be ephemeral', async () => {
@@ -38,7 +40,7 @@ describe('commands | staff | approve', () => {
 
     test('When a user is not a member of staff, then the command should exit with an appropriate message', async () => {
         // Arrange
-        interaction.member.roles.cache.some.mockReturnValue(false);
+        accessMock.mockReturnValue(false);
 
         // Act
         await execute(interaction);

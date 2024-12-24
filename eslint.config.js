@@ -42,6 +42,7 @@ export default tseslint.config(
     {
         files: ['**/*.test.ts'],
         rules: {
+            'jest/expect-expect': 'off',
             'jest/require-top-level-describe': 'error',
             'jest/consistent-test-it': ['error', { fn: 'test' }],
             'jest/valid-title': [
