@@ -1,9 +1,8 @@
 {
     "compilerOptions": {
-        "strict": true, // might chance this back to false
+        "strict": true,
         "typeRoots": [
-            "node_modules/@types",
-            "typings-custom"
+            "node_modules/@types"
         ],
         "experimentalDecorators": true,
         "module": "commonjs",
@@ -14,7 +13,7 @@
         "outDir": "build",
         "resolveJsonModule": true,
         "moduleResolution": "node",
-        "esModuleInterop": false,
+        "esModuleInterop": true,
         "skipLibCheck": true,
         "target": "ES2020"
     },

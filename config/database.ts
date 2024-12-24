@@ -5,7 +5,7 @@ import { Environment } from '../services/environment';
 
 export const initialize = async () => {
     try {
-        await mongoose.connect(Environment.MONGO_URL!, {
+        await mongoose.connect(Environment.MONGO_URL, {
             dbName: Environment.CABBAGE_DB_NAME,
         });
     } catch (error) {
@@ -15,7 +15,7 @@ export const initialize = async () => {
 
     config.set({
         mongodb: {
-            url: Environment.MONGO_URL!,
+            url: Environment.MONGO_URL,
             databaseName: Environment.CABBAGE_DB_NAME,
             options: {},
         },

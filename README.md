@@ -26,6 +26,8 @@ first familiarize yourself with
 It is very helpful, and will explain most of the background needed to understand
 this repo.
 
+The code QA is done with [ESLint](https://eslint.org/) and [Prettier](https://prettier.io/). It is strongly recommended to use Visual Studio Code with the [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extensions installed to work on this project.
+
 The Bekt clan currently hosts both the bot's live application code and its
 database instance on [Railway](https://railway.app/) (we maintain both a
 production and test environment).

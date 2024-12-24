@@ -1,3 +1,5 @@
+import { Client } from 'discord.js';
+
 import { Environment } from '../services/environment';
 import { getWOMClient } from '../config/wom';
 import { Member } from '../models/member';
@@ -7,7 +9,7 @@ export const delay = (milliseconds: number) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
 
-export const updateAllMemberRanks = async (discordClient: any) => {
+export const updateAllMemberRanks = async (discordClient: Client) => {
     // This is a very expensive operation
     // TODO: Investigate ways to reduce the cost of this (potentially avoid updating dead accounts/members)
 
@@ -21,14 +23,13 @@ export const updateAllMemberRanks = async (discordClient: any) => {
     // See https://docs.wiseoldman.net/groups-api/group-endpoints for info on why this approach is preferred
     await delay(300000);
 
-    let womMemberIDs = await Member.find({}, 'discordID -_id').exec();
+    const members = await Member.find({}, 'discordID -_id').exec();
+    const womMemberIDs = members.map((doc) => doc.discordID);
 
-    womMemberIDs = womMemberIDs.map((doc: any) => doc.discordID);
-
-    await womMemberIDs.forEach(async (discordID: any) => {
+    for (const discordID of womMemberIDs) {
         await updateMemberRank(discordID, discordClient);
         await delay(5000);
-    });
+    }
 
     console.log(`Attempt to update all member's cabbage counts has finished.`);
 };
