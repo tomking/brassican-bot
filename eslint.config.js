@@ -37,7 +37,6 @@ export default tseslint.config(
                 },
             ],
             '@typescript-eslint/no-shadow': ['error'],
-            '@typescript-eslint/no-require-imports': 'warn',
         },
     },
     {

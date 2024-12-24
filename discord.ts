@@ -1,7 +1,12 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import {
+    Client,
+    Collection,
+    GatewayIntentBits,
+    SlashCommandBuilder,
+} from 'discord.js';
 
-import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import { Environment } from './services/environment';
 
 export type ModifiedDiscordClient = Client & {
@@ -15,7 +20,7 @@ export const initialize = async () => {
 
     // Load all commands from dir/subdirs on start
     client.commands = new Collection();
-    const foldersPath = path.join(__dirname, 'commands');
+    const foldersPath = path.join(path.resolve(), 'commands');
     const commandFolders = fs.readdirSync(foldersPath);
 
     for (const folder of commandFolders) {
@@ -25,7 +30,13 @@ export const initialize = async () => {
             .filter((file) => file.endsWith('.ts'));
         for (const file of commandFiles) {
             const filePath = path.join(commandsPath, file);
-            const command = require(filePath);
+            const command: {
+                name: string;
+                once?: boolean;
+                data: SlashCommandBuilder;
+                execute: (...args: unknown[]) => Promise<void>;
+            } = await import(`file://${filePath}`);
+
             if ('data' in command && 'execute' in command) {
                 client.commands.set(command.data.name, command);
             } else {
@@ -37,14 +48,19 @@ export const initialize = async () => {
     }
 
     // Load all event handlers from dir on start
-    const eventsPath = path.join(__dirname, 'events');
+    const eventsPath = path.join(path.resolve(), 'events');
     const eventFiles = fs
         .readdirSync(eventsPath)
         .filter((file) => file.endsWith('.ts'));
 
     for (const file of eventFiles) {
         const filePath = path.join(eventsPath, file);
-        const event = require(filePath);
+        const event: {
+            name: string;
+            once?: boolean;
+            execute: (...args: unknown[]) => Promise<void>;
+        } = await import(`file://${filePath}`);
+
         if (event.once) {
             client.once(event.name, (...args: unknown[]) =>
                 event.execute(...args)
