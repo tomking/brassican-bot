@@ -1,9 +1,9 @@
-const cron = require('node-cron');
+import * as cron from 'node-cron';
 
-const updateAllMemberRanks = require('../helpers/updateAllMemberRanks');
-const { getDiscordClient } = require('../discord');
+import { updateAllMemberRanks } from '../helpers/updateAllMemberRanks';
+import { getDiscordClient } from '../discord';
 
-const initialize = async () => {
+export const initialize = () => {
     // Schedule a job to run every Monday at 00:00 UTC to update all member's cabbage counts
     const client = getDiscordClient();
     cron.schedule(
@@ -26,8 +26,4 @@ const initialize = async () => {
             timezone: 'UTC',
         }
     );
-};
-
-module.exports = {
-    initialize,
 };

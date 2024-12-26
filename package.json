@@ -1,13 +1,14 @@
 {
     "name": "brassican-bot",
+    "type": "module",
     "version": "1.0.0",
     "description": "A discord bot that manages the custom rank system for the Bekt clan.",
-    "main": "index.js",
+    "main": "index.ts",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "prestart": "npm run deploy-commands",
-        "start": "node index.js",
-        "deploy-commands": "node deploy-commands.js"
+        "start": "tsx index.ts",
+        "format": "prettier --config .prettierrc **/*.ts --write --check",
+        "lint": "eslint --flag unstable_ts_config"
     },
     "engines": {
         "node": ">=18"
@@ -23,15 +24,29 @@
     },
     "homepage": "https://github.com/tomking/brassican-bot#readme",
     "dependencies": {
+        "@typescript-eslint/eslint-plugin": "^8.18.2",
+        "@typescript-eslint/parser": "^8.18.2",
         "@wise-old-man/utils": "^3.3.6",
         "discord.js": "^14.16.3",
         "dotenv": "^16.4.7",
+        "eslint": "^9.17.0",
+        "eslint-config-google": "^0.14.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-jest": "^28.10.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "jest": "^29.7.0",
+        "jiti": "^2.4.2",
         "joi": "^17.13.3",
         "migrate-mongo": "^11.0.0",
-        "mongoose": "^8.9.0",
-        "node-cron": "^3.0.3"
+        "mongoose": "^8.9.2",
+        "node-cron": "^3.0.3",
+        "prettier": "^3.4.2",
+        "tsx": "^4.19.2",
+        "typescript-eslint": "^8.18.2",
+        "zod": "^3.24.1"
     },
     "devDependencies": {
+        "@types/migrate-mongo": "^10.0.5",
         "@types/node-cron": "^3.0.11"
     }
 }
