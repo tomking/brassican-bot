@@ -82,6 +82,8 @@ export const initialize = async () => {
         }
     }
 
+    // Re-deploy the commands to Discord
+
     const rest = new REST().setToken(Environment.DISCORD_BOT_TOKEN);
 
     try {
@@ -89,23 +91,31 @@ export const initialize = async () => {
             `Started refreshing ${client.commands?.size || 0} application (/) commands.`
         );
 
+        // Delete all existing global commands
+        await rest
+            .put(Routes.applicationCommands(Environment.DISCORD_APP_ID), {
+                body: [],
+            })
+            .then(() => console.log('Successfully deleted all guild commands.'))
+            .catch(console.error);
+
+        // Delete all existing guild commands
         await rest
             .put(
                 Routes.applicationGuildCommands(
                     Environment.DISCORD_APP_ID,
                     Environment.GUILD_ID
                 ),
-                { body: [] }
+                {
+                    body: [],
+                }
             )
             .then(() => console.log('Successfully deleted all guild commands.'))
             .catch(console.error);
 
-        // The put method is used to fully refresh all commands in the guild with the current set
+        // The put method is used to fully refresh all commands with the current set.
         const data = await rest.put(
-            Routes.applicationGuildCommands(
-                Environment.DISCORD_APP_ID,
-                Environment.GUILD_ID
-            ),
+            Routes.applicationCommands(Environment.DISCORD_APP_ID),
             {
                 body: Array.from(client.commands, ([_, details]) =>
                     (details as DiscordCommandDetails).data.toJSON()
