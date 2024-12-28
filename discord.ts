@@ -5,12 +5,27 @@ import {
     Collection,
     GatewayIntentBits,
     SlashCommandBuilder,
+    REST,
+    Routes,
 } from 'discord.js';
 
 import { Environment } from './services/environment';
 
 export type ModifiedDiscordClient = Client & {
     commands?: Collection<string, unknown>;
+};
+
+type DiscordCommandDetails = {
+    name: string;
+    once?: boolean;
+    data: SlashCommandBuilder;
+    execute: (...args: unknown[]) => Promise<void>;
+};
+
+type DiscordEventDetails = {
+    name: string;
+    once?: boolean;
+    execute: (...args: unknown[]) => Promise<void>;
 };
 
 let client: ModifiedDiscordClient;
@@ -32,12 +47,9 @@ export const initialize = async () => {
             );
         for (const file of commandFiles) {
             const filePath = path.join(commandsPath, file);
-            const command: {
-                name: string;
-                once?: boolean;
-                data: SlashCommandBuilder;
-                execute: (...args: unknown[]) => Promise<void>;
-            } = await import(`file://${filePath}`);
+            const command: DiscordCommandDetails = await import(
+                `file://${filePath}`
+            );
 
             if ('data' in command && 'execute' in command) {
                 client.commands.set(command.data.name, command);
@@ -57,11 +69,7 @@ export const initialize = async () => {
 
     for (const file of eventFiles) {
         const filePath = path.join(eventsPath, file);
-        const event: {
-            name: string;
-            once?: boolean;
-            execute: (...args: unknown[]) => Promise<void>;
-        } = await import(`file://${filePath}`);
+        const event: DiscordEventDetails = await import(`file://${filePath}`);
 
         if (event.once) {
             client.once(event.name, (...args: unknown[]) =>
@@ -72,6 +80,33 @@ export const initialize = async () => {
                 event.execute(...args)
             );
         }
+    }
+
+    const rest = new REST().setToken(Environment.DISCORD_BOT_TOKEN);
+
+    try {
+        console.log(
+            `Started refreshing ${client.commands?.size || 0} application (/) commands.`
+        );
+
+        // The put method is used to fully refresh all commands in the guild with the current set
+        const data = await rest.put(
+            Routes.applicationGuildCommands(
+                Environment.DISCORD_APP_ID,
+                Environment.GUILD_ID
+            ),
+            {
+                body: Array.from(client.commands, ([_, details]) =>
+                    (details as DiscordCommandDetails).data.toJSON()
+                ),
+            }
+        );
+
+        console.log(
+            `Successfully reloaded ${(data as unknown[])?.length || 0} application (/) commands.`
+        );
+    } catch (error) {
+        console.error('Could not reload commands:', error);
     }
 
     await client.login(Environment.DISCORD_BOT_TOKEN);
