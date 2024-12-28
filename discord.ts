@@ -91,9 +91,22 @@ export const initialize = async () => {
             `Started refreshing ${client.commands?.size || 0} application (/) commands.`
         );
 
-        // The put method is used to fully redeploy all commands with the current set.
+        // Delete all existing global commands
+        await rest
+            .put(Routes.applicationCommands(Environment.DISCORD_APP_ID), {
+                body: [],
+            })
+            .then(() =>
+                console.log('Successfully deleted all global commands.')
+            )
+            .catch(console.error);
+
+        // Fully redeploy all commands at the guild level
         const data = await rest.put(
-            Routes.applicationCommands(Environment.DISCORD_APP_ID),
+            Routes.applicationGuildCommands(
+                Environment.DISCORD_APP_ID,
+                Environment.GUILD_ID
+            ),
             {
                 body: Array.from(client.commands, ([_, details]) =>
                     (details as DiscordCommandDetails).data.toJSON()
