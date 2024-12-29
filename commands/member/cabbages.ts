@@ -172,7 +172,7 @@ const cabbageEmbed = (member: GuildMember, memberData: IMember) => {
         cabbagesText.push(cabbageBreakdown.quiver);
     }
     if (account.blorva) {
-        const blorvaEmoji = findEmoji(client, 'uwuemoji');
+        const blorvaEmoji = findEmoji(client, 'Blorva');
         achievementText.push(`${blorvaEmoji} Blorva`);
         statusText.push(checkmark);
         cabbagesText.push(cabbageBreakdown.blorva);
