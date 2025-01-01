@@ -1,5 +1,5 @@
 {
-    "rankCutoffs": [0, 100, 250, 500, 1000, 1500, 2500, 5000, 6500],
+    "rankCutoffs": [0, 100, 250, 500, 850, 1400, 2000, 3500, 6000],
     "rankNames": [
         "Jade",
         "Red Topaz",
@@ -11,28 +11,34 @@
         "Onyx",
         "Zenyte"
     ],
-    "maxCabbages": 100,
-    "infernoCabbages": 100,
-    "quiverCabbages": 100,
-    "blorvaCabbages": 100,
-    "questCapeCabbages": 100,
-    "clogCabbages": [
-        { "milestone": 0, "bonusCabbages": 0 },
-        { "milestone": 0, "bonusCabbages": 0 },
-        { "milestone": 0, "bonusCabbages": 0 }
-    ],
-    "adTierCabbages": {
-        "EASY": 5,
-        "MEDIUM": 10,
-        "HARD": 20,
-        "ELITE": 40
-    },
-    "caTierCabbages": {
-        "EASY": 5,
-        "MEDIUM": 10,
-        "HARD": 20,
-        "ELITE": 40,
-        "MASTER": 80,
-        "GRANDMASTER": 160
+    "cabbages": {
+        "ad": {
+            "EASY": 10,
+            "MEDIUM": 25,
+            "HARD": 50,
+            "ELITE": 100
+        },
+        "blorva": 100,
+        "ca": {
+            "EASY": 10,
+            "MEDIUM": 25,
+            "HARD": 50,
+            "ELITE": 100,
+            "MASTER": 150,
+            "GRANDMASTER": 250
+        },
+        "clog": {
+            "amount": 25,
+            "frequency": 100,
+            "bonus": [
+                { "milestone": 500, "amount": 50 },
+                { "milestone": 1000, "amount": 50 },
+                { "milestone": 1500, "amount": 50 }
+            ]
+        },
+        "inferno": 100,
+        "max": 100,
+        "questCape": 100,
+        "quiver": 100
     }
 }
