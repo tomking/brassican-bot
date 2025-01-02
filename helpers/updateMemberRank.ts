@@ -53,14 +53,16 @@ export const updateMemberRank = async (
 
     const { data: latestSnapshotData } = playerDetails?.latestSnapshot || {};
 
-    if (!memberData.accountProgression.inferno) {
-        memberData.accountProgression.inferno =
-            (latestSnapshotData?.bosses?.tzkal_zuk?.kills || 0) > 0;
+    if (latestSnapshotData?.skills?.overall?.level === 2277) {
+        memberData.accountProgression.max = true;
     }
 
-    if (!memberData.accountProgression.max) {
-        memberData.accountProgression.max =
-            latestSnapshotData?.skills?.overall?.level === 2277;
+    if ((latestSnapshotData?.bosses?.tzkal_zuk?.kills || 0) > 0) {
+        memberData.accountProgression.inferno = true;
+    }
+
+    if ((latestSnapshotData?.bosses?.sol_heredit?.kills || 0) > 0) {
+        memberData.accountProgression.quiver = true;
     }
 
     memberData.currentCabbages = Object.values(
