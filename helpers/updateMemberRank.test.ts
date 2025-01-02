@@ -174,4 +174,32 @@ describe('helpers | updateMemberRank', () => {
             accountProgression: { max: true },
         });
     });
+
+    test('When a user already has max and inferno approved, but their account does not reflect it, then they will still keep the max approved status', async () => {
+        // Arrange
+        TestHelper.userHasAccountInfo({
+            accountProgression: { max: true, inferno: true },
+        });
+
+        TestHelper.userHasWOMData({
+            latestSnapshot: {
+                data: {
+                    skills: {
+                        overall: { level: 2276 },
+                    },
+                    bosses: {
+                        tzkal_zuk: { kills: 0 },
+                    },
+                },
+            },
+        });
+
+        // Act
+        await updateMemberRank(memberDiscordId, discordClient);
+
+        // Assert
+        TestHelper.expectAccountInfoToContain({
+            accountProgression: { max: true, inferno: true },
+        });
+    });
 });
