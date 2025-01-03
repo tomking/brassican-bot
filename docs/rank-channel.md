@@ -22,9 +22,9 @@
 
 ## Special Ranks
 > ### Staff
-> **:goldKey: Gold Key** - Owner (@bekt.)
+> **:goldKey: Gold Key** - Owner (<@379314651663433732>)
 > 
-> **:silverKey: Silver Key** - Admin (@kimenu)
+> **:silverKey: Silver Key** - Admin (<@138705528455954433>)
 > 
 > **:goldStarBar:   Gold Star w/ Bar** - Assistant Admins
 > 
