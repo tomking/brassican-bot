@@ -1,7 +1,7 @@
 # Rank Overview
 
 ## Main Member Ranks
-> **:jadeGem:Jade** -  New Member/Cute Noob
+> **:jadeGem: Jade** - New Member/Cute Noob
 > 
 > **:redtopazGem: Red Topaz** - 100 Cabbages
 > 
@@ -26,7 +26,7 @@
 > 
 > **:silverKey: Silver Key** - Admin (<@138705528455954433>)
 > 
-> **:goldStarBar:   Gold Star w/ Bar** - Assistant Admins
+> **:goldStarBar: Gold Star w/ Bar** - Assistant Admins
 > 
 > **:goldStar: Gold Star** - Moderators
 > 
@@ -85,11 +85,11 @@ We will also give some bonus cabbages for specific account progression milestone
 
 ## Registering
 
-To register for the rank system head over to #🥬-cabbage-channel  and use `/register` with the rsn of your main account. You only need to do this once for your account. If you need any assistance please open a support ticket here: #🎫-open-ticket.
+To register for the rank system head over to <#1143680296173195394> and use `/register` with the rsn of your main account. You only need to do this once for your account. If you need any assistance please open a support ticket here: <#1138926885649260674>.
 
 ## Submitting Bonus Cabbage Confirmations
 
-We try to automate everything as much as possible, but certain things require you to submit proof you have completed them to get your cabbages. To submit rank materials (ex. proof of a combat achievement bracket completion) go to #🎫-open-ticket and use the 'Rank Submissions' button.
+We try to automate everything as much as possible, but certain things require you to submit proof you have completed them to get your cabbages. To submit rank materials (ex. proof of a combat achievement bracket completion) go to <#1138926885649260674> and use the 'Rank Submissions' button.
 
 The following is a list of which bonus cabbage tasks require manual submission (if something isn't on this list it will automatically get added to your account the next time our system updates it -- if you are itching to get your cabbages ASAP, feel free to open a ticket and a mod can manually trigger an update for your account!)
 
@@ -102,10 +102,10 @@ The following is a list of which bonus cabbage tasks require manual submission (
 
 ## Viewing Your Stats
 
-You can use `/cabbages` in #🥬-cabbage-channel to see your current cabbage count and breakdown as well as information about what you have submitted. You can also use `/cabbages <player>` to see these stats about another player.
+You can use `/cabbages` in <#1143680296173195394> to see your current cabbage count and breakdown as well as information about what you have submitted. You can also use `/cabbages <player>` to see these stats about another player.
 
 __\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\___
 
-If you have any questions, find an issue with the system, or need help with anything at all, go to #🎫-open-ticket and use the 'Help' button.
+If you have any questions, find an issue with the system, or need help with anything at all, go to <#1138926885649260674> and use the 'Help' button.
 
 ~ The Bekt Staff :cabbageheart:
