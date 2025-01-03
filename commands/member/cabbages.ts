@@ -241,7 +241,7 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     await interaction.deferReply({ ephemeral: true });
     const member = (interaction?.options?.getMember('member') ||
         interaction.member) as GuildMember;
-    const discordID = interaction.user.id;
+    const discordID = member.id;
 
     // Get user's information
     let memberData: IMember | null;
