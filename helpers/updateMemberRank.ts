@@ -92,9 +92,10 @@ export const updateMemberRank = async (
             ) as TextChannel;
 
             logChannel.send(
-                `${discordClient.users.cache
-                    .get(memberData.discordID)!
-                    .toString()}'s rank was updated on Discord to: ${newRank}`
+                `${(
+                    discordClient.users.cache.get(memberData.discordID) ||
+                    `<@${memberData.discordID}>`
+                ).toString()}'s rank was updated on Discord to: ${newRank}`
             );
         } catch (error) {
             console.error("Error updating user's roles: ", error);
@@ -115,9 +116,10 @@ export const updateMemberRank = async (
         ) as TextChannel;
 
         rankUpdatesChannel.send({
-            content: `${discordClient.users.cache
-                .get(memberData.discordID)!
-                .toString()} needs their rank in game updated to: ${newRank}`,
+            content: `${(
+                discordClient.users.cache.get(memberData.discordID) ||
+                `<@${memberData.discordID}>`
+            ).toString()} needs their rank in game updated to: ${newRank}`,
             components: [row],
         });
     }
