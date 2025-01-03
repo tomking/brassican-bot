@@ -11,10 +11,6 @@ import {
 
 import { Environment } from './services/environment';
 
-export type ModifiedDiscordClient = Client & {
-    commands?: Collection<string, unknown>;
-};
-
 type DiscordCommandDetails = {
     name: string;
     once?: boolean;
@@ -26,6 +22,10 @@ type DiscordEventDetails = {
     name: string;
     once?: boolean;
     execute: (...args: unknown[]) => Promise<void>;
+};
+
+export type ModifiedDiscordClient = Client & {
+    commands?: Collection<string, DiscordCommandDetails>;
 };
 
 let client: ModifiedDiscordClient;
