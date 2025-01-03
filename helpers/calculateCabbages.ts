@@ -6,27 +6,29 @@ export const getCabbageBreakdown = (
     memberData: IMember,
     playerDetails?: PlayerDetails
 ) => {
+    const configCabbages = Configuration.cabbages;
+
     // We return an object with key-value pairs (<achievement-name>, <amount of cabbages>)
     // If playerDetails is undefined or not provided, we reverse engineer the core cabbages
     const { accountProgression: account } = memberData;
-    let clogCabbages = Math.floor(account.clogSlots / 100) * 25;
-    const milestoneBonusList = Configuration.clogCabbages || [];
+    let clogCabbages =
+        Math.floor(account.clogSlots / configCabbages.clog.frequency) *
+        configCabbages.clog.amount;
 
-    milestoneBonusList.forEach(({ milestone, bonusCabbages }) => {
-        if (account.clogSlots >= milestone) clogCabbages += bonusCabbages;
+    (configCabbages.clog.bonus || []).forEach(({ milestone, amount }) => {
+        if (account.clogSlots >= milestone) clogCabbages += amount;
     });
 
     const cabbageBreakdown = {
-        // TODO: change the amount of Clogs, CA and AD in config.json
         eventCabbages: memberData.eventCabbages,
-        max: account.max ? Configuration.maxCabbages : 0,
-        inferno: account.inferno ? Configuration.infernoCabbages : 0,
-        quiver: account.quiver ? Configuration.quiverCabbages : 0,
-        blorva: account.blorva ? Configuration.blorvaCabbages : 0,
-        questCape: account.questCape ? Configuration.questCapeCabbages : 0,
+        max: account.max ? configCabbages.max : 0,
+        inferno: account.inferno ? configCabbages.inferno : 0,
+        quiver: account.quiver ? configCabbages.quiver : 0,
+        blorva: account.blorva ? configCabbages.blorva : 0,
+        questCape: account.questCape ? configCabbages.questCape : 0,
         clogSlots: clogCabbages,
-        caTier: Configuration.caTierCabbages[account.caTier] || 0,
-        adTier: Configuration.adTierCabbages[account.adTier] || 0,
+        caTier: configCabbages.ca[account.caTier] || 0,
+        adTier: configCabbages.ad[account.adTier] || 0,
     } as { [key: string]: number };
 
     const sum = Object.values(cabbageBreakdown).reduce(
@@ -46,5 +48,6 @@ export const cabbagesUntilNext = (currentAmount: number) => {
     for (const threshold of Configuration.rankCutoffs) {
         if (threshold > currentAmount) return threshold - currentAmount;
     }
+
     return -1; // More cabbages than highest rank
 };
