@@ -125,6 +125,31 @@ describe('helpers | updateMemberRank', () => {
         });
     });
 
+    test('When a user has (at least) one colosseum completion, then their account progression is automatically updated', async () => {
+        // Arrange
+        TestHelper.userHasAccountInfo({
+            accountProgression: { quiver: false },
+        });
+
+        TestHelper.userHasWOMData({
+            latestSnapshot: {
+                data: {
+                    bosses: {
+                        sol_heredit: { kills: 1 },
+                    },
+                },
+            },
+        });
+
+        // Act
+        await updateMemberRank(memberDiscordId, discordClient);
+
+        // Assert
+        TestHelper.expectAccountInfoToContain({
+            accountProgression: { quiver: true },
+        });
+    });
+
     test('When a user is not maxed, then their account progression is automatically updated', async () => {
         // Arrange
         TestHelper.userHasAccountInfo({
@@ -172,6 +197,35 @@ describe('helpers | updateMemberRank', () => {
         // Assert
         TestHelper.expectAccountInfoToContain({
             accountProgression: { max: true },
+        });
+    });
+
+    test('When a user already has an approval for something, but their account does not reflect it, then they will still keep it', async () => {
+        // Arrange
+        TestHelper.userHasAccountInfo({
+            accountProgression: { max: true, inferno: true, quiver: true },
+        });
+
+        TestHelper.userHasWOMData({
+            latestSnapshot: {
+                data: {
+                    skills: {
+                        overall: { level: 2276 },
+                    },
+                    bosses: {
+                        tzkal_zuk: { kills: 0 },
+                        sol_heredit: { kills: 0 },
+                    },
+                },
+            },
+        });
+
+        // Act
+        await updateMemberRank(memberDiscordId, discordClient);
+
+        // Assert
+        TestHelper.expectAccountInfoToContain({
+            accountProgression: { max: true, inferno: true, quiver: true },
         });
     });
 });
