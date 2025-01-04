@@ -22,12 +22,12 @@ const getLastUpdateDiscord = async (channelID: string): Promise<Date> => {
 
 const getLastUpdateDocs = (channelName: string): Date => {
     try {
-        const stats = fs.statSync('./docs/' + channelName + '.md');
+        const stats = fs.statSync(`./docs/${channelName}.md`);
 
         // TODO: Do we need this extra check?
         if (!stats) {
             console.error(
-                'File stats are empty for: ./docs/' + channelName + '.md'
+                `File stats are empty for: ./docs/${channelName}.md`
             );
             return new Date();
         }
@@ -100,7 +100,7 @@ const updateAllChannels = async () => {
             const discordDate = await getLastUpdateDiscord(channelID);
             const docsDate = getLastUpdateDocs(name);
             if (docsDate > discordDate) {
-                const path = './docs/' + name + '.md';
+                const path = `./docs/${name}.md`;
                 const messages = parseFileContents(path);
                 repostMessages(channelID, messages);
             }
@@ -111,7 +111,6 @@ const updateAllChannels = async () => {
 };
 
 export const initialize = async () => {
-    console.log();
     console.log('Started updating docs');
     await updateAllChannels();
     console.log('Finished updating docs');
