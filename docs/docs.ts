@@ -12,8 +12,8 @@ const getLastUpdateDiscord = async (channelID: string): Promise<Date> => {
     const client = getDiscordClient();
     const channel = (await client.channels.fetch(channelID)) as TextChannel;
     const lastMessage = (await channel.messages.fetch({ limit: 1 })).first();
-    // If channel is empty, we return a very early date such that we resend the messages in the channel
     if (lastMessage === undefined) {
+        // Channel is empty so return very early date which acts as -inf
         return new Date(0);
     }
     return new Date(lastMessage.createdTimestamp);
@@ -32,17 +32,15 @@ const getLastUpdateDocs = (channelName: string): Date => {
 
         return stats.mtime;
     } catch (error) {
-        // If error, we return current date such that
         console.error('Error getting file stats:', error);
         return new Date();
     }
 };
 
 const isHeader = (text: string): boolean =>
-    /^\*\*/.test(text) || /^#+\s+\w/.test(text);
+    /^\*\*/.test(text) || /^#+\s+/.test(text);
 
 const parseFileContents = (path: string): string[] => {
-    // Read the file
     let content = fs.readFileSync(path, 'utf8');
     // Normalize the content by removing extra newlines
     content = content.replace(/\n+/g, '\n');
@@ -51,10 +49,7 @@ const parseFileContents = (path: string): string[] => {
     const messages: string[] = [];
     let currentMessage = '';
 
-    // Iterate through the lines
-    for (const index in lines) {
-        const line = lines[index];
-
+    for (const line of lines) {
         // If currentMessage is getting long and line is a header, finish currentMessage and start a new one
         if (currentMessage.length > MINIMUM_MESSAGE_LENGTH && isHeader(line)) {
             messages.push(currentMessage);
@@ -68,7 +63,7 @@ const parseFileContents = (path: string): string[] => {
             continue;
         }
 
-        // Finish currentMessage and start a new one if above things don't happen
+        // Otherwise finish currentMessage and start a new one
         messages.push(currentMessage);
         currentMessage = line;
     }
