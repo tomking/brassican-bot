@@ -24,7 +24,9 @@ const getLastUpdateDocs = (channelName: string): Date => {
         const stats = fs.statSync(`${__dirname}/docs/${channelName}.md`);
 
         if (!stats) {
-            console.error(`File stats are empty for: ${__dirname}/docs/${channelName}.md`);
+            console.error(
+                `File stats are empty for: ${__dirname}/docs/${channelName}.md`
+            );
             return new Date();
         }
 
@@ -36,7 +38,8 @@ const getLastUpdateDocs = (channelName: string): Date => {
     }
 };
 
-const isHeader = (text: string): boolean => /^\*\*/.test(text) || /^#+\s+\w/.test(text);
+const isHeader = (text: string): boolean =>
+    /^\*\*/.test(text) || /^#+\s+\w/.test(text);
 
 const parseFileContents = (path: string): string[] => {
     // Read the file
@@ -104,7 +107,10 @@ const updateAllChannels = async () => {
             }
         }
     } catch (error) {
-        console.error(error);
+        console.error(
+            'Something went wrong whilst updating all channels: ',
+            error
+        );
     }
 };
 
