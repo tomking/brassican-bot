@@ -4,12 +4,9 @@ import * as fs from 'node:fs';
 import * as nodePath from 'node:path';
 import DocsData from './docs.json';
 
-interface StringDictionary {
-    [key: string]: string;
-}
-
 const __dirname = nodePath.resolve();
-const channels: StringDictionary = DocsData.channels;
+const MINIMUM_MESSAGE_LENGTH = 1200;
+const MAXIMUM_MESSAGE_LENGTH = 2000;
 
 const getLastUpdateDiscord = async (channelID: string): Promise<Date> => {
     const client = getDiscordClient();
@@ -39,6 +36,8 @@ const getLastUpdateDocs = (channelName: string): Date => {
     }
 };
 
+const isHeader = (text: string): boolean => /^\*\*/.test(text) || /^#+\s+\w/.test(text);
+
 const parseFileContents = (path: string): string[] => {
     // Read the file
     let content = fs.readFileSync(path, 'utf8');
@@ -54,16 +53,15 @@ const parseFileContents = (path: string): string[] => {
         const line = lines[index];
 
         // If currentMessage is getting long and line is a header, finish currentMessage and start a new one
-        const isHeader: boolean = /^\*\*/.test(line) || /^#+\s+\w/.test(line);
-        if (currentMessage.length > 1200 && isHeader) {
+        if (currentMessage.length > MINIMUM_MESSAGE_LENGTH && isHeader(line)) {
             messages.push(currentMessage);
             currentMessage = line;
             continue;
         }
 
         // Merge currentMessage with line if their lengths allow it
-        if (currentMessage.length + line.length < 2000) {
-            currentMessage = currentMessage + line;
+        if (currentMessage.length + line.length < MAXIMUM_MESSAGE_LENGTH) {
+            currentMessage = currentMessage.concat(line);
             continue;
         }
 
@@ -73,7 +71,9 @@ const parseFileContents = (path: string): string[] => {
     }
 
     // Append any remaining content to the messages array
-    messages.push(currentMessage);
+    if (currentMessage !== '') {
+        messages.push(currentMessage);
+    }
 
     return messages;
 };
@@ -82,8 +82,8 @@ const repostMessages = async (channelID: string, messages: string[]) => {
     const client = getDiscordClient();
     const channel = (await client.channels.fetch(channelID)) as TextChannel;
     // Fetch and delete all existing messages
-    const recentMessages = await channel.messages.fetch({ limit: 100 });
-    for (const [, message] of recentMessages) {
+    const lastMessages = await channel.messages.fetch({ limit: 100 });
+    for (const [, message] of lastMessages) {
         await message.delete();
     }
     // Repost the messages
@@ -94,8 +94,7 @@ const repostMessages = async (channelID: string, messages: string[]) => {
 
 const updateAllChannels = async () => {
     try {
-        for (const name in channels) {
-            const channelID = channels[name];
+        for (const [name, channelID] of Object.entries(DocsData.channels)) {
             const discordDate = await getLastUpdateDiscord(channelID);
             const docsDate = getLastUpdateDocs(name);
             if (docsDate > discordDate) {
