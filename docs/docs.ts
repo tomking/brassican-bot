@@ -1,34 +1,33 @@
 import { TextChannel } from 'discord.js';
 import { getDiscordClient } from '../discord';
 import * as fs from 'node:fs';
+import * as nodePath from 'node:path';
 import DocsData from './docs.json';
 
 interface StringDictionary {
     [key: string]: string;
 }
 
+const __dirname = nodePath.resolve();
 const channels: StringDictionary = DocsData.channels;
 
 const getLastUpdateDiscord = async (channelID: string): Promise<Date> => {
     const client = getDiscordClient();
     const channel = (await client.channels.fetch(channelID)) as TextChannel;
-    const message = (await channel.messages.fetch({ limit: 1 })).first();
+    const lastMessage = (await channel.messages.fetch({ limit: 1 })).first();
     // If channel is empty, we return a very early date such that we resend the messages in the channel
-    if (message === undefined) {
+    if (lastMessage === undefined) {
         return new Date(0);
     }
-    return new Date(message.createdTimestamp);
+    return new Date(lastMessage.createdTimestamp);
 };
 
 const getLastUpdateDocs = (channelName: string): Date => {
     try {
-        const stats = fs.statSync(`./docs/${channelName}.md`);
+        const stats = fs.statSync(`${__dirname}/docs/${channelName}.md`);
 
-        // TODO: Do we need this extra check?
         if (!stats) {
-            console.error(
-                `File stats are empty for: ./docs/${channelName}.md`
-            );
+            console.error(`File stats are empty for: ${__dirname}/docs/${channelName}.md`);
             return new Date();
         }
 
@@ -83,9 +82,9 @@ const repostMessages = async (channelID: string, messages: string[]) => {
     const client = getDiscordClient();
     const channel = (await client.channels.fetch(channelID)) as TextChannel;
     // Fetch and delete all existing messages
-    const fetched = await channel.messages.fetch({ limit: 20 });
-    for (const item of fetched) {
-        await item[1].delete();
+    const recentMessages = await channel.messages.fetch({ limit: 100 });
+    for (const [, message] of recentMessages) {
+        await message.delete();
     }
     // Repost the messages
     for (const msg of messages) {
@@ -100,7 +99,7 @@ const updateAllChannels = async () => {
             const discordDate = await getLastUpdateDiscord(channelID);
             const docsDate = getLastUpdateDocs(name);
             if (docsDate > discordDate) {
-                const path = `./docs/${name}.md`;
+                const path = `${__dirname}/docs/${name}.md`;
                 const messages = parseFileContents(path);
                 repostMessages(channelID, messages);
             }
