@@ -110,7 +110,7 @@ const updateChannel = async (name: string, channelID: string) => {
 export const initialize = async () => {
     console.log('Started updating docs');
     await Promise.all([
-        updateChannel('rank-channel', Environment.RANK_UPDATES_CHANNEL),
+        updateChannel('rank-channel', Environment.RANK_CHANNEL),
     ]);
     console.log('Finished updating docs');
 };
