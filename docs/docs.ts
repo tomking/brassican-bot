@@ -1,8 +1,8 @@
+import { Environment } from '../services/environment';
 import { TextChannel } from 'discord.js';
 import { getDiscordClient } from '../discord';
 import * as fs from 'node:fs';
 import * as nodePath from 'node:path';
-import DocsData from './docs.json';
 
 const __dirname = nodePath.resolve();
 const MINIMUM_MESSAGE_LENGTH = 1200;
@@ -90,20 +90,18 @@ const repostMessages = async (channelID: string, messages: string[]) => {
     }
 };
 
-const updateAllChannels = async () => {
+const updateChannel = async (name: string, channelID: string) => {
     try {
-        for (const [name, channelID] of Object.entries(DocsData.channels)) {
-            const discordDate = await getLastUpdateDiscord(channelID);
-            const docsDate = getLastUpdateDocs(name);
-            if (docsDate > discordDate) {
-                const path = `${__dirname}/docs/${name}.md`;
-                const messages = parseFileContents(path);
-                repostMessages(channelID, messages);
-            }
+        const discordDate = await getLastUpdateDiscord(channelID);
+        const docsDate = getLastUpdateDocs(name);
+        if (docsDate > discordDate) {
+            const path = `${__dirname}/docs/${name}.md`;
+            const messages = parseFileContents(path);
+            repostMessages(channelID, messages);
         }
     } catch (error) {
         console.error(
-            'Something went wrong whilst updating all channels: ',
+            `Something went wrong whilst updating channel '${name}': `,
             error
         );
     }
@@ -111,6 +109,8 @@ const updateAllChannels = async () => {
 
 export const initialize = async () => {
     console.log('Started updating docs');
-    await updateAllChannels();
+    await Promise.all([
+        updateChannel('rank-channel', Environment.RANK_UPDATES_CHANNEL),
+    ]);
     console.log('Finished updating docs');
 };
