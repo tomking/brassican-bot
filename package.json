@@ -41,7 +41,7 @@
         "jiti": "^2.4.2",
         "joi": "^17.13.3",
         "migrate-mongo": "^11.0.0",
-        "mongoose": "^8.9.3",
+        "mongoose": "^8.9.4",
         "node-cron": "^3.0.3",
         "prettier": "^3.4.2",
         "tsx": "^4.19.2",
