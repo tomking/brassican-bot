@@ -21,7 +21,7 @@ export const initialize = async () => {
         },
         migrationsDir: 'migrations',
         changelogCollectionName: 'changelog',
-        migrationFileExtension: '.js',
+        migrationFileExtension: '.ts',
     });
 
     const { db, client } = await database.connect();
