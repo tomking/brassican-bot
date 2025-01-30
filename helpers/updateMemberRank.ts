@@ -65,9 +65,9 @@ export const updateMemberRank = async (
         memberData.accountProgression.quiver = true;
     }
 
-    if ((latestSnapshotData?.activities?.collections_logged?.score || 0) > 0) {
+    if ((latestSnapshotData?.activities?.collections_logged.score || 0) > 0) {
         memberData.accountProgression.clogSlots =
-            latestSnapshotData?.activities?.collections_logged?.score;
+            latestSnapshotData?.activities?.collections_logged.score || 0;
     }
 
     memberData.currentCabbages = Object.values(
