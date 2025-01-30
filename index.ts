@@ -1,5 +1,5 @@
 import * as environment from './services/environment';
-import * as database from './config/database';
+import * as database from './stores';
 import * as discord from './discord';
 import * as wiseoldman from './config/wom';
 import * as scheduler from './services/scheduler';

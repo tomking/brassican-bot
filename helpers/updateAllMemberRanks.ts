@@ -2,7 +2,7 @@ import { Client } from 'discord.js';
 
 import { Environment } from '../services/environment';
 import { getWOMClient } from '../config/wom';
-import { Member } from '../models/member';
+import { Member } from '../stores';
 import { updateMemberRank } from './updateMemberRank';
 
 export const delay = (milliseconds: number) => {

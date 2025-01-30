@@ -5,7 +5,7 @@ import {
 } from 'discord.js';
 
 import { Environment } from '../../services/environment';
-import { Member } from '../../models/member';
+import { Member } from '../../stores';
 import { getWOMClient } from '../../config/wom';
 import { updateMemberRank } from '../../helpers/updateMemberRank';
 
@@ -23,7 +23,12 @@ export const data = new SlashCommandBuilder()
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
     await interaction.deferReply({ ephemeral: true });
-    const rsn = interaction.options.getString('rsn')!;
+    const rsn = interaction.options.getString('rsn');
+    if (!rsn) {
+        await interaction.editReply('Please provide a valid username.');
+        return;
+    }
+
     const discordID = interaction.user.id;
 
     // Check if user is already registered with this discord ID

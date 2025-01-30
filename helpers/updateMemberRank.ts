@@ -9,7 +9,7 @@ import { ButtonStyle } from 'discord-api-types/v10';
 import { Environment } from '../services/environment';
 import { mapPointsToRank } from './mapPointsToRank';
 import { getCabbageBreakdown } from './calculateCabbages';
-import { IMember, Member } from '../models/member';
+import { IMember, Member } from '../stores';
 import { getWOMClient } from '../config/wom';
 import { PlayerDetails } from '@wise-old-man/utils';
 

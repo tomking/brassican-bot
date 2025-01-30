@@ -1,6 +1,6 @@
 import { PlayerDetails } from '@wise-old-man/utils';
 import * as Configuration from '../config.json';
-import { IMember } from '../models/member';
+import { IMember } from '../stores';
 
 export const getCabbageBreakdown = (
     memberData: IMember,

@@ -1,13 +1,13 @@
 import { faker } from '@faker-js/faker';
 
 import { updateMemberRank } from './updateMemberRank';
-import { IMember, Member } from '../models/member';
+import { IMember, Member } from '../stores';
 import { getWOMClient } from '../config/wom';
 import { DeepPartial } from '../utils/deepPartial';
 import { PlayerDetails } from '@wise-old-man/utils';
 import { Client } from 'discord.js';
 
-jest.mock('../models/member');
+jest.mock('../stores');
 jest.mock('../config/wom');
 jest.mock('../services/environment', () => ({
     Environment: {},

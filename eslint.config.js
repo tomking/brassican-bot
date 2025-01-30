@@ -2,7 +2,7 @@ import tseslint from 'typescript-eslint';
 import jestlint from 'eslint-plugin-jest';
 
 export default tseslint.config(
-    ...tseslint.configs.recommended,
+    ...tseslint.configs.strict,
     jestlint.configs['flat/recommended'],
     {
         files: ['**/*.ts'],
@@ -26,7 +26,7 @@ export default tseslint.config(
                     props: false,
                 },
             ],
-            'no-unused-vars': 'off',
+            'no-unused-vars': 'warn',
             'require-jsdoc': 'off',
             'new-cap': 'off',
             '@typescript-eslint/no-unused-vars': [

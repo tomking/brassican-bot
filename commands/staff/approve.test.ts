@@ -1,8 +1,8 @@
 import { execute } from './approve';
-import { Member } from '../../models/member';
+import { Member } from '../../stores';
 import { ChatInputCommandInteraction } from 'discord.js';
 
-jest.mock('../../models/member');
+jest.mock('../../stores');
 
 describe('commands | staff | approve', () => {
     let interaction: ChatInputCommandInteraction;

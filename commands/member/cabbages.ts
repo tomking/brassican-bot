@@ -15,7 +15,7 @@ import {
     cabbagesUntilNext,
     getCabbageBreakdown,
 } from '../../helpers/calculateCabbages';
-import { IMember, Member } from '../../models/member';
+import { IMember, Member } from '../../stores';
 
 const findEmoji = (client: ModifiedDiscordClient, name: string) => {
     const emoji = client.emojis.cache.find(

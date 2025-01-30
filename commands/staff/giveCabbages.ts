@@ -7,7 +7,7 @@ import {
 } from 'discord.js';
 
 import { Environment } from '../../services/environment';
-import { Member } from '../../models/member';
+import { Member } from '../../stores';
 import { updateMemberRank } from '../../helpers/updateMemberRank';
 
 export const data = new SlashCommandBuilder()
