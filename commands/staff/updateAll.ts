@@ -16,7 +16,7 @@ export const data = new SlashCommandBuilder()
     );
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: 'Ephemeral' });
 
     // Check if calling user is a member of staff (mod or CA)
     if (

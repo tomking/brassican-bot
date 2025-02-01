@@ -9,5 +9,5 @@ import * as scheduler from './services/scheduler';
     await database.initialize();
     wiseoldman.initialize();
     await discord.initialize();
-    scheduler.initialize();
+    await scheduler.initialize();
 })();

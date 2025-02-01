@@ -7,7 +7,7 @@ import {
 import * as z from 'zod';
 
 import { Environment } from '../../services/environment';
-import { Scheduler } from '../../stores';
+import { scheduleAction } from '../../services/scheduler';
 
 export const data = new SlashCommandBuilder()
     .setName('giverank')
@@ -46,7 +46,15 @@ export const data = new SlashCommandBuilder()
 
 // use zod validation
 
-export type DurationUnit = 'hour' | 'hours' | 'day' | 'days' | 'week' | 'weeks';
+export type DurationUnit =
+    | 'second'
+    | 'seconds'
+    | 'hour'
+    | 'hours'
+    | 'day'
+    | 'days'
+    | 'week'
+    | 'weeks';
 
 export const DurationSchema = z.string().refine((value) => {
     // multiple durations can be separated by a comma
@@ -60,7 +68,18 @@ export const DurationSchema = z.string().refine((value) => {
 
     const [number, unit] = value.split(' ');
 
-    if (!['hour', 'hours', 'day', 'days', 'week', 'weeks'].includes(unit)) {
+    if (
+        ![
+            'second',
+            'seconds',
+            'hour',
+            'hours',
+            'day',
+            'days',
+            'week',
+            'weeks',
+        ].includes(unit)
+    ) {
         return false;
     }
 
@@ -85,7 +104,7 @@ export const parseDuration = (
 };
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: 'Ephemeral' });
 
     // Check if calling user is a member of staff (mod or CA)
     if (
@@ -132,6 +151,10 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
         endDate = new Date(now);
 
         switch (unit) {
+            case 'second':
+            case 'seconds':
+                endDate.setSeconds(now.getSeconds() + number);
+                break;
             case 'hour':
             case 'hours':
                 endDate.setHours(now.getHours() + number);
@@ -147,9 +170,9 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
         }
 
         // round to the nearest hour
-        endDate.setMinutes(0);
-        endDate.setSeconds(0);
-        endDate.setMilliseconds(0);
+        // endDate.setMinutes(0);
+        // endDate.setSeconds(0);
+        // endDate.setMilliseconds(0);
 
         console.log('Calculated end date:', endDate.toISOString());
     }
@@ -157,20 +180,29 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
     console.log(interaction.options);
 
     // TODO: implement
-    if (interaction.options.getString('end-date')) {
-        console.log('gfiugfif');
-        const scheduledAction = new Scheduler({
-            command: 'giveRank',
-            arguments: {
+    if (endDate) {
+        console.log('Scheduling action');
+        await scheduleAction(
+            'giveRank',
+            {
                 user: interaction.options.getUser('user')?.id,
                 rank: interaction.options.getString('rank'),
-            },
-            date: interaction.options.getString('end-date'),
-        });
+            } as unknown as JSON,
+            endDate
+        );
 
-        console.log(scheduledAction);
+        // const scheduledAction = new Scheduler({
+        //     command: 'giveRank',
+        //     arguments: {
+        //         user: interaction.options.getUser('user')?.id,
+        //         rank: interaction.options.getString('rank'),
+        //     },
+        //     date: endDate,
+        // });
 
-        await scheduledAction.save();
+        // console.log(scheduledAction);
+
+        // await scheduledAction.save();
     }
 
     // write out the month entirely and the time in 24h format
