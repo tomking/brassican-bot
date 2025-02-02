@@ -86,10 +86,19 @@ const repostMessages = async (channelID: string, messages: string[]) => {
     for (const [, message] of lastMessages) {
         await message.delete();
     }
+
     // Repost the messages
-    for (const msg of messages) {
-        await channel.send(msg);
+    let firstMessageId;
+    for (const [index, msg] of messages.entries()) {
+        const postedMessage = await channel.send(msg);
+        if (index === 0) {
+            firstMessageId = postedMessage.id;
+        }
     }
+    const link = `https://discord.com/channels/${Environment.GUILD_ID}/${channelID}/${firstMessageId}`;
+    await channel.send(
+        `:arrow_up: [Click Here to Jump to the Top](${link}) :arrow_up:`
+    );
 };
 
 const updateChannel = async (name: string, channelID: string) => {
