@@ -99,7 +99,7 @@ const updateChannel = async (name: string, channelID: string) => {
         if (docsDate > discordDate) {
             const path = `${__dirname}/docs/${name}.md`;
             const messages = parseFileContents(path);
-            repostMessages(channelID, messages);
+            await repostMessages(channelID, messages);
         }
     } catch (error) {
         console.error(
