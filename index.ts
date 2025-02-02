@@ -3,11 +3,13 @@ import * as database from './config/database';
 import * as discord from './discord';
 import * as wiseoldman from './config/wom';
 import * as scheduler from './services/scheduler';
+import * as docs from './docs/docs';
 
 (async () => {
     environment.initialize();
     await database.initialize();
     wiseoldman.initialize();
     await discord.initialize();
+    await docs.initialize();
     scheduler.initialize();
 })();

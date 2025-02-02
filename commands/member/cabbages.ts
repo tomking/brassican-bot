@@ -238,7 +238,7 @@ export const data = new SlashCommandBuilder()
     );
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: 'Ephemeral' });
     const member = (interaction?.options?.getMember('member') ||
         interaction.member) as GuildMember;
     const discordID = member.id;

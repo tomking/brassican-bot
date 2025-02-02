@@ -34,7 +34,7 @@ describe('commands | staff | approve', () => {
 
         // Assert
         expect(interaction.deferReply).toHaveBeenCalledWith({
-            ephemeral: true,
+            flags: 'Ephemeral',
         });
     });
 
