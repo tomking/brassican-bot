@@ -3,6 +3,7 @@ import { TextChannel } from 'discord.js';
 import { getDiscordClient } from '../discord';
 import * as fs from 'node:fs';
 import * as nodePath from 'node:path';
+import * as os from 'os';
 
 const __dirname = nodePath.resolve();
 const MINIMUM_MESSAGE_LENGTH = 1200;
@@ -43,10 +44,8 @@ const isHeader = (text: string): boolean =>
 const parseFileContents = (path: string): string[] => {
     let content = fs.readFileSync(path, 'utf8');
     // Normalize the content by removing extra newlines
-    content = content.replace(/\r\n|\r/g, '\n');
-    const lines = content.split('\n');
-
     content = content.replace(/\n+/g, '\n');
+    const lines = content.split(os.EOL);
 
     const messages: string[] = [];
     let currentMessage = '';
