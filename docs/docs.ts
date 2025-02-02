@@ -43,8 +43,10 @@ const isHeader = (text: string): boolean =>
 const parseFileContents = (path: string): string[] => {
     let content = fs.readFileSync(path, 'utf8');
     // Normalize the content by removing extra newlines
+    console.log(content);
     content = content.replace(/\r\n|\r|\n/g, '\n');
     const lines = content.split('\n');
+    console.log(JSON.stringify(lines));
 
     const messages: string[] = [];
     let currentMessage = '';
