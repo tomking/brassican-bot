@@ -41,12 +41,12 @@ const isHeader = (text: string): boolean =>
     /^\*\*/.test(text) || /^#+\s+/.test(text);
 
 const parseFileContents = (path: string): string[] => {
-    let content = fs.readFileSync(path, 'utf8');
+    const content = fs.readFileSync(path, 'utf8');
     // Normalize the content by removing extra newlines
-    console.log(content);
-    content = content.replace(/\r\n|\r|\n/g, '\n');
-    const lines = content.split('\n');
-    console.log(JSON.stringify(lines));
+    const lines = content
+        .split(/\r\n|\n|\r/)
+        .filter((line) => line !== '')
+        .map((line) => line.concat('\n'));
 
     const messages: string[] = [];
     let currentMessage = '';
