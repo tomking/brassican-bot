@@ -22,7 +22,7 @@ export const data = new SlashCommandBuilder()
     );
 
 export const execute = async (interaction: ChatInputCommandInteraction) => {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: 'Ephemeral' });
     const rsn = interaction.options.getString('rsn')!;
     const discordID = interaction.user.id;
 
