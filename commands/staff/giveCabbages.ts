@@ -32,6 +32,12 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
     );
 
+export type GiveCabbagesCommandOptions = {
+    user: string;
+    quantity: number;
+    reason?: string;
+};
+
 export const execute = async (interaction: ChatInputCommandInteraction) => {
     await interaction.deferReply({ flags: 'Ephemeral' });
 

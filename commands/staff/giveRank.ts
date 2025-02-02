@@ -4,10 +4,11 @@ import {
     Role,
     SlashCommandBuilder,
 } from 'discord.js';
-import * as z from 'zod';
 
 import { Environment } from '../../services/environment';
 import { scheduleAction } from '../../services/scheduler';
+import { DurationSchema, parseDuration } from '../../utils/duration';
+import { isStaff } from '../../services/isStaff';
 
 export const data = new SlashCommandBuilder()
     .setName('giverank')
@@ -31,89 +32,11 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
     );
 
-// create a type for the "duration" argument
-// this can be something like "1 week", "2 days", "3 hours", etc.
-// the minimum granularity should be hours, the maximum should be weeks
-
-// duration should be of a combination of a numer, followed by a space, followed by a time unit
-
-// the time unit should be one of the following:
-// - hour
-// - day
-// - week
-
-// number should be minumum 1, maximum 100
-
-// use zod validation
-
-export type DurationUnit =
-    | 'second'
-    | 'seconds'
-    | 'hour'
-    | 'hours'
-    | 'day'
-    | 'days'
-    | 'week'
-    | 'weeks';
-
-export const DurationSchema = z.string().refine((value) => {
-    // multiple durations can be separated by a comma
-    // every duration unit can only occur once, where hour/hours, day/days, and week/weeks are considered the same
-
-    // const durations = value.split(',').map((d) => d.trim());
-
-    // if (durations.length > 1) {
-    //     return durations.every((d) => DurationSchema.check(d));
-    // }
-
-    const [number, unit] = value.split(' ');
-
-    if (
-        ![
-            'second',
-            'seconds',
-            'hour',
-            'hours',
-            'day',
-            'days',
-            'week',
-            'weeks',
-        ].includes(unit)
-    ) {
-        return false;
-    }
-
-    if (parseInt(number) < 1 || parseInt(number) > 100) {
-        return false;
-    }
-
-    return true;
-});
-
-export type Duration = z.infer<typeof DurationSchema>;
-
-export const parseDuration = (
-    duration: Duration
-): { number: number; unit: DurationUnit } => {
-    const [number, unit] = duration.split(' ');
-
-    return {
-        number: parseInt(number),
-        unit: unit as DurationUnit,
-    };
-};
-
 export const execute = async (interaction: ChatInputCommandInteraction) => {
     await interaction.deferReply({ flags: 'Ephemeral' });
 
     // Check if calling user is a member of staff (mod or CA)
-    if (
-        !(interaction.member as GuildMember).roles.cache.some(
-            (role: Role) =>
-                role.id === Environment.DISCORD_MOD_ROLE_ID ||
-                role.id === Environment.DISCORD_CA_ROLE_ID
-        )
-    ) {
+    if (!isStaff(interaction.member as GuildMember)) {
         await interaction.editReply(
             'Only members of staff can use this command!'
         );
