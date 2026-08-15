@@ -14,6 +14,7 @@ import {
     cabbagesUntilNext,
     getCabbageBreakdown,
 } from '../../helpers/calculateCabbages';
+import { getRsnByWomId } from '../../helpers/wom';
 import { IMember, Member } from '../../models/member';
 
 const capitalize = (input: string) => {
@@ -33,7 +34,11 @@ const embedfield = (name: string, value: string, inline?: boolean) => ({
     inline: !!inline,
 });
 
-const mobileBreakdown = (member: GuildMember, memberData: IMember) => {
+const mobileBreakdown = (
+    member: GuildMember,
+    memberData: IMember,
+    registeredAccount: string
+) => {
     const { accountProgression: account } = memberData;
     // Generate all necessary info
     const rankEmojiName = `${memberData.currentRank
@@ -51,6 +56,7 @@ const mobileBreakdown = (member: GuildMember, memberData: IMember) => {
     const textArray = [
         `# ${rankEmoji}  ${nickname}'s profile`,
         ' ',
+        `Username: ${registeredAccount}`,
         `Current cabbages: ${cabbages}`,
         `Cabbages until next tier: ${nextTierText}`,
         `Last updated: <t:${timestamp}>\`\`\``,
@@ -119,7 +125,11 @@ const mobileBreakdown = (member: GuildMember, memberData: IMember) => {
     return textArray.join('\n');
 };
 
-const cabbageEmbed = (member: GuildMember, memberData: IMember) => {
+const cabbageEmbed = (
+    member: GuildMember,
+    memberData: IMember,
+    registeredAccount: string
+) => {
     const { accountProgression: account } = memberData;
     // Generate all neccesary info
     const checkmark = findApplicationEmoji('checkmark');
@@ -208,8 +218,16 @@ const cabbageEmbed = (member: GuildMember, memberData: IMember) => {
     const embed = new EmbedBuilder()
         .addFields(
             embedfield(`${rankEmoji}  **${nickname}'s profile**`, ''),
-            embedfield('', '**Current cabbages**:\n**Until next tier**:', true),
-            embedfield('', `${cabbages}\n${nextTierText}`, true),
+            embedfield(
+                '',
+                '**Username**:\n**Current cabbages**:\n**Until next tier**:',
+                true
+            ),
+            embedfield(
+                '',
+                `${registeredAccount}\n${cabbages}\n${nextTierText}`,
+                true
+            ),
             embedfield('', '', true),
             embedfield('Achievements', achievementText.join('\n'), true),
             embedfield('Status', statusText.join('\n'), true),
@@ -280,9 +298,12 @@ export const execute = async (interaction: ChatInputCommandInteraction) => {
         pc_button
     );
 
+    const registeredAccount =
+        (await getRsnByWomId(memberData.womID)) || 'Unknown';
+
     // By default, use the embed version first
-    const embed = cabbageEmbed(member, memberData);
-    const text_version = mobileBreakdown(member, memberData);
+    const embed = cabbageEmbed(member, memberData, registeredAccount);
+    const text_version = mobileBreakdown(member, memberData, registeredAccount);
     const reply = await interaction.editReply({
         embeds: [embed],
         components: [pc_row],
